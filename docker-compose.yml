@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  db:
+    image: mongo:5.0.2
+    restart: always
+    volumes:
+      - db:/data/db
+    ports:
+      - 27017:27017
+
+  api:
+    build: ./
+    restart: always
+    depends_on:
+      - db
+    environment:
+      - DB_URL=mongodb://db:27017/agnos
+      - JWT_SECRET=agnos_jwt_scret
+      - PORT=3000
+    volumes:
+      - ./tsconfig.json:/home/node/app/tsconfig.json
+      - ./src:/home/node/app/src
+      - ./node_modules:/home/node/app/node_modules
+    ports:
+      - 3000:3000
+    stdin_open: true
+    tty: true
+
+volumes:
+  db:
