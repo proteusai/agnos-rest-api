@@ -1,4 +1,4 @@
-import { object, string, TypeOf } from "zod";
+import { object, string, boolean, TypeOf } from "zod";
 
 /**
  * @openapi
@@ -7,31 +7,40 @@ import { object, string, TypeOf } from "zod";
  *    CreateUserInput:
  *      type: object
  *      required:
- *        - email
  *        - name
+ *        - email
+ *      optional:
+ *        - emailIsVerified
  *        - password
  *        - passwordConfirmation
+ *        - picture
  *      properties:
- *        email:
- *          type: string
- *          default: jane.doe@example.com
  *        name:
  *          type: string
  *          default: Jane Doe
+ *        email:
+ *          type: string
+ *          default: jane.doe@example.com
+ *        emailIsVerified:
+ *          type: boolean
+ *          default: false
  *        password:
  *          type: string
  *          default: stringPassword123
  *        passwordConfirmation:
  *          type: string
  *          default: stringPassword123
+ *        picture:
+ *          type: string
+ *          default: https://content.com/image.png
  *    CreateUserResponse:
  *      type: object
  *      properties:
- *        email:
+ *        _id:
  *          type: string
  *        name:
  *          type: string
- *        _id:
+ *        email:
  *          type: string
  *        createdAt:
  *          type: string
@@ -44,15 +53,13 @@ export const createUserSchema = object({
     name: string({
       required_error: "Name is required",
     }),
-    password: string({
-      required_error: "Name is required",
-    }).min(6, "Password too short - should be 6 chars minimum"),
-    passwordConfirmation: string({
-      required_error: "passwordConfirmation is required",
-    }),
     email: string({
       required_error: "Email is required",
     }).email("Not a valid email"),
+    emailIsVerified: boolean().optional(),
+    password: string().min(6, "Password too short - should be 6 chars minimum").optional(),
+    passwordConfirmation: string().optional(),
+    picture: string().optional(),
   }).refine((data) => data.password === data.passwordConfirmation, {
     message: "Passwords do not match",
     path: ["passwordConfirmation"],

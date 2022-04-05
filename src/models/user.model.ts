@@ -3,9 +3,11 @@ import bcrypt from "bcrypt";
 import config from "config";
 
 export interface UserInput {
-  email: string;
   name: string;
-  password: string;
+  email: string;
+  emailIsVerified?: boolean;
+  password?: string;
+  picture?: string;
 }
 
 export interface UserDocument extends UserInput, mongoose.Document {
@@ -16,9 +18,11 @@ export interface UserDocument extends UserInput, mongoose.Document {
 
 const userSchema = new mongoose.Schema(
   {
-    email: { type: String, required: true, unique: true },
     name: { type: String, required: true },
-    password: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    emailIsVerified: { type: Boolean, required: false, default: false },
+    password: { type: String, required: false },
+    picture: { type: String, required: false },
   },
   {
     timestamps: true,
@@ -27,6 +31,10 @@ const userSchema = new mongoose.Schema(
 
 userSchema.pre("save", async function (next) {
   let user = this as UserDocument;
+
+  if (!user.password) {
+    return next();
+  }
 
   if (!user.isModified("password")) {
     return next();
@@ -45,6 +53,10 @@ userSchema.methods.comparePassword = async function (
   candidatePassword: string
 ): Promise<boolean> {
   const user = this as UserDocument;
+
+  if (!user.password) {
+    return true;
+  }
 
   return bcrypt.compare(candidatePassword, user.password).catch((e) => false);
 };

@@ -11,9 +11,9 @@ const validate =
         params: req.params,
       });
       next();
-    } catch (e: any) {
-      return res.status(400).send(e.errors);
+    } catch (error: any) {
+      return res.status(400).send({ error });
     }
   };
 
-  export default validate;
+export default validate;
