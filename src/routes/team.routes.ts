@@ -1,35 +1,38 @@
 import { Router } from "express";
-import { createUserHandler } from "../controllers/user.controller";
-import { createUserSchema } from "../schema/user.schema";
+import { createTeamHandler } from "../controllers/team.controller";
+import requireUser from "../middleware/requireUser";
 import validateResource from "../middleware/validateResource";
+import { createTeamSchema } from "../schema/team.schema";
 
 const router = Router();
 
 /**
  * @openapi
- * '/api/users':
+ * '/api/teams':
  *  post:
  *     tags:
- *     - User
- *     summary: Register a user
+ *     - Team
+ *     summary: Create a team
  *     requestBody:
  *      required: true
  *      content:
  *        application/json:
  *           schema:
- *              $ref: '#/components/schemas/CreateUserInput'
+ *              $ref: '#/components/schemas/CreateTeamInput'
  *     responses:
  *      200:
  *        description: Success
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/CreateUserResponse'
- *      409:
- *        description: Conflict
+ *              $ref: '#/components/schemas/CreateTeamResponse'
  *      400:
  *        description: Bad request
  */
-router.post("/users", validateResource(createUserSchema), createUserHandler);
+router.post(
+  "/teams",
+  [requireUser, validateResource(createTeamSchema)],
+  createTeamHandler
+);
 
 export default router;

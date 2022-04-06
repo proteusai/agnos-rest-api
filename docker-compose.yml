@@ -16,8 +16,8 @@ services:
       - db
     environment:
       - DB_URL=mongodb://db:27017/agnos
-      - JWT_SECRET=agnos_jwt_scret
       - PORT=3000
+      - NODE_ENV=development
     volumes:
       - ./tsconfig.json:/home/node/app/tsconfig.json
       - ./src:/home/node/app/src

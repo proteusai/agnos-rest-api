@@ -12,12 +12,16 @@ export async function createUser(input: UserInput) {
   }
 }
 
+export async function findUser(query: FilterQuery<UserDocument>) {
+  return UserModel.findOne(query).lean();
+}
+
 export async function validatePassword({
   email,
   password,
 }: {
   email: string;
-  password: string;
+  password?: string;
 }) {
   const user = await UserModel.findOne({ email });
 
@@ -25,13 +29,13 @@ export async function validatePassword({
     return false;
   }
 
+  if (!password) {
+    return omit(user.toJSON(), "password");
+  }
+
   const isValid = await user.comparePassword(password);
 
   if (!isValid) return false;
 
   return omit(user.toJSON(), "password");
-}
-
-export async function findUser(query: FilterQuery<UserDocument>) {
-  return UserModel.findOne(query).lean();
 }

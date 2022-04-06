@@ -9,11 +9,6 @@ import { object, string, boolean, TypeOf } from "zod";
  *      required:
  *        - name
  *        - email
- *      optional:
- *        - emailIsVerified
- *        - password
- *        - passwordConfirmation
- *        - picture
  *      properties:
  *        name:
  *          type: string
@@ -36,16 +31,23 @@ import { object, string, boolean, TypeOf } from "zod";
  *    CreateUserResponse:
  *      type: object
  *      properties:
- *        _id:
- *          type: string
- *        name:
- *          type: string
- *        email:
- *          type: string
- *        createdAt:
- *          type: string
- *        updatedAt:
- *          type: string
+ *        user:
+ *          type: object
+ *          properties:
+ *            _id:
+ *              type: string
+ *            name:
+ *              type: string
+ *            email:
+ *              type: string
+ *            emailIsVerified:
+ *              type: boolean
+ *            picture:
+ *              type: string
+ *            createdAt:
+ *              type: string
+ *            updatedAt:
+ *              type: string
  */
 
 export const createUserSchema = object({
@@ -56,8 +58,10 @@ export const createUserSchema = object({
     email: string({
       required_error: "Email is required",
     }).email("Not a valid email"),
-    emailIsVerified: boolean().optional(),
-    password: string().min(6, "Password too short - should be 6 chars minimum").optional(),
+    emailIsVerified: boolean().default(false).optional(),
+    password: string()
+      .min(6, "Password too short - should be 6 chars minimum")
+      .optional(),
     passwordConfirmation: string().optional(),
     picture: string().optional(),
   }).refine((data) => data.password === data.passwordConfirmation, {

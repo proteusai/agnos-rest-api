@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import config from "config";
+import { BaseDocument } from "./base.model";
+import MembershipModel from "./membership.model";
+import { DEFAULT_USER_PICTURE } from "../constants/defaults";
 
 export interface UserInput {
   name: string;
@@ -10,9 +13,10 @@ export interface UserInput {
   picture?: string;
 }
 
-export interface UserDocument extends UserInput, mongoose.Document {
-  createdAt: Date;
-  updatedAt: Date;
+export interface UserDocument
+  extends BaseDocument,
+    UserInput,
+    mongoose.Document {
   comparePassword(candidatePassword: string): Promise<Boolean>;
 }
 
@@ -20,9 +24,9 @@ const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    emailIsVerified: { type: Boolean, required: false, default: false },
+    emailIsVerified: { type: Boolean, default: false },
     password: { type: String, required: false },
-    picture: { type: String, required: false },
+    picture: { type: String, required: false, default: DEFAULT_USER_PICTURE },
   },
   {
     timestamps: true,
@@ -45,6 +49,20 @@ userSchema.pre("save", async function (next) {
   const hash = await bcrypt.hash(user.password, salt);
 
   user.password = hash;
+
+  return next();
+});
+userSchema.post("save", async function (next) {
+  let user = this as UserDocument;
+
+  if (!user.isModified("name") && !user.isModified("picture")) {
+    return next();
+  }
+
+  MembershipModel.updateMany(
+    { userId: user._id },
+    { userName: user.name, userPicture: user.picture }
+  ).exec();
 
   return next();
 });
