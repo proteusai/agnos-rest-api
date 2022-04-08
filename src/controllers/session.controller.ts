@@ -1,46 +1,36 @@
 import { Request, Response } from "express";
-import config from "config";
 import {
   createSession,
   findSessions,
   updateSession,
 } from "../service/session.service";
-import { validatePassword } from "../service/user.service";
-import { signJwt } from "../utils/jwt.utils";
+import { findUser } from "../service/user.service";
 import { CreateSessionInput } from "../schema/session.schema";
 
 export async function createUserSessionHandler(
   req: Request<{}, {}, CreateSessionInput["body"]>,
   res: Response
 ) {
-  // Validate the user's password
-  const user = await validatePassword(req.body);
+  const email = req.body.email;
+  const accessToken = req.body.accessToken;
+
+  const user = await findUser({ email });
 
   if (!user) {
-    return res.status(401).send("Invalid email or password");
+    return res.status(401).send({ error: { message: "Invalid access token" } });
   }
 
-  // create a session
-  const session = await createSession(user._id, req.get("user-agent") || "");
+  const userId = user._id;
+  const userAgent = req.get("user-agent") || "";
 
-  // create an access token
+  const session = await createSession({
+    userId,
+    email,
+    accessToken,
+    userAgent,
+  });
 
-  const accessToken = signJwt(
-    { ...user, sessionId: session._id },
-    "accessTokenPrivateKey",
-    { expiresIn: config.get("accessTokenTtl") }
-  );
-
-  // create a refresh token
-  const refreshToken = signJwt(
-    { ...user, sessionId: session._id },
-    "refreshTokenPrivateKey",
-    { expiresIn: config.get("refreshTokenTtl") }
-  );
-
-  // return access & refresh tokens
-
-  return res.send({ accessToken, refreshToken });
+  return res.send({ session });
 }
 
 export async function getUserSessionsHandler(req: Request, res: Response) {
@@ -56,8 +46,5 @@ export async function deleteSessionHandler(req: Request, res: Response) {
 
   await updateSession({ _id: sessionId }, { valid: false });
 
-  return res.send({
-    accessToken: null,
-    refreshToken: null,
-  });
+  return res.status(204).send();
 }

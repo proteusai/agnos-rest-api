@@ -1,25 +1,32 @@
 import { Router } from "express";
+import validateResource from "../middleware/validateResource";
+import requireUser from "../middleware/requireUser";
 import {
   createUserSessionHandler,
   deleteSessionHandler,
   getUserSessionsHandler,
 } from "../controllers/session.controller";
-import requireTrustedClient from "../middleware/requireTrustedClient";
-import requireUser from "../middleware/requireUser";
-import validateResource from "../middleware/validateResource";
 import { createSessionSchema } from "../schema/session.schema";
+import checkAuth0IdToken from "../middleware/checkAuth0IdToken";
 
 const router = Router();
 
 router.post(
   "/sessions",
-  requireTrustedClient,
-  validateResource(createSessionSchema),
+  [validateResource(createSessionSchema), /**checkAuth0AccessToken,**/ checkAuth0IdToken],
   createUserSessionHandler
 );
 
-router.get("/sessions", requireUser, getUserSessionsHandler);
+router.get(
+  "/sessions",
+  [/**checkAuth0AccessToken,**/ requireUser],
+  getUserSessionsHandler
+);
 
-router.delete("/sessions", requireUser, deleteSessionHandler);
+router.delete(
+  "/sessions",
+  [/**checkAuth0AccessToken,**/ requireUser],
+  deleteSessionHandler
+);
 
 export default router;

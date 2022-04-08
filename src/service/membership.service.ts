@@ -29,3 +29,11 @@ export async function createMembership(input: MembershipInput) {
 export async function findMemberships(query: FilterQuery<MembershipDocument>) {
   return MembershipModel.find(query).lean();
 }
+
+export async function findTeamMemberships(teamId: string) {
+  return MembershipModel.find({ teamId }).lean();
+}
+
+export async function findUserMemberships(userId: string) {
+  return MembershipModel.find({ userId }).lean();
+}

@@ -52,7 +52,7 @@ userSchema.pre("save", async function (next) {
 
   return next();
 });
-userSchema.post("save", async function (next) {
+userSchema.post("save", async function (doc, next) {
   let user = this as UserDocument;
 
   if (!user.isModified("name") && !user.isModified("picture")) {

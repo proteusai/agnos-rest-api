@@ -16,26 +16,6 @@ export async function findUser(query: FilterQuery<UserDocument>) {
   return UserModel.findOne(query).lean();
 }
 
-export async function validatePassword({
-  email,
-  password,
-}: {
-  email: string;
-  password?: string;
-}) {
-  const user = await UserModel.findOne({ email });
-
-  if (!user) {
-    return false;
-  }
-
-  if (!password) {
-    return omit(user.toJSON(), "password");
-  }
-
-  const isValid = await user.comparePassword(password);
-
-  if (!isValid) return false;
-
-  return omit(user.toJSON(), "password");
+export async function findUsers(query: FilterQuery<UserDocument>) {
+  return UserModel.find(query).lean();
 }

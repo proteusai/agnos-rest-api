@@ -5,7 +5,12 @@ export const createSessionSchema = object({
     email: string({
       required_error: "Email is required",
     }),
-    password: string().optional(),
+    accessToken: string({
+      required_error: "Access token is required",
+    }),
+    idToken: string({
+      required_error: "ID token is required",
+    }),
   }),
 });
 

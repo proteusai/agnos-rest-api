@@ -14,10 +14,8 @@ services:
     restart: always
     depends_on:
       - db
-    environment:
-      - DB_URL=mongodb://db:27017/agnos
-      - PORT=3000
-      - NODE_ENV=development
+    env_file:
+      - .env
     volumes:
       - ./tsconfig.json:/home/node/app/tsconfig.json
       - ./src:/home/node/app/src

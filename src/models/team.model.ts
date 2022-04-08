@@ -40,7 +40,7 @@ teamSchema.pre("remove", async function (next) {
 
   return next();
 });
-teamSchema.post("save", async function (next) {
+teamSchema.post("save", async function (doc, next) {
   let team = this as TeamDocument;
 
   if (!team.isModified("name") && !team.isModified("picture")) {
