@@ -13,7 +13,10 @@ const router = Router();
 
 router.post(
   "/sessions",
-  [validateResource(createSessionSchema), /**checkAuth0AccessToken,**/ checkAuth0IdToken],
+  [
+    validateResource(createSessionSchema),
+    /**checkAuth0AccessToken,**/ checkAuth0IdToken,
+  ],
   createUserSessionHandler
 );
 

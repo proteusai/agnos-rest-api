@@ -1,15 +1,9 @@
 import { Router } from "express";
-import {
-  createUserHandler,
-  findMeHandler,
-} from "../controllers/user.controller";
+import { createUserHandler } from "../controllers/user.controller";
 import { createUserSchema } from "../schema/user.schema";
 import validateResource from "../middleware/validateResource";
-import requireUser from "../middleware/requireUser";
 
 const router = Router();
-
-router.get("/me", [/**checkAuth0AccessToken,**/ requireUser], findMeHandler);
 
 /**
  * @openapi

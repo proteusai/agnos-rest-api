@@ -31,7 +31,10 @@ const router = Router();
  */
 router.post(
   "/teams",
-  [/**checkAuth0AccessToken,**/ requireUser, validateResource(createTeamSchema)],
+  [
+    validateResource(createTeamSchema),
+    /**checkAuth0AccessToken,**/ requireUser,
+  ],
   createTeamHandler
 );
 
