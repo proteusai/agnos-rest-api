@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CreateMembershipInput } from "../schema/membership.schema";
+import { CreateMembershipInput, GetMembershipsInput } from "../schema/membership.schema";
 import {
   createMembership,
   findUserMemberships,
@@ -13,8 +13,12 @@ export async function createMembershipHandler(
   return res.send({ membership });
 }
 
-export async function findMyMembershipsHandler(req: Request, res: Response) {
+export async function findMyMembershipsHandler(req: Request<{}, {}, {}, GetMembershipsInput["query"]>, res: Response) {
   const userId = res.locals.user._id;
-  const memberships = await findUserMemberships(userId);
+  let populate: string[] | undefined = undefined;
+  if (req.query.populate) {
+    populate = req.query.populate.split(";")
+  }
+  const memberships = await findUserMemberships(userId, { populate });
   return res.send({ memberships });
 }

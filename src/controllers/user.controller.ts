@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import { DEFAULT_TEAM_NAME } from "../constants/defaults";
 import { CreateUserInput } from "../schema/user.schema";
 import { createMembership } from "../service/membership.service";
-import { createTeam } from "../service/team.service";
-import { createUser, findUser } from "../service/user.service";
+import { createTeamAndReturnModel } from "../service/team.service";
+import { createUserAndReturnModel, findUser } from "../service/user.service";
 import logger from "../utils/logger";
 
 export async function createUserHandler(
@@ -11,16 +11,24 @@ export async function createUserHandler(
   res: Response
 ) {
   try {
-    const user = await createUser(req.body);
-    const team = await createTeam(user._id, {
+    const user = await createUserAndReturnModel(req.body);
+    const team = await createTeamAndReturnModel(user._id, {
       name: DEFAULT_TEAM_NAME,
       email: user.email,
+      description: "This is your own space and you can invite people in.",
+      private: true,
     });
-    await createMembership({
-      userId: user._id,
-      teamId: team._id,
+    const membership = await createMembership({
+      user: user._id,
+      team: team._id,
       permission: "ADMIN",
     });
+
+    user.memberships?.push(membership);
+    await user.save();
+    team.memberships?.push(membership);
+    await team.save();
+
     return res.send({ user });
   } catch (error: any) {
     logger.error(error);

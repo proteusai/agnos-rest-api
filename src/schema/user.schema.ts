@@ -42,6 +42,10 @@ import { object, string, boolean, TypeOf } from "zod";
  *              type: string
  *            emailIsVerified:
  *              type: boolean
+ *            memberships:
+ *              type: array
+ *              items: 
+ *                $ref: '#/definitions/membership'
  *            picture:
  *              type: string
  *            createdAt:

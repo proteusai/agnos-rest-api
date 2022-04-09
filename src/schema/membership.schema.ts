@@ -1,5 +1,11 @@
 import { literal, object, string, TypeOf, union } from "zod";
 
+const query = {
+  query: object({
+    populate: string().optional(),
+  }),
+};
+
 /**
  * @openapi
  * components:
@@ -10,9 +16,9 @@ import { literal, object, string, TypeOf, union } from "zod";
  *        - userId
  *        - teamId
  *      properties:
- *        userId:
+ *        user:
  *          type: string
- *        teamId:
+ *        team:
  *          type: string
  *        permission:
  *          type: string
@@ -49,18 +55,30 @@ import { literal, object, string, TypeOf, union } from "zod";
 
 export const createMembershipSchema = object({
   body: object({
-    userId: string({
+    user: string({
       required_error: "User ID is required",
     }),
-    teamId: string({
+    team: string({
       required_error: "Team ID is required",
     }),
     permission: union([
       literal("READ"),
       literal("WRITE"),
       literal("ADMIN"),
-    ]).optional(),
+    ]).default("READ"),
   }),
 });
 
+export const getMembershipSchema = object({
+  ...query,
+});
+
+export const getMembershipsSchema = object({
+  ...query,
+});
+
 export type CreateMembershipInput = TypeOf<typeof createMembershipSchema>;
+
+export type GetMembershipInput = TypeOf<typeof getMembershipSchema>;
+
+export type GetMembershipsInput = TypeOf<typeof getMembershipsSchema>;

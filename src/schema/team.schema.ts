@@ -54,6 +54,7 @@ export const createTeamSchema = object({
     name: string({
       required_error: "Name is required",
     }),
+    description: string().optional(),
     email: string().email("Not a valid email").optional(),
     private: boolean().optional(),
     picture: string().optional(),

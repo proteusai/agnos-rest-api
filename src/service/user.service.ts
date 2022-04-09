@@ -3,10 +3,15 @@ import { omit } from "lodash";
 import UserModel, { UserDocument, UserInput } from "../models/user.model";
 
 export async function createUser(input: UserInput) {
+  const user = await createUserAndReturnModel(input);
+
+  return omit(user.toJSON(), "password");
+}
+export async function createUserAndReturnModel(input: UserInput) {
   try {
     const user = await UserModel.create(input);
 
-    return omit(user.toJSON(), "password");
+    return user;
   } catch (e: any) {
     throw new Error(e);
   }
