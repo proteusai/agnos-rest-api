@@ -6,6 +6,7 @@ node_modules/
 coverage
 /.jest-cache/
 pgdata/
+todo.txt
 
 # Generated
 /src/generated/

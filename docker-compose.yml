@@ -14,10 +14,8 @@ services:
     restart: always
     depends_on:
       - db
-    environment:
-      - DB_URL=mongodb://db:27017/agnos
-      - JWT_SECRET=agnos_jwt_scret
-      - PORT=3000
+    env_file:
+      - .env
     volumes:
       - ./tsconfig.json:/home/node/app/tsconfig.json
       - ./src:/home/node/app/src

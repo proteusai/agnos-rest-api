@@ -1,4 +1,4 @@
-FROM node:14.8.0
+FROM node:14.15.0
 WORKDIR /home/node/app
 COPY package.json yarn.lock ./
 COPY ./tsconfig.json .

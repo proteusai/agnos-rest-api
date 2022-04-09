@@ -1,6 +1,4 @@
-import express, { Request, Response } from "express";
-import dotenv from "dotenv";
-dotenv.config();
+import express from "express";
 import config from "config";
 import cors from "cors";
 import connect from "./utils/connect";

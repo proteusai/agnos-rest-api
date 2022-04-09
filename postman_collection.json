@@ -15,7 +15,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\",\n    \"passwordConfirmation\": \"{{password}}\",\n    \"name\": \"{{name}}\"\n}",
+              "raw": "{\n   \"name\": \"{{name}}\",\n    \"email\": \"{{email}}\",\n    \"emailIsVerified\": \"{{emailIsVerified}}\",\n    \"password\": \"{{password}}\",\n    \"passwordConfirmation\": \"{{password}}\",\n    \"picture\": \"{{picture}}\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
