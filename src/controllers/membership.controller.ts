@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { CreateMembershipInput, GetMembershipsInput } from "../schema/membership.schema";
 import {
   createMembership,
-  findUserMemberships,
+  findMembershipsForUser,
 } from "../service/membership.service";
 
 export async function createMembershipHandler(
@@ -19,6 +19,6 @@ export async function findMyMembershipsHandler(req: Request<{}, {}, {}, GetMembe
   if (req.query.populate) {
     populate = req.query.populate.split(";")
   }
-  const memberships = await findUserMemberships(userId, { populate });
+  const memberships = await findMembershipsForUser(userId, { populate });
   return res.send({ memberships });
 }

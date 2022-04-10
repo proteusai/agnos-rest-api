@@ -1,0 +1,49 @@
+import mongoose from "mongoose";
+import { PermissionName } from "../constants/permissions";
+import { BaseDocument } from "./base.model";
+import DesignModel, { DesignDocument } from "./design.model";
+import TeamModel, { TeamDocument } from "./team.model";
+
+export interface TeamDesignShareInput {
+  design: DesignDocument["_id"];
+  team: TeamDocument["_id"];
+  permission: PermissionName;
+}
+
+export interface TeamDesignShareDocument
+  extends BaseDocument,
+    TeamDesignShareInput,
+    mongoose.Document {}
+
+const teamDesignShareSchema = new mongoose.Schema(
+  {
+    design: { type: mongoose.Schema.Types.ObjectId, ref: "Design" },
+    team: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },
+    permission: { type: String, ref: "Permission" },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+teamDesignShareSchema.pre("remove", function (next) {
+  let teamDesignShare = this as TeamDesignShareDocument;
+
+  DesignModel.updateMany(
+    { teamDesignShares: teamDesignShare._id },
+    { $pull: { teamDesignShares: teamDesignShare._id } }
+  ).exec();
+  TeamModel.updateMany(
+    { teamDesignShares: teamDesignShare._id },
+    { $pull: { teamDesignShares: teamDesignShare._id } }
+  ).exec();
+
+  next();
+});
+
+const TeamDesignShareModel = mongoose.model<TeamDesignShareDocument>(
+  "TeamDesignShare",
+  teamDesignShareSchema
+);
+
+export default TeamDesignShareModel;

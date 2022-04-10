@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import { PermissionName } from "../constants/permissions";
 import { BaseDocument } from "./base.model";
-import { TeamDocument } from "./team.model";
-import { UserDocument } from "./user.model";
+import TeamModel, { TeamDocument } from "./team.model";
+import UserModel, { UserDocument } from "./user.model";
 
 export interface MembershipInput {
   user: UserDocument["_id"];
@@ -25,6 +25,21 @@ const membershipSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+membershipSchema.pre("remove", function (next) {
+  let membership = this as MembershipDocument;
+
+  TeamModel.updateMany(
+    { memberships: membership._id },
+    { $pull: { memberships: membership._id } }
+  ).exec();
+  UserModel.updateMany(
+    { memberships: membership._id },
+    { $pull: { memberships: membership._id } }
+  ).exec();
+
+  next();
+});
 
 const MembershipModel = mongoose.model<MembershipDocument>(
   "Membership",

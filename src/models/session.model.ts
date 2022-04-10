@@ -3,7 +3,7 @@ import { BaseDocument } from "./base.model";
 import { UserDocument } from "./user.model";
 
 export interface SessionInput {
-  userId: UserDocument["_id"];
+  user: UserDocument["_id"];
   email: string;
   accessToken: string;
   valid?: boolean;
@@ -17,7 +17,7 @@ export interface SessionDocument
 
 const sessionSchema = new mongoose.Schema(
   {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     email: { type: String, required: true },
     accessToken: { type: String, required: true },
     valid: { type: Boolean, default: true },

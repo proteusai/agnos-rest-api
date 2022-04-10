@@ -1,9 +1,11 @@
 import { Express, Request, Response } from "express";
 import userRoutes from "./user.routes";
 import sessionRoutes from "./session.routes";
+import designRoutes from "./design.routes";
 import meRoutes from "./me.routes";
 import membershipRoutes from "./membership.routes";
 import teamRoutes from "./team.routes";
+import shareRoutes from "./share.routes";
 
 export default function routes(app: Express) {
   /**
@@ -22,6 +24,8 @@ export default function routes(app: Express) {
   app.use(userRoutes);
   app.use(sessionRoutes);
   app.use(meRoutes);
+  app.use(designRoutes);
   app.use(membershipRoutes);
   app.use(teamRoutes);
+  app.use(shareRoutes);
 }
