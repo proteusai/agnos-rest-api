@@ -62,7 +62,4 @@ export const createTeamSchema = object({
   }),
 });
 
-export type CreateTeamInput = Omit<
-  TypeOf<typeof createTeamSchema>,
-  "body.secrets"
->;
+export type CreateTeamInput = TypeOf<typeof createTeamSchema>;

@@ -24,7 +24,7 @@ export async function createUserSessionHandler(
   const userAgent = req.get("user-agent") || "";
 
   const session = await createSession({
-    userId,
+    user: userId,
     email,
     accessToken,
     userAgent,
@@ -42,9 +42,9 @@ export async function getUserSessionsHandler(req: Request, res: Response) {
 }
 
 export async function deleteSessionHandler(req: Request, res: Response) {
-  const sessionId = res.locals.user.sessionId;
+  const session = res.locals.user.session;
 
-  await updateSession({ _id: sessionId }, { valid: false });
+  await updateSession({ _id: session }, { valid: false });
 
   return res.status(204).send();
 }

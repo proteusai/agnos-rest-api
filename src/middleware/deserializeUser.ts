@@ -23,8 +23,8 @@ const deserializeUser = async (
   }
 
   res.locals.user = {
-    _id: session.userId,
-    sessionId: session._id,
+    _id: session.user,
+    session: session._id,
   };
   return next();
 };
