@@ -5,6 +5,7 @@ import { BaseDocument } from "./base.model";
 import { DEFAULT_USER_PICTURE } from "../constants/defaults";
 import { MembershipDocument } from "./membership.model";
 import { UserDesignShareDocument } from "./userDesignShare.model";
+import { SettingsDocument } from "./settings.model";
 
 export interface UserInput {
   name: string;
@@ -19,6 +20,7 @@ export interface UserDocument
     UserInput,
     mongoose.Document {
   memberships?: Array<MembershipDocument["_id"]>;
+  settings?: SettingsDocument["_id"];
   userDesignShares?: Array<UserDesignShareDocument["_id"]>;
   comparePassword(candidatePassword: string): Promise<Boolean>;
 }
@@ -31,7 +33,10 @@ const userSchema = new mongoose.Schema(
     memberships: [{ type: mongoose.Schema.Types.ObjectId, ref: "Membership" }],
     password: { type: String },
     picture: { type: String, default: DEFAULT_USER_PICTURE },
-    userDesignShares: [{ type: mongoose.Schema.Types.ObjectId, ref: "UserDesignShare" }],
+    settings: { type: mongoose.Schema.Types.ObjectId, ref: "Settings" },
+    userDesignShares: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "UserDesignShare" },
+    ],
   },
   {
     timestamps: true,

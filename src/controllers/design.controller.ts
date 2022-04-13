@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { TeamDocument } from "../models/team.model";
-import { CreateDesignInput } from "../schema/design.schema";
-import { createDesignDocument } from "../service/design.service";
+import { CreateDesignInput, GetDesignInput } from "../schema/design.schema";
+import { createDesignDocument, findDesign } from "../service/design.service";
 import { findTeamDocument } from "../service/team.service";
 import { createTeamDesignShare } from "../service/teamDesignShare.service";
 import { findUserDocument } from "../service/user.service";
@@ -53,4 +53,17 @@ export async function createDesignHandler(
   await team.save();
 
   return res.send({ design: design.toJSON() });
+}
+
+export async function getDesignHandler(
+  req: Request<GetDesignInput["params"]>,
+  res: Response
+) {
+  const design = await findDesign({ _id: req.params.id });
+
+  if (!design) {
+    return res.sendStatus(404);
+  }
+
+  return res.send({ design });
 }

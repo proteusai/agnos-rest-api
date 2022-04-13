@@ -13,7 +13,7 @@ export async function createMembershipHandler(
   return res.send({ membership });
 }
 
-export async function findMyMembershipsHandler(req: Request<{}, {}, {}, GetMembershipsInput["query"]>, res: Response) {
+export async function getMyMembershipsHandler(req: Request<{}, {}, {}, GetMembershipsInput["query"]>, res: Response) {
   const userId = res.locals.user._id;
   let populate: string[] | undefined = undefined;
   if (req.query.populate) {

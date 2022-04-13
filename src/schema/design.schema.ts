@@ -1,5 +1,13 @@
 import { boolean, object, string, TypeOf } from "zod";
 
+const params = {
+  params: object({
+    id: string({
+      required_error: "Design ID is required",
+    }),
+  }),
+};
+
 export const createDesignSchema = object({
   body: object({
     name: string({
@@ -14,4 +22,9 @@ export const createDesignSchema = object({
   }),
 });
 
+export const getDesignSchema = object({
+  ...params,
+});
+
 export type CreateDesignInput = TypeOf<typeof createDesignSchema>;
+export type GetDesignInput = TypeOf<typeof getDesignSchema>;

@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { findTeamDesignSharesForTeamHandler } from "../controllers/teamDesignShare.controller";
+import { getTeamDesignSharesForTeamHandler } from "../controllers/teamDesignShare.controller";
 import requireUser from "../middleware/requireUser";
 
 const router = Router();
 
 router.get(
-  "/share/team-designs/for-team/:team",
+  "/share/team-designs/for-team/:team?",
   [/**checkAuth0AccessToken,**/ requireUser],
-  findTeamDesignSharesForTeamHandler
+  getTeamDesignSharesForTeamHandler
 );
 
 export default router;

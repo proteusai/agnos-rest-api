@@ -2,9 +2,7 @@ import { literal, object, string, TypeOf, union } from "zod";
 
 const params = {
   params: object({
-    team: string({
-      required_error: "Parameter 'team' is required",
-    }),
+    team: string().optional(),
   }),
 };
 
