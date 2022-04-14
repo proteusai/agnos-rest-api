@@ -3,7 +3,7 @@ import { CreateSettingsInput } from "../schema/settings.schema";
 import {
   createSettings,
   findAndUpdateSettings,
-  findSettingsForUser,
+  findOneSetOfSettings,
 } from "../service/settings.service";
 import { findUserDocument } from "../service/user.service";
 
@@ -14,7 +14,7 @@ export async function createOrUpdateSettingsHandler(
   const _id = res.locals.user._id;
   const user = await findUserDocument({ _id });
 
-  let settings = await findSettingsForUser(_id);
+  let settings = await findOneSetOfSettings({ user: _id });
 
   if (!settings) {
     settings = await createSettings({ ...req.body, user: _id });
@@ -35,7 +35,7 @@ export async function getSettingsHandler(req: Request, res: Response) {
   const _id = res.locals.user._id;
   const user = await findUserDocument({ _id });
 
-  let settings = await findSettingsForUser(_id);
+  let settings = await findOneSetOfSettings({ user: _id });
   if (!settings) {
     settings = await createSettings({ user: _id });
     if (settings) {

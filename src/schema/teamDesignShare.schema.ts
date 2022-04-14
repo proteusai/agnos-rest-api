@@ -1,14 +1,9 @@
 import { literal, object, string, TypeOf, union } from "zod";
 
-const params = {
-  params: object({
-    team: string().optional(),
-  }),
-};
-
 const query = {
   query: object({
     populate: string().optional(),
+    team: string().optional(),
   }),
 };
 
@@ -33,7 +28,6 @@ export const getTeamDesignShareSchema = object({
 });
 
 export const getTeamDesignSharesSchema = object({
-  ...params,
   ...query,
 });
 

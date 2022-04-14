@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { TeamDocument } from "../models/team.model";
 import { CreateDesignInput, GetDesignInput } from "../schema/design.schema";
-import { createDesignDocument, findDesign } from "../service/design.service";
+import { createDesign, findDesign } from "../service/design.service";
 import { findTeamDocument } from "../service/team.service";
 import { createTeamDesignShare } from "../service/teamDesignShare.service";
 import { findUserDocument } from "../service/user.service";
@@ -30,7 +30,7 @@ export async function createDesignHandler(
       .send({ error: { message: "Could not find the team" } });
   }
 
-  const design = await createDesignDocument({
+  const design = await createDesign({
     ...req.body,
     user: user._id,
     team: team._id,
@@ -52,7 +52,7 @@ export async function createDesignHandler(
   team.teamDesignShares?.push(teamDesignShare);
   await team.save();
 
-  return res.send({ design: design.toJSON() });
+  return res.send({ design });
 }
 
 export async function getDesignHandler(

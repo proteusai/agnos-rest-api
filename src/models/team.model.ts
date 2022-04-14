@@ -3,6 +3,7 @@ import { DEFAULT_TEAM_PICTURE } from "../constants/defaults";
 import { BaseDocument } from "./base.model";
 import DesignModel, { DesignDocument } from "./design.model";
 import MembershipModel, { MembershipDocument } from "./membership.model";
+import PluginModel, { PluginDocument } from "./plugin.model";
 import ServiceModel, { ServiceDocument } from "./service.model";
 import TeamDesignShareModel, {
   TeamDesignShareDocument,
@@ -26,6 +27,7 @@ export interface TeamDocument
     mongoose.Document {
   designs?: Array<DesignDocument["_id"]>;
   memberships?: Array<MembershipDocument["_id"]>;
+  plugins?: Array<PluginDocument["_id"]>;
   services?: Array<ServiceDocument["_id"]>;
   teamDesignShares?: Array<TeamDesignShareDocument["_id"]>;
 }
@@ -40,6 +42,7 @@ const teamSchema = new mongoose.Schema(
     memberships: [{ type: mongoose.Schema.Types.ObjectId, ref: "Membership" }],
     private: { type: Boolean, default: false },
     picture: { type: String, default: DEFAULT_TEAM_PICTURE },
+    plugins: [{ type: mongoose.Schema.Types.ObjectId, ref: "Plugin" }],
     secrets: { type: {} },
     services: [{ type: mongoose.Schema.Types.ObjectId, ref: "Service" }],
     teamDesignShares: [
@@ -57,6 +60,7 @@ teamSchema.pre("remove", async function (next) {
 
   DesignModel.remove({ team: team._id }).exec();
   MembershipModel.remove({ team: team._id }).exec();
+  PluginModel.remove({ team: team._id }).exec();
   ServiceModel.remove({ team: team._id }).exec();
   TeamDesignShareModel.remove({ team: team._id }).exec();
 

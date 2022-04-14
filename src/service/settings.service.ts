@@ -19,14 +19,6 @@ export async function createSettingsDocument(input: SettingsInput) {
   }
 }
 
-export async function findSettingsForUser(userId: string) {
-  return SettingsModel.findOne({ user: userId }).lean();
-}
-
-export async function findSettingsForUserDocument(userId: string) {
-  return SettingsModel.findOne({ user: userId });
-}
-
 export async function findOneSetOfSettings(
   query: FilterQuery<SettingsDocument>
 ) {

@@ -1,8 +1,11 @@
 import { Request, Response } from "express";
-import { CreateMembershipInput, GetMembershipsInput } from "../schema/membership.schema";
+import {
+  CreateMembershipInput,
+  GetMembershipsInput,
+} from "../schema/membership.schema";
 import {
   createMembership,
-  findMembershipsForUser,
+  findMemberships,
 } from "../service/membership.service";
 
 export async function createMembershipHandler(
@@ -13,12 +16,15 @@ export async function createMembershipHandler(
   return res.send({ membership });
 }
 
-export async function getMyMembershipsHandler(req: Request<{}, {}, {}, GetMembershipsInput["query"]>, res: Response) {
+export async function getMyMembershipsHandler(
+  req: Request<{}, {}, {}, GetMembershipsInput["query"]>,
+  res: Response
+) {
   const userId = res.locals.user._id;
   let populate: string[] | undefined = undefined;
   if (req.query.populate) {
-    populate = req.query.populate.split(";")
+    populate = req.query.populate.split(";");
   }
-  const memberships = await findMembershipsForUser(userId, { populate });
+  const memberships = await findMemberships({ user: userId }, { populate });
   return res.send({ memberships });
 }
