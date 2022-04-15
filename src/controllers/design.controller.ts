@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { IGNORE_LEAST_CARDINALITY } from "../constants/settings";
 import { TeamDocument } from "../models/team.model";
 import { CreateDesignInput, GetDesignInput } from "../schema/design.schema";
 import { createDesign, findDesign } from "../service/design.service";
@@ -41,16 +42,19 @@ export async function createDesignHandler(
     design: design._id,
     permission: "ADMIN",
   });
-  userDoc?.userDesignShares?.push(userDesignShare);
-  await userDoc?.save();
 
   const teamDesignShare = await createTeamDesignShare({
     team: team._id,
     design: design._id,
     permission: "ADMIN",
   });
-  team.teamDesignShares?.push(teamDesignShare);
-  await team.save();
+
+  if (IGNORE_LEAST_CARDINALITY) {
+    userDoc?.userDesignShares?.push(userDesignShare);
+    await userDoc?.save();
+    team.teamDesignShares?.push(teamDesignShare);
+    await team.save();
+  }
 
   return res.send({ design });
 }

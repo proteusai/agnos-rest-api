@@ -1,17 +1,31 @@
 import { Router } from "express";
 import {
   createPluginHandler,
+  getPluginHandler,
   getPluginsHandler,
 } from "../controllers/plugin.controller";
 import requireUser from "../middleware/requireUser";
 import validateResource from "../middleware/validateResource";
-import { createPluginSchema } from "../schema/plugin.schema";
+import {
+  createPluginSchema,
+  getPluginSchema,
+  getPluginsSchema,
+} from "../schema/plugin.schema";
 
 const router = Router();
 
 router.get(
+  "/plugins/:id",
+  [validateResource(getPluginSchema), /**checkAuth0AccessToken,**/ requireUser],
+  getPluginHandler
+);
+
+router.get(
   "/plugins",
-  [/**checkAuth0AccessToken,**/ requireUser],
+  [
+    validateResource(getPluginsSchema),
+    /**checkAuth0AccessToken,**/ requireUser,
+  ],
   getPluginsHandler
 );
 

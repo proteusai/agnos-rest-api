@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { DEFAULT_TEAM_NAME } from "../constants/defaults";
+import { IGNORE_LEAST_CARDINALITY } from "../constants/settings";
 import { CreateUserInput } from "../schema/user.schema";
 import { createMembership } from "../service/membership.service";
 import { createSettings } from "../service/settings.service";
@@ -29,11 +30,13 @@ export async function createUserHandler(
 
     const settings = await createSettings({ user: user._id });
 
-    user.memberships?.push(membership);
+    if (IGNORE_LEAST_CARDINALITY) {
+      team.memberships?.push(membership);
+      await team.save();
+      user.memberships?.push(membership);
+    }
     user.settings = settings._id;
     await user.save();
-    team.memberships?.push(membership);
-    await team.save();
 
     return res.send({ user: user.toJSON() });
   } catch (error: any) {

@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { IGNORE_LEAST_CARDINALITY } from "../constants/settings";
 import { TeamDocument } from "../models/team.model";
 import {
   CreatePluginInput,
@@ -11,14 +12,12 @@ import {
   findPlugins,
 } from "../service/plugin.service";
 import { findTeam, findTeamDocument } from "../service/team.service";
-import { findUserDocument } from "../service/user.service";
 
 export async function createPluginHandler(
   req: Request<{}, {}, CreatePluginInput["body"]>,
   res: Response
 ) {
   const user = res.locals.user;
-  const userDoc = await findUserDocument({ _id: user._id });
 
   let team:
     | (TeamDocument & {
@@ -42,8 +41,10 @@ export async function createPluginHandler(
     team: team._id,
   });
 
-  team.plugins?.push(plugin);
-  await team.save();
+  if (IGNORE_LEAST_CARDINALITY) {
+    team.plugins?.push(plugin);
+    await team.save();
+  }
 
   return res.send({ plugin });
 }
