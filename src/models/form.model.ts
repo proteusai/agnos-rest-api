@@ -75,6 +75,7 @@ export const FormFieldSchema = {
   name: { type: String, required: true },
   title: { type: String, required: true },
   default: { type: {} },
+  required: { type: Boolean },
   type: { type: String, enum: htmlInputTypes, default: "text" },
 };
 
@@ -91,6 +92,7 @@ export const FormFieldOrFormFieldGroupSchema = {
 export const FormActionSchema = {
   title: { type: String, required: true },
   run: { type: String, required: true },
+  transform: { type: String },
 };
 
 export const FormSchema = {
