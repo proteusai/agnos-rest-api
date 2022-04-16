@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { DEFAULT_DESIGN_PICTURE } from "../constants/defaults";
 import { BaseDocument } from "./base.model";
-import { TeamDocument } from "./team.model";
+import TeamModel, { TeamDocument } from "./team.model";
 import TeamDesignShareModel, {
   TeamDesignShareDocument,
 } from "./teamDesignShare.model";
@@ -17,6 +17,7 @@ export interface DesignInput {
   private?: boolean;
   picture?: string;
   secrets?: object;
+  template?: boolean; // if true the design appears in the templates page
   team: TeamDocument["_id"]; // ref to the team that created this design
   user: UserDocument["_id"]; // ref to the user that created this design
 }
@@ -37,6 +38,7 @@ const designSchema = new mongoose.Schema(
     private: { type: Boolean, default: false },
     picture: { type: String, default: DEFAULT_DESIGN_PICTURE },
     secrets: { type: {} },
+    template: { type: Boolean, default: false },
     team: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },
     teamDesignShares: [
       { type: mongoose.Schema.Types.ObjectId, ref: "TeamDesignShare" },
@@ -54,6 +56,10 @@ const designSchema = new mongoose.Schema(
 designSchema.pre("remove", async function (next) {
   let design = this as DesignDocument;
 
+  TeamModel.updateMany(
+    { designs: design._id },
+    { $pull: { designs: design._id } }
+  ).exec();
   TeamDesignShareModel.remove({ design: design._id }).exec();
   UserDesignShareModel.remove({ design: design._id }).exec();
 
@@ -82,6 +88,7 @@ export default DesignModel;
 //             variables: []
 //           },
 //         ],
+//       secrets: {},
 //       },
 //     ],
 //     secrets: {},

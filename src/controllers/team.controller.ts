@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { IGNORE_LEAST_CARDINALITY } from "../constants/settings";
 import { CreateTeamInput } from "../schema/team.schema";
 import { createMembership } from "../service/membership.service";
 import { createTeamDocument } from "../service/team.service";
@@ -18,10 +19,12 @@ export async function createTeamHandler(
     permission: "ADMIN",
   });
 
-  userDoc?.memberships?.push(membership);
-  await userDoc?.save();
-  team.memberships?.push(membership);
-  await team.save();
+  if (IGNORE_LEAST_CARDINALITY) {
+    userDoc?.memberships?.push(membership);
+    await userDoc?.save();
+    team.memberships?.push(membership);
+    await team.save();
+  }
 
   return res.send({ team: team.toJSON() });
 }

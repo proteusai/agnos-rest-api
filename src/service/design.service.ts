@@ -23,3 +23,7 @@ export async function createDesignDocument(input: DesignInput) {
 export async function findDesign(query: FilterQuery<DesignDocument>) {
   return DesignModel.findOne(query).lean();
 }
+
+export async function findDesigns(query: FilterQuery<DesignDocument>) {
+  return DesignModel.find(query).lean();
+}

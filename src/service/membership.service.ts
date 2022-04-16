@@ -16,24 +16,11 @@ export async function createMembership(input: MembershipInput) {
   return membership.toJSON();
 }
 
-export async function findMemberships(query: FilterQuery<MembershipDocument>) {
-  return MembershipModel.find(query).lean();
-}
-
-export async function findMembershipsForTeam(
-  teamId: string,
+export async function findMemberships(
+  query: FilterQuery<MembershipDocument>,
   options?: ServiceOptions
 ) {
-  return MembershipModel.find({ team: teamId })
-    .populate(options?.populate || defaultPopulate)
-    .lean();
-}
-
-export async function findMembershipsForUser(
-  userId: string,
-  options?: ServiceOptions
-) {
-  return MembershipModel.find({ user: userId })
+  return MembershipModel.find(query)
     .populate(options?.populate || defaultPopulate)
     .lean();
 }

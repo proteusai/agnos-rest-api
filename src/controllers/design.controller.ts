@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
+import { IGNORE_LEAST_CARDINALITY } from "../constants/settings";
 import { TeamDocument } from "../models/team.model";
-import { CreateDesignInput } from "../schema/design.schema";
-import { createDesignDocument } from "../service/design.service";
+import { CreateDesignInput, GetDesignInput } from "../schema/design.schema";
+import { createDesign, findDesign } from "../service/design.service";
 import { findTeamDocument } from "../service/team.service";
 import { createTeamDesignShare } from "../service/teamDesignShare.service";
 import { findUserDocument } from "../service/user.service";
@@ -30,7 +31,7 @@ export async function createDesignHandler(
       .send({ error: { message: "Could not find the team" } });
   }
 
-  const design = await createDesignDocument({
+  const design = await createDesign({
     ...req.body,
     user: user._id,
     team: team._id,
@@ -41,16 +42,32 @@ export async function createDesignHandler(
     design: design._id,
     permission: "ADMIN",
   });
-  userDoc?.userDesignShares?.push(userDesignShare);
-  await userDoc?.save();
 
   const teamDesignShare = await createTeamDesignShare({
     team: team._id,
     design: design._id,
     permission: "ADMIN",
   });
-  team.teamDesignShares?.push(teamDesignShare);
-  await team.save();
 
-  return res.send({ design: design.toJSON() });
+  if (IGNORE_LEAST_CARDINALITY) {
+    userDoc?.userDesignShares?.push(userDesignShare);
+    await userDoc?.save();
+    team.teamDesignShares?.push(teamDesignShare);
+    await team.save();
+  }
+
+  return res.send({ design });
+}
+
+export async function getDesignHandler(
+  req: Request<GetDesignInput["params"]>,
+  res: Response
+) {
+  const design = await findDesign({ _id: req.params.id });
+
+  if (!design) {
+    return res.sendStatus(404);
+  }
+
+  return res.send({ design });
 }

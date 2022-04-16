@@ -1,11 +1,13 @@
 import { Request, Response } from "express";
+import { TeamDocument } from "../models/team.model";
 import {
   CreateTeamDesignShareInput,
   GetTeamDesignSharesInput,
 } from "../schema/teamDesignShare.schema";
+import { findTeam } from "../service/team.service";
 import {
   createTeamDesignShare,
-  findTeamDesignSharesForTeam,
+  findTeamDesignShares,
 } from "../service/teamDesignShare.service";
 
 export async function createTeamDesignShareHandler(
@@ -16,21 +18,35 @@ export async function createTeamDesignShareHandler(
   return res.send({ teamDesignShare });
 }
 
-export async function findTeamDesignSharesForTeamHandler(
-  req: Request<
-    GetTeamDesignSharesInput["params"],
-    {},
-    {},
-    GetTeamDesignSharesInput["query"]
-  >,
+export async function getMyTeamDesignSharesHandler(
+  req: Request<{}, {}, {}, GetTeamDesignSharesInput["query"]>,
   res: Response
 ) {
   let populate: string[] | undefined = undefined;
   if (req.query.populate) {
     populate = req.query.populate.split(";");
   }
-  const teamDesignShares = await findTeamDesignSharesForTeam(req.params.team, {
-    populate,
-  });
+
+  const user = res.locals.user;
+
+  let team = null;
+  if (req.query.team) {
+    team = await findTeam({ _id: req.query.team });
+    // TODO: check that user is a member of this team
+  } else {
+    team = await findTeam({ autoCreated: true, user: user._id });
+  }
+  if (!team) {
+    return res
+      .status(404)
+      .send({ error: { message: "Could not find the team" } });
+  }
+
+  const teamDesignShares = await findTeamDesignShares(
+    { team: team._id },
+    {
+      populate,
+    }
+  );
   return res.send({ teamDesignShares });
 }

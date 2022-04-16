@@ -17,16 +17,10 @@ export async function createTeamDesignShare(input: TeamDesignShareInput) {
 }
 
 export async function findTeamDesignShares(
-  query: FilterQuery<TeamDesignShareDocument>
-) {
-  return TeamDesignShareModel.find(query).lean();
-}
-
-export async function findTeamDesignSharesForTeam(
-  teamId: string,
+  query: FilterQuery<TeamDesignShareDocument>,
   options?: ServiceOptions
 ) {
-  return TeamDesignShareModel.find({ team: teamId })
+  return TeamDesignShareModel.find(query)
     .populate(options?.populate || defaultPopulate)
     .lean();
 }
