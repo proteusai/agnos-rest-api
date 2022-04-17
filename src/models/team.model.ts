@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 import { DEFAULT_TEAM_PICTURE } from "../constants/defaults";
 import { BaseDocument } from "./base.model";
 import DesignModel, { DesignDocument } from "./design.model";
+import FunctionModel, { FunctionDocument } from "./function.model";
 import MembershipModel, { MembershipDocument } from "./membership.model";
 import PluginModel, { PluginDocument } from "./plugin.model";
-import ServiceModel, { ServiceDocument } from "./service.model";
 import TeamDesignShareModel, {
   TeamDesignShareDocument,
 } from "./teamDesignShare.model";
@@ -26,9 +26,9 @@ export interface TeamDocument
     TeamInput,
     mongoose.Document {
   designs?: Array<DesignDocument["_id"]>;
+  functions?: Array<FunctionDocument["_id"]>;
   memberships?: Array<MembershipDocument["_id"]>;
   plugins?: Array<PluginDocument["_id"]>;
-  services?: Array<ServiceDocument["_id"]>;
   teamDesignShares?: Array<TeamDesignShareDocument["_id"]>;
 }
 
@@ -39,6 +39,7 @@ const teamSchema = new mongoose.Schema(
     description: { type: String },
     designs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Design" }],
     email: { type: String },
+    functions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Function" }],
     memberships: [{ type: mongoose.Schema.Types.ObjectId, ref: "Membership" }],
     private: { type: Boolean, default: false },
     picture: { type: String, default: DEFAULT_TEAM_PICTURE },
@@ -59,9 +60,9 @@ teamSchema.pre("remove", async function (next) {
   let team = this as TeamDocument;
 
   DesignModel.remove({ team: team._id }).exec();
+  FunctionModel.remove({ team: team._id }).exec();
   MembershipModel.remove({ team: team._id }).exec();
   PluginModel.remove({ team: team._id }).exec();
-  ServiceModel.remove({ team: team._id }).exec();
   TeamDesignShareModel.remove({ team: team._id }).exec();
 
   return next();
