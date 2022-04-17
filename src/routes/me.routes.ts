@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { getMyFunctionsHandler } from "../controllers/function.controller";
 import { getMyMembershipsHandler } from "../controllers/membership.controller";
 import { getMyPluginsHandler } from "../controllers/plugin.controller";
 import { getMyTeamDesignSharesHandler } from "../controllers/teamDesignShare.controller";
@@ -13,6 +14,12 @@ router.get(
   "/me/memberships",
   [/**checkAuth0AccessToken,**/ requireUser],
   getMyMembershipsHandler
+);
+
+router.get(
+  "/me/functions",
+  [/**checkAuth0AccessToken,**/ requireUser],
+  getMyFunctionsHandler
 );
 
 router.get(
