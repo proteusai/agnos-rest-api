@@ -5,11 +5,12 @@ import { TeamDocument } from "./team.model";
 import { UserDocument } from "./user.model";
 
 export interface FunctionVersionInput {
+  _id: string;
   name: string;
   code: string;
   description?: string;
   function: FunctionDocument["_id"];
-  published: boolean; // version cannot be edited once published
+  published?: boolean; // version cannot be edited once published
   secrets?: object;
   team: TeamDocument["_id"]; // ref to the team that created this function version
   user: UserDocument["_id"]; // ref to the user that created this function version
@@ -17,11 +18,12 @@ export interface FunctionVersionInput {
 
 export interface FunctionVersionDocument
   extends BaseDocument,
-    FunctionVersionInput,
+    Omit<FunctionVersionInput, "_id">,
     mongoose.Document {}
 
 const functionVersionSchema = new mongoose.Schema(
   {
+    _id: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     code: { type: String, required: true },
     description: { type: String },
@@ -32,6 +34,7 @@ const functionVersionSchema = new mongoose.Schema(
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   {
+    _id: false,
     timestamps: true,
   }
 );

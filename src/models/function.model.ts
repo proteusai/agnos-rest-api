@@ -34,7 +34,7 @@ const functionSchema = new mongoose.Schema(
     team: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     versions: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "FunctionVersion" },
+      { type: String, ref: "FunctionVersion" },
     ],
   },
   {

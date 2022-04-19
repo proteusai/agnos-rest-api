@@ -40,10 +40,12 @@
     "jwks-rsa": "^2.0.5",
     "lodash": "^4.17.21",
     "mongoose": "^6.2.9",
+    "nanoid": "^3.3.3",
     "openapi-types": "^10.0.0",
     "pino": "^7.9.2",
     "pino-pretty": "^7.6.0",
     "response-time": "^2.3.2",
+    "slugify": "^1.6.5",
     "swagger-jsdoc": "^6.2.0",
     "swagger-ui-express": "^4.3.0",
     "zod": "^3.14.3"
