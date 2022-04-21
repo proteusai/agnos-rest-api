@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { PermissionScope, PermissionScopes } from "../constants/permissions";
 import { BaseDocument } from "./base.model";
 import FunctionModel, { FunctionDocument } from "./function.model";
 import { TeamDocument } from "./team.model";
@@ -11,7 +12,9 @@ export interface FunctionVersionInput {
   description?: string;
   function: FunctionDocument["_id"];
   published?: boolean; // version cannot be edited once published
+  scopes?: Array<PermissionScope>;
   secrets?: object;
+  testData?: string;
   team: TeamDocument["_id"]; // ref to the team that created this function version
   user: UserDocument["_id"]; // ref to the user that created this function version
 }
@@ -29,7 +32,9 @@ const functionVersionSchema = new mongoose.Schema(
     description: { type: String },
     function: { type: mongoose.Schema.Types.ObjectId, ref: "Function" },
     published: { type: Boolean, default: false },
+    scopes: [{ type: String, enum: PermissionScopes }],
     secrets: { type: {} },
+    testData: { type: String },
     team: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },

@@ -2,6 +2,7 @@ import { Router } from "express";
 import { getMyFunctionsHandler } from "../controllers/function.controller";
 import { getMyMembershipsHandler } from "../controllers/membership.controller";
 import { getMyPluginsHandler } from "../controllers/plugin.controller";
+import { getMyTeamHandler } from "../controllers/team.controller";
 import { getMyTeamDesignSharesHandler } from "../controllers/teamDesignShare.controller";
 import { getMeHandler } from "../controllers/user.controller";
 import requireUser from "../middleware/requireUser";
@@ -32,6 +33,12 @@ router.get(
   "/me/team-designs",
   [/**checkAuth0AccessToken,**/ requireUser],
   getMyTeamDesignSharesHandler
+);
+
+router.get(
+  "/me/team",
+  [/**checkAuth0AccessToken,**/ requireUser],
+  getMyTeamHandler
 );
 
 export default router;

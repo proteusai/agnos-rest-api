@@ -3,6 +3,7 @@ import {
   createFunctionVersionHandler,
   getFunctionVersionHandler,
   getFunctionVersionsHandler,
+  runFunctionVersionHandler,
 } from "../controllers/functionVersion.controller";
 import requireUser from "../middleware/requireUser";
 import validateResource from "../middleware/validateResource";
@@ -10,6 +11,7 @@ import {
   createFunctionVersionSchema,
   getFunctionVersionSchema,
   getFunctionVersionsSchema,
+  runFunctionVersionSchema,
 } from "../schema/functionVersion.schema";
 
 const router = Router();
@@ -41,14 +43,18 @@ router.post(
   createFunctionVersionHandler
 );
 
-// TODO: run the function version
-// router.post(
-//   "/function-versions/:id",
-//   [
-//     validateResource(createPluginSchema),
-//     /**checkAuth0AccessToken,**/ requireUser,
-//   ],
-//   createPluginHandler
-// );
+router.post(
+  "/function-versions/:id",
+  [
+    validateResource(runFunctionVersionSchema),
+    /**checkAuth0AccessToken,**/ requireUser,
+  ],
+  runFunctionVersionHandler
+);
+
+// TODO: function logs, stats (successes, failures) // do not do when ?test=true
+// TODO: schedule a func to run periodically or once in the future
+// TODO: a function needs permission to get data like "user", secrets etc. passed into it
+// a plugin that uses this function must be granted this permission during installation
 
 export default router;

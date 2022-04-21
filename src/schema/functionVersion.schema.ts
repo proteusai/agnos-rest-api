@@ -1,4 +1,4 @@
-import { boolean, object, string, TypeOf } from "zod";
+import { boolean, literal, object, string, TypeOf, union } from "zod";
 
 const params = {
   params: object({
@@ -28,7 +28,25 @@ export const createFunctionVersionSchema = object({
       required_error: "Function ID is required",
     }),
     published: boolean().optional(),
+    scopes: union([
+      literal("READ:DESIGN"),
+      literal("READ:ENVIRONMENT"),
+      literal("READ:USER"),
+    ])
+      .array()
+      .optional(),
     secrets: object({}).optional(),
+    testData: string().optional(),
+  }),
+});
+
+export const runFunctionVersionSchema = object({
+  body: object({
+    form: object({}).optional(),
+  }),
+  ...params,
+  query: object({
+    test: boolean().optional(),
   }),
 });
 
@@ -46,3 +64,4 @@ export type CreateFunctionVersionInput = TypeOf<
 >;
 export type GetFunctionVersionInput = TypeOf<typeof getFunctionVersionSchema>;
 export type GetFunctionVersionsInput = TypeOf<typeof getFunctionVersionsSchema>;
+export type RunFunctionVersionInput = TypeOf<typeof runFunctionVersionSchema>;

@@ -6,6 +6,7 @@ import {
   CreateFunctionVersionInput,
   GetFunctionVersionInput,
   GetFunctionVersionsInput,
+  RunFunctionVersionInput,
 } from "../schema/functionVersion.schema";
 import {
   findFunction,
@@ -15,6 +16,7 @@ import {
   createFunctionVersion,
   findFunctionVersion,
   findFunctionVersions,
+  runFunctionVersion,
 } from "../service/functionVersion.service";
 
 export async function createFunctionVersionHandler(
@@ -36,7 +38,7 @@ export async function createFunctionVersionHandler(
     `${func.name} ${req.body.name} ${Date.now()} ${nanoid()}`,
     { lower: true, strict: true }
   );
-  console.log(">>>>>>>>>>>>>>>>>>>>>", _id)
+
   const functionVersion = await createFunctionVersion({
     _id,
     ...req.body,
@@ -91,4 +93,40 @@ export async function getFunctionVersionsHandler(
     { populate }
   );
   return res.send({ functionVersions });
+}
+
+export async function runFunctionVersionHandler(
+  req: Request<
+    RunFunctionVersionInput["params"],
+    {},
+    RunFunctionVersionInput["body"],
+    RunFunctionVersionInput["query"]
+  >,
+  res: Response
+) {
+  try {
+    const result = await runFunctionVersion(
+      {
+        _id: req.params.id,
+      },
+      {
+        args: {
+          form: req.body.form,
+          user: {
+            _id: res.locals.user._id,
+          },
+        },
+        test: !!req.query.test,
+      }
+    );
+
+    console.log(">>>>>>>>>>>>>>>>>result:");
+    console.log(result);
+
+    return res.send({ result });
+  } catch (error) {
+    console.log(">>>>>>>>>>>>>>>>>error:");
+    console.log(error);
+    return res.send({ error });
+  }
 }

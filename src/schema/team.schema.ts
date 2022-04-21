@@ -1,5 +1,19 @@
 import { object, string, boolean, TypeOf } from "zod";
 
+const params = {
+  params: object({
+    id: string({
+      required_error: "Team ID is required",
+    }),
+  }),
+};
+
+const query = {
+  query: object({
+    populate: string().optional(),
+  }),
+};
+
 /**
  * @openapi
  * components:
@@ -62,4 +76,15 @@ export const createTeamSchema = object({
   }),
 });
 
+export const getTeamSchema = object({
+  ...params,
+  ...query,
+});
+
+export const getTeamsSchema = object({
+  ...query,
+});
+
 export type CreateTeamInput = TypeOf<typeof createTeamSchema>;
+export type GetTeamInput = TypeOf<typeof getTeamSchema>;
+export type GetTeamsInput = TypeOf<typeof getTeamsSchema>;
