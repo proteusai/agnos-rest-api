@@ -7,6 +7,7 @@ import {
   GetFunctionVersionInput,
   GetFunctionVersionsInput,
   RunFunctionVersionInput,
+  UpdateFunctionVersionInput,
 } from "../schema/functionVersion.schema";
 import {
   findFunction,
@@ -14,6 +15,7 @@ import {
 } from "../service/function.service";
 import {
   createFunctionVersion,
+  findAndUpdateFunctionVersion,
   findFunctionVersion,
   findFunctionVersions,
   runFunctionVersion,
@@ -93,6 +95,39 @@ export async function getFunctionVersionsHandler(
     { populate }
   );
   return res.send({ functionVersions });
+}
+
+export async function updateFunctionVersionHandler(
+  req: Request<
+    UpdateFunctionVersionInput["params"],
+    {},
+    UpdateFunctionVersionInput["body"]
+  >,
+  res: Response
+) {
+  const _id = req.params.id;
+  const update = req.body;
+
+  const funcVer = await findFunctionVersion({ _id });
+
+  if (!funcVer) {
+    return res.sendStatus(404);
+  }
+  if (funcVer.published) {
+    return res
+      .status(403)
+      .send({
+        error: { message: "Published function versions cannot be updated" },
+      });
+  }
+
+  // TODO: ensure that the user has permission to update this func ver
+
+  const functionVersion = await findAndUpdateFunctionVersion({ _id }, update, {
+    new: true,
+  });
+
+  return res.send({ functionVersion });
 }
 
 export async function runFunctionVersionHandler(

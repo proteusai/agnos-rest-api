@@ -4,6 +4,7 @@ import {
   getFunctionVersionHandler,
   getFunctionVersionsHandler,
   runFunctionVersionHandler,
+  updateFunctionVersionHandler,
 } from "../controllers/functionVersion.controller";
 import requireUser from "../middleware/requireUser";
 import validateResource from "../middleware/validateResource";
@@ -12,6 +13,7 @@ import {
   getFunctionVersionSchema,
   getFunctionVersionsSchema,
   runFunctionVersionSchema,
+  updateFunctionVersionSchema,
 } from "../schema/functionVersion.schema";
 
 const router = Router();
@@ -32,6 +34,15 @@ router.get(
     /**checkAuth0AccessToken,**/ requireUser,
   ],
   getFunctionVersionsHandler
+);
+
+router.patch(
+  "/function-versions/:id",
+  [
+    validateResource(updateFunctionVersionSchema),
+    /**checkAuth0AccessToken,**/ requireUser,
+  ],
+  updateFunctionVersionHandler
 );
 
 router.post(

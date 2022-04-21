@@ -1,6 +1,6 @@
 // https://github.com/request/request/issues/3143
 
-import { FilterQuery } from "mongoose";
+import { FilterQuery, UpdateQuery, QueryOptions } from "mongoose";
 // import vm from "vm";
 import { VM } from "vm2";
 import axios from "axios";
@@ -42,6 +42,14 @@ export async function findFunctionVersions(
     .populate(options?.populate || defaultPopulate)
     .sort({ createdAt: -1 })
     .lean();
+}
+
+export async function findAndUpdateFunctionVersion(
+  query: FilterQuery<FunctionVersionDocument>,
+  update: UpdateQuery<FunctionVersionDocument>,
+  options: QueryOptions
+) {
+  return FunctionVersionModel.findOneAndUpdate(query, update, options);
 }
 
 export interface RunOptions {
@@ -106,10 +114,10 @@ export async function runFunctionVersion(
       },
     },
   };
-  console.log(">>>>>>>>>>>>>>>>>>>>>>>>function scopes")
-  console.log(functionVersion.scopes)
-  console.log(">>>>>>>>>>>>>>>>>>>>>>>is user passed in sandbox?")
-  console.log(sandbox)
+  console.log(">>>>>>>>>>>>>>>>>>>>>>>>function scopes");
+  console.log(functionVersion.scopes);
+  console.log(">>>>>>>>>>>>>>>>>>>>>>>is user passed in sandbox?");
+  console.log(sandbox);
   const vm = new VM({
     sandbox,
     timeout: 10000,

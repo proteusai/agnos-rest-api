@@ -8,6 +8,24 @@ const params = {
   }),
 };
 
+const payload = {
+  body: object({
+    name: string().optional(),
+    code: string().optional(),
+    description: string().optional(),
+    published: boolean().optional(),
+    scopes: union([
+      literal("READ:DESIGN"),
+      literal("READ:ENVIRONMENT"),
+      literal("READ:USER"),
+    ])
+      .array()
+      .optional(),
+    secrets: object({}).optional(),
+    testData: string().optional(),
+  }),
+};
+
 const query = {
   query: object({
     function: string().optional(),
@@ -59,9 +77,17 @@ export const getFunctionVersionsSchema = object({
   ...query,
 });
 
+export const updateFunctionVersionSchema = object({
+  ...payload,
+  ...params,
+});
+
 export type CreateFunctionVersionInput = TypeOf<
   typeof createFunctionVersionSchema
 >;
 export type GetFunctionVersionInput = TypeOf<typeof getFunctionVersionSchema>;
 export type GetFunctionVersionsInput = TypeOf<typeof getFunctionVersionsSchema>;
 export type RunFunctionVersionInput = TypeOf<typeof runFunctionVersionSchema>;
+export type UpdateFunctionVersionInput = TypeOf<
+  typeof updateFunctionVersionSchema
+>;
