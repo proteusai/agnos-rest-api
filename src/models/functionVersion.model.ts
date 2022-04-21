@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { PermissionScope, PermissionScopes } from "../constants/permissions";
+import { PermissionScope } from "../constants/permissions";
 import { BaseDocument } from "./base.model";
 import FunctionModel, { FunctionDocument } from "./function.model";
 import { TeamDocument } from "./team.model";
@@ -32,7 +32,7 @@ const functionVersionSchema = new mongoose.Schema(
     description: { type: String },
     function: { type: mongoose.Schema.Types.ObjectId, ref: "Function" },
     published: { type: Boolean, default: false },
-    scopes: [{ type: String, enum: PermissionScopes }],
+    scopes: [{ type: String, enum: Object.keys(PermissionScope) }],
     secrets: { type: {} },
     testData: { type: String },
     team: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },

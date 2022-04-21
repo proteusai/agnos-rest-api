@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { nanoid } from "nanoid";
 import slugify from "slugify";
+import { PermissionScope } from "../constants/permissions";
 import { IGNORE_LEAST_CARDINALITY } from "../constants/settings";
 import {
   CreateFunctionVersionInput,
@@ -44,6 +45,7 @@ export async function createFunctionVersionHandler(
   const functionVersion = await createFunctionVersion({
     _id,
     ...req.body,
+    scopes: req.body.scopes?.map((scope) => PermissionScope[scope]),
     user: user._id,
     team: func.team,
   });
@@ -114,11 +116,9 @@ export async function updateFunctionVersionHandler(
     return res.sendStatus(404);
   }
   if (funcVer.published) {
-    return res
-      .status(403)
-      .send({
-        error: { message: "Published function versions cannot be updated" },
-      });
+    return res.status(403).send({
+      error: { message: "Published function versions cannot be updated" },
+    });
   }
 
   // TODO: ensure that the user has permission to update this func ver
@@ -151,7 +151,7 @@ export async function runFunctionVersionHandler(
             _id: res.locals.user._id,
           },
         },
-        test: !!req.query.test,
+        test: req.query.test ? req.query.test.toLowerCase() === "true" : false,
       }
     );
 

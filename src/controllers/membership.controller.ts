@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { PermissionName } from "../constants/permissions";
 import {
   CreateMembershipInput,
   GetMembershipsInput,
@@ -12,7 +13,10 @@ export async function createMembershipHandler(
   req: Request<{}, {}, CreateMembershipInput["body"]>,
   res: Response
 ) {
-  const membership = await createMembership(req.body);
+  const membership = await createMembership({
+    ...req.body,
+    permission: PermissionName[req.body.permission],
+  });
   return res.send({ membership });
 }
 

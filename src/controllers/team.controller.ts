@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { PermissionName } from "../constants/permissions";
 import { IGNORE_LEAST_CARDINALITY } from "../constants/settings";
 import {
   CreateTeamInput,
@@ -24,7 +25,7 @@ export async function createTeamHandler(
   const membership = await createMembership({
     user: user._id,
     team: team._id,
-    permission: "ADMIN",
+    permission: PermissionName.ADMIN,
   });
 
   if (IGNORE_LEAST_CARDINALITY) {

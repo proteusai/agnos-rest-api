@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { DEFAULT_TEAM_NAME } from "../constants/defaults";
+import { PermissionName } from "../constants/permissions";
 import { IGNORE_LEAST_CARDINALITY } from "../constants/settings";
 import { CreateUserInput } from "../schema/user.schema";
 import { createMembership } from "../service/membership.service";
@@ -25,7 +26,7 @@ export async function createUserHandler(
     const membership = await createMembership({
       user: user._id,
       team: team._id,
-      permission: "ADMIN",
+      permission: PermissionName.ADMIN,
     });
 
     const settings = await createSettings({ user: user._id });

@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { PermissionName } from "../constants/permissions";
 import { TeamDocument } from "../models/team.model";
 import {
   CreateTeamDesignShareInput,
@@ -14,7 +15,10 @@ export async function createTeamDesignShareHandler(
   req: Request<{}, {}, CreateTeamDesignShareInput["body"]>,
   res: Response
 ) {
-  const teamDesignShare = await createTeamDesignShare(req.body);
+  const teamDesignShare = await createTeamDesignShare({
+    ...req.body,
+    permission: PermissionName[req.body.permission],
+  });
   return res.send({ teamDesignShare });
 }
 

@@ -1,4 +1,4 @@
-import { boolean, literal, object, string, TypeOf, union } from "zod";
+import { boolean, enum as zodEnum, object, string, TypeOf } from "zod";
 
 const params = {
   params: object({
@@ -14,11 +14,7 @@ const payload = {
     code: string().optional(),
     description: string().optional(),
     published: boolean().optional(),
-    scopes: union([
-      literal("READ:DESIGN"),
-      literal("READ:ENVIRONMENT"),
-      literal("READ:USER"),
-    ])
+    scopes: zodEnum(["READ:DESIGN", "READ:ENVIRONMENT", "READ:USER"] as const)
       .array()
       .optional(),
     secrets: object({}).optional(),
@@ -46,11 +42,7 @@ export const createFunctionVersionSchema = object({
       required_error: "Function ID is required",
     }),
     published: boolean().optional(),
-    scopes: union([
-      literal("READ:DESIGN"),
-      literal("READ:ENVIRONMENT"),
-      literal("READ:USER"),
-    ])
+    scopes: zodEnum(["READ:DESIGN", "READ:ENVIRONMENT", "READ:USER"] as const)
       .array()
       .optional(),
     secrets: object({}).optional(),
@@ -64,7 +56,7 @@ export const runFunctionVersionSchema = object({
   }),
   ...params,
   query: object({
-    test: boolean().optional(),
+    test: string().optional(),
   }),
 });
 

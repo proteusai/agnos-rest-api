@@ -12,6 +12,7 @@ import FunctionVersionModel, {
   FunctionVersionInput,
 } from "../models/functionVersion.model";
 import { findUser } from "./user.service";
+import { PermissionScope } from "../constants/permissions";
 
 const defaultPopulate = ["function", "team", "user"];
 
@@ -66,10 +67,9 @@ export async function runFunctionVersion(
   query: FilterQuery<FunctionVersionDocument>,
   options: RunOptions
 ) {
-  const functionVersion = await FunctionVersionModel.findOne({
-    ...query,
-    populate: ["function", "team"],
-  }).lean();
+  const functionVersion = await FunctionVersionModel.findOne(query)
+    .populate(["function", "team"])
+    .lean();
 
   if (!functionVersion) {
     throw new Error("Cannot find function version");
@@ -91,12 +91,17 @@ export async function runFunctionVersion(
     agnos: {
       form: options.args.form || options.test ? testForm : undefined,
       function: {
+        name: functionVersion.function.name,
+        team: {
+          name: functionVersion.team.name,
+        },
         version: {
+          name: functionVersion.name,
           secrets: functionVersion.secrets,
         },
       },
       ...(functionVersion.scopes &&
-        functionVersion.scopes.includes("READ:USER") && {
+        functionVersion.scopes.includes(PermissionScope["READ:USER"]) && {
           user: {
             email: user?.email,
             name: user?.name,
@@ -105,6 +110,11 @@ export async function runFunctionVersion(
         }),
       // design
       // environment
+    },
+    process: {
+      env: {
+        NODE_ENV: options.test ? "test" : "production",
+      },
     },
     console: {
       log: (data: any) => {

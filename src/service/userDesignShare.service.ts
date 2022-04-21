@@ -8,9 +8,6 @@ import UserDesignShareModel, {
 const defaultPopulate = ["user", "design", "permission"];
 
 export async function createUserDesignShare(input: UserDesignShareInput) {
-  if (!input.permission) {
-    input.permission = "READ";
-  }
   const userDesignShare = await UserDesignShareModel.create(input);
 
   return userDesignShare.toJSON();

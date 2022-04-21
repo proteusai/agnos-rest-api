@@ -12,6 +12,8 @@ const validate =
       });
       next();
     } catch (error: any) {
+      console.log(">>>>>>>>>>>>>>>>>>error in validation")
+      console.log(error)
       return res.status(400).send({ error });
     }
   };
