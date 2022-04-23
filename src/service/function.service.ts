@@ -22,6 +22,12 @@ export async function findFunction(query: FilterQuery<FunctionDocument>) {
   return FunctionModel.findOne(query).lean();
 }
 
+export async function findFunctionDocument(
+  query: FilterQuery<FunctionDocument>
+) {
+  return FunctionModel.findOne(query);
+}
+
 export async function findFunctions(
   query: FilterQuery<FunctionDocument>,
   options?: ServiceOptions

@@ -1,4 +1,4 @@
-import { literal, object, string, TypeOf, union } from "zod";
+import { enum as zodEnum, object, string, TypeOf } from "zod";
 
 const query = {
   query: object({
@@ -15,11 +15,12 @@ export const createTeamDesignShareSchema = object({
     team: string({
       required_error: "Team ID is required",
     }),
-    permission: union([
-      literal("READ"),
-      literal("WRITE"),
-      literal("ADMIN"),
-    ]).default("READ"),
+    //  permission: union([
+    //   literal("READ"),
+    //   literal("WRITE"),
+    //   literal("ADMIN"),
+    // ]).default("READ"),
+    permission: zodEnum(["READ", "WRITE", "ADMIN"] as const).default("READ"),
   }),
 });
 

@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { PermissionName } from "../constants/permissions";
 import { IGNORE_LEAST_CARDINALITY } from "../constants/settings";
 import { TeamDocument } from "../models/team.model";
 import { CreateDesignInput, GetDesignInput } from "../schema/design.schema";
@@ -40,13 +41,13 @@ export async function createDesignHandler(
   const userDesignShare = await createUserDesignShare({
     user: user._id,
     design: design._id,
-    permission: "ADMIN",
+    permission: PermissionName.ADMIN,
   });
 
   const teamDesignShare = await createTeamDesignShare({
     team: team._id,
     design: design._id,
-    permission: "ADMIN",
+    permission: PermissionName.ADMIN,
   });
 
   if (IGNORE_LEAST_CARDINALITY) {

@@ -8,9 +8,6 @@ import MembershipModel, {
 const defaultPopulate = ["user", "team", "permission"];
 
 export async function createMembership(input: MembershipInput) {
-  if (!input.permission) {
-    input.permission = "READ";
-  }
   const membership = await MembershipModel.create(input);
 
   return membership.toJSON();
