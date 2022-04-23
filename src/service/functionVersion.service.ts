@@ -13,6 +13,10 @@ import FunctionVersionModel, {
 } from "../models/functionVersion.model";
 import { findUser } from "./user.service";
 import { PermissionScope } from "../constants/permissions";
+import { createLog } from "./log.service";
+import { Env } from "../constants/env";
+import { DataType } from "../constants/type";
+import { LogType } from "../constants/log";
 
 const defaultPopulate = ["function", "team", "user"];
 
@@ -91,14 +95,20 @@ export async function runFunctionVersion(
     agnos: {
       form: options.args.form || options.test ? testForm : undefined,
       function: {
+        //===============
         name: functionVersion.function.name,
+        secrets: functionVersion.function.secrets || {},
         team: {
           name: functionVersion.team.name,
         },
         version: {
           name: functionVersion.name,
-          secrets: functionVersion.secrets,
+          secrets: functionVersion.secrets || {},
         },
+      },
+      secrets: {
+        ...(functionVersion.function.secrets || {}),
+        ...(functionVersion.secrets || {}),
       },
       ...(functionVersion.scopes &&
         functionVersion.scopes.includes(PermissionScope["READ:USER"]) && {
@@ -118,16 +128,33 @@ export async function runFunctionVersion(
     },
     console: {
       log: (data: any) => {
-        console.log(">>>>>>>> custom logger:");
-        console.log(data);
-        // TODO: build log and invocation stats
+        let dataType = DataType.OBJECT;
+        switch (typeof data) {
+          case "boolean":
+            dataType = DataType.BOOLEAN;
+            break;
+          case "bigint":
+          case "number":
+            dataType = DataType.NUMBER;
+            break;
+          case "string":
+            dataType = DataType.STRING;
+            break;
+        }
+        createLog({
+          data,
+          dataType,
+          env: options.test ? Env.TEST : Env.PRODUCTION,
+          meta: {
+            version: functionVersion._id,
+            user: user?._id,
+          },
+          source: functionVersion.function._id,
+          type: LogType.INFO,
+        });
       },
     },
   };
-  console.log(">>>>>>>>>>>>>>>>>>>>>>>>function scopes");
-  console.log(functionVersion.scopes);
-  console.log(">>>>>>>>>>>>>>>>>>>>>>>is user passed in sandbox?");
-  console.log(sandbox);
   const vm = new VM({
     sandbox,
     timeout: 10000,

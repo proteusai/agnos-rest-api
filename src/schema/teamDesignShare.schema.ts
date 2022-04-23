@@ -15,7 +15,7 @@ export const createTeamDesignShareSchema = object({
     team: string({
       required_error: "Team ID is required",
     }),
-    // permission: union([
+    //  permission: union([
     //   literal("READ"),
     //   literal("WRITE"),
     //   literal("ADMIN"),
