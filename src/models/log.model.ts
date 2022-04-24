@@ -8,7 +8,7 @@ export interface LogInput {
   data: any;
   dataType?: DataType;
   env: Env;
-  meta?: object;
+  meta?: any;
   source: string;
   type?: LogType;
 }

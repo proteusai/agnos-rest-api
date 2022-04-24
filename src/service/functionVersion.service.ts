@@ -63,6 +63,7 @@ export interface RunOptions {
     form?: object;
     user: {
       _id: string;
+      accessToken: string;
     };
   };
 }
@@ -141,17 +142,20 @@ export async function runFunctionVersion(
             dataType = DataType.STRING;
             break;
         }
-        createLog({
-          data,
-          dataType,
-          env: options.test ? Env.TEST : Env.PRODUCTION,
-          meta: {
-            version: functionVersion._id,
-            user: user?._id,
+        createLog(
+          {
+            data,
+            dataType,
+            env: options.test ? Env.TEST : Env.PRODUCTION,
+            meta: {
+              version: functionVersion._id,
+              user: user?._id,
+            },
+            source: functionVersion.function._id,
+            type: LogType.INFO,
           },
-          source: functionVersion.function._id,
-          type: LogType.INFO,
-        });
+          { accessToken: options.args.user.accessToken }
+        );
       },
     },
   };

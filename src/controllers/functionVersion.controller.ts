@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { get } from "lodash";
 import { nanoid } from "nanoid";
 import slugify from "slugify";
 import { PermissionScope } from "../constants/permissions";
@@ -139,6 +140,10 @@ export async function runFunctionVersionHandler(
   >,
   res: Response
 ) {
+  const accessToken = get(req, "headers.authorization", "").replace(
+    /^Bearer\s/,
+    ""
+  );
   try {
     const result = await runFunctionVersion(
       {
@@ -149,6 +154,7 @@ export async function runFunctionVersionHandler(
           form: req.body.form,
           user: {
             _id: res.locals.user._id,
+            accessToken,
           },
         },
         test: req.query.test ? req.query.test.toLowerCase() === "true" : false,
