@@ -15,7 +15,7 @@ import { findUser } from "./user.service";
 import { PermissionScope } from "../constants/permissions";
 import { createLog } from "./log.service";
 import { Env } from "../constants/env";
-import { DataType } from "../constants/type";
+import { DataType } from "../constants/log";
 import { LogType } from "../constants/log";
 
 const defaultPopulate = ["function", "team", "user"];
@@ -96,14 +96,17 @@ export async function runFunctionVersion(
     agnos: {
       form: options.args.form || options.test ? testForm : undefined,
       function: {
-        //===============
+        _id: functionVersion.function._id,
         name: functionVersion.function.name,
         secrets: functionVersion.function.secrets || {},
         team: {
+          _id: functionVersion.team._id,
           name: functionVersion.team.name,
         },
         version: {
+          _id: functionVersion._id,
           name: functionVersion.name,
+          scopes: functionVersion.scopes,
           secrets: functionVersion.secrets || {},
         },
       },
@@ -127,7 +130,7 @@ export async function runFunctionVersion(
         NODE_ENV: options.test ? "test" : "production",
       },
     },
-    console: {
+    console: {//====================
       log: (data: any) => {
         let dataType = DataType.OBJECT;
         switch (typeof data) {
@@ -140,6 +143,9 @@ export async function runFunctionVersion(
             break;
           case "string":
             dataType = DataType.STRING;
+            break;
+          case "undefined":
+            dataType = DataType.UNDEFINED;
             break;
         }
         createLog(

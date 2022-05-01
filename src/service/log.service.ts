@@ -19,12 +19,13 @@ export async function createLogDocument(
 ) {
   const log = await LogModel.create(input);
 
-  websocket.emit(log.source, log);
-  if (log.meta && log.meta["version"]) websocket.emit(log.meta["version"], log);
+  websocket.emit(`log:${log.source}`, log);
+  if (log.meta && log.meta["version"])
+    websocket.emit(`log:${log.meta["version"]}`, log);
   if (log.meta && log.meta["version"] && log.meta["user"])
-    websocket.emit(`${log.meta["user"]}@${log.meta["version"]}`, log);
+    websocket.emit(`log:${log.meta["user"]}@${log.meta["version"]}`, log);
   if (log.meta && log.meta["version"] && options?.accessToken)
-    websocket.emit(`${options.accessToken}@${log.meta["version"]}`, log);
+    websocket.emit(`log:${options.accessToken}@${log.meta["version"]}`, log);
 
   return log;
 }
