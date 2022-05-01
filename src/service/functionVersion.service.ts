@@ -155,6 +155,7 @@ export async function runFunctionVersion(
             env: options.test ? Env.TEST : Env.PRODUCTION,
             meta: {
               version: functionVersion._id,
+              versionName: functionVersion.name,
               user: user?._id,
             },
             source: functionVersion.function._id,
