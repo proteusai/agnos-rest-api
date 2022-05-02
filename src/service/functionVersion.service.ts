@@ -80,6 +80,42 @@ export async function runFunctionVersion(
     throw new Error("Cannot find function version");
   }
 
+  const log = (data: any, type: LogType) => {
+    let dataType = DataType.OBJECT;
+    switch (typeof data) {
+      case "boolean":
+        dataType = DataType.BOOLEAN;
+        break;
+      case "bigint":
+      case "number":
+        dataType = DataType.NUMBER;
+        break;
+      case "string":
+        dataType = DataType.STRING;
+        break;
+      case "undefined":
+        dataType = DataType.UNDEFINED;
+        break;
+    }
+    createLog(
+      {
+        data,
+        dataType,
+        env: options.test ? Env.TEST : Env.PRODUCTION,
+        meta: {
+          function: functionVersion.function._id,
+          functionName: functionVersion.function.name,
+          version: functionVersion._id,
+          versionName: functionVersion.name,
+          user: user?._id,
+        },
+        source: functionVersion.function._id,
+        type,
+      },
+      { accessToken: options.args.user.accessToken }
+    );
+  };
+
   let testForm = undefined;
   const testData = functionVersion.testData;
   if (testData) {
@@ -130,42 +166,12 @@ export async function runFunctionVersion(
         NODE_ENV: options.test ? "test" : "production",
       },
     },
-    console: {//====================
-      log: (data: any) => {
-        let dataType = DataType.OBJECT;
-        switch (typeof data) {
-          case "boolean":
-            dataType = DataType.BOOLEAN;
-            break;
-          case "bigint":
-          case "number":
-            dataType = DataType.NUMBER;
-            break;
-          case "string":
-            dataType = DataType.STRING;
-            break;
-          case "undefined":
-            dataType = DataType.UNDEFINED;
-            break;
-        }
-        createLog(
-          {
-            data,
-            dataType,
-            env: options.test ? Env.TEST : Env.PRODUCTION,
-            meta: {
-              function: functionVersion.function._id,
-              functionName: functionVersion.function.name,
-              version: functionVersion._id,
-              versionName: functionVersion.name,
-              user: user?._id,
-            },
-            source: functionVersion.function._id,
-            type: LogType.INFO,
-          },
-          { accessToken: options.args.user.accessToken }
-        );
-      },
+    console: {
+      error: (data: any) => log(data, LogType.ERROR),
+      info: (data: any) => log(data, LogType.INFO),
+      log: (data: any) => log(data, LogType.INFO),
+      success: (data: any) => log(data, LogType.SUCCESS),
+      warn: (data: any) => log(data, LogType.WARNING),
     },
   };
   const vm = new VM({
