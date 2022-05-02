@@ -7,8 +7,8 @@ COPY ./config ./config
 # COPY ./.eslintrc.js ./
 # COPY ./.eslintignore ./
 COPY ./src ./src
-# RUN npm ci --only=production
 RUN yarn
-RUN yarn build
-CMD yarn start
+# RUN yarn build
+# CMD yarn start
+CMD yarn dev
 EXPOSE 3000

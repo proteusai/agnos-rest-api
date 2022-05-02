@@ -15,7 +15,7 @@ import { findUser } from "./user.service";
 import { PermissionScope } from "../constants/permissions";
 import { createLog } from "./log.service";
 import { Env } from "../constants/env";
-import { DataType } from "../constants/type";
+import { DataType } from "../constants/log";
 import { LogType } from "../constants/log";
 
 const defaultPopulate = ["function", "team", "user"];
@@ -63,6 +63,7 @@ export interface RunOptions {
     form?: object;
     user: {
       _id: string;
+      accessToken: string;
     };
   };
 }
@@ -78,6 +79,42 @@ export async function runFunctionVersion(
   if (!functionVersion) {
     throw new Error("Cannot find function version");
   }
+
+  const log = (data: any, type: LogType) => {
+    let dataType = DataType.OBJECT;
+    switch (typeof data) {
+      case "boolean":
+        dataType = DataType.BOOLEAN;
+        break;
+      case "bigint":
+      case "number":
+        dataType = DataType.NUMBER;
+        break;
+      case "string":
+        dataType = DataType.STRING;
+        break;
+      case "undefined":
+        dataType = DataType.UNDEFINED;
+        break;
+    }
+    createLog(
+      {
+        data,
+        dataType,
+        env: options.test ? Env.TEST : Env.PRODUCTION,
+        meta: {
+          function: functionVersion.function._id,
+          functionName: functionVersion.function.name,
+          version: functionVersion._id,
+          versionName: functionVersion.name,
+          user: user?._id,
+        },
+        source: functionVersion.function._id,
+        type,
+      },
+      { accessToken: options.args.user.accessToken }
+    );
+  };
 
   let testForm = undefined;
   const testData = functionVersion.testData;
@@ -95,14 +132,17 @@ export async function runFunctionVersion(
     agnos: {
       form: options.args.form || options.test ? testForm : undefined,
       function: {
-        //===============
+        _id: functionVersion.function._id,
         name: functionVersion.function.name,
         secrets: functionVersion.function.secrets || {},
         team: {
+          _id: functionVersion.team._id,
           name: functionVersion.team.name,
         },
         version: {
+          _id: functionVersion._id,
           name: functionVersion.name,
+          scopes: functionVersion.scopes,
           secrets: functionVersion.secrets || {},
         },
       },
@@ -127,32 +167,11 @@ export async function runFunctionVersion(
       },
     },
     console: {
-      log: (data: any) => {
-        let dataType = DataType.OBJECT;
-        switch (typeof data) {
-          case "boolean":
-            dataType = DataType.BOOLEAN;
-            break;
-          case "bigint":
-          case "number":
-            dataType = DataType.NUMBER;
-            break;
-          case "string":
-            dataType = DataType.STRING;
-            break;
-        }
-        createLog({
-          data,
-          dataType,
-          env: options.test ? Env.TEST : Env.PRODUCTION,
-          meta: {
-            version: functionVersion._id,
-            user: user?._id,
-          },
-          source: functionVersion.function._id,
-          type: LogType.INFO,
-        });
-      },
+      error: (data: any) => log(data, LogType.ERROR),
+      info: (data: any) => log(data, LogType.INFO),
+      log: (data: any) => log(data, LogType.INFO),
+      success: (data: any) => log(data, LogType.SUCCESS),
+      warn: (data: any) => log(data, LogType.WARNING),
     },
   };
   const vm = new VM({
