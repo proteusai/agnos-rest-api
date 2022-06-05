@@ -17,6 +17,8 @@ import { createLog } from "./log.service";
 import { Env } from "../constants/env";
 import { DataType } from "../constants/log";
 import { LogType } from "../constants/log";
+import { createInvocation } from "./invocation.service";
+import { InvocationType } from "../constants/invocation";
 
 const defaultPopulate = ["function", "team", "user"];
 
@@ -124,43 +126,44 @@ export async function runFunctionVersion(
   }
 
   const user = await findUser({ _id: options.args.user._id });
+  const agnos = {
+    form: options.args.form || options.test ? testForm : undefined,
+    function: {
+      _id: functionVersion.function._id,
+      name: functionVersion.function.name,
+      secrets: functionVersion.function.secrets || {},
+      team: {
+        _id: functionVersion.team._id,
+        name: functionVersion.team.name,
+      },
+      version: {
+        _id: functionVersion._id,
+        name: functionVersion.name,
+        scopes: functionVersion.scopes,
+        secrets: functionVersion.secrets || {},
+      },
+    },
+    secrets: {
+      ...(functionVersion.function.secrets || {}),
+      ...(functionVersion.secrets || {}),
+    },
+    ...(functionVersion.scopes &&
+      functionVersion.scopes.includes(PermissionScope["READ:USER"]) && {
+        user: {
+          email: user?.email,
+          name: user?.name,
+          picture: user?.picture,
+        },
+      }),
+    // design
+    // environment
+  };
 
   const sandbox = {
     axios,
     request,
     requireFromUrl,
-    agnos: {
-      form: options.args.form || options.test ? testForm : undefined,
-      function: {
-        _id: functionVersion.function._id,
-        name: functionVersion.function.name,
-        secrets: functionVersion.function.secrets || {},
-        team: {
-          _id: functionVersion.team._id,
-          name: functionVersion.team.name,
-        },
-        version: {
-          _id: functionVersion._id,
-          name: functionVersion.name,
-          scopes: functionVersion.scopes,
-          secrets: functionVersion.secrets || {},
-        },
-      },
-      secrets: {
-        ...(functionVersion.function.secrets || {}),
-        ...(functionVersion.secrets || {}),
-      },
-      ...(functionVersion.scopes &&
-        functionVersion.scopes.includes(PermissionScope["READ:USER"]) && {
-          user: {
-            email: user?.email,
-            name: user?.name,
-            picture: user?.picture,
-          },
-        }),
-      // design
-      // environment
-    },
+    agnos,
     process: {
       env: {
         NODE_ENV: options.test ? "test" : "production",
@@ -178,12 +181,43 @@ export async function runFunctionVersion(
     sandbox,
     timeout: 10000,
   });
-  const result = vm.run(functionVersion.code);
 
-  // const script = new vm.Script(`(function(){${functionVersion.code}})()`);
-  //   const script = new vm.Script(functionVersion.code);
-  //   const context = vm.createContext(sandbox);
-  //   const result = script.runInContext(context);
+  try {
+    const result = vm.run(functionVersion.code);
 
-  return result;
+    // const script = new vm.Script(`(function(){${functionVersion.code}})()`);
+    //   const script = new vm.Script(functionVersion.code);
+    //   const context = vm.createContext(sandbox);
+    //   const result = script.runInContext(context);
+
+    createInvocation(
+      {
+        // TODO: caller,
+        function: functionVersion.function._id,
+        input: agnos,
+        // TODO: meta,
+        output: result,
+        type: InvocationType.ERROR,
+        version: functionVersion._id,
+      },
+      { accessToken: options.args.user.accessToken }
+    );
+
+    return result;
+  } catch (error) {
+    createInvocation(
+      {
+        // TODO: caller,
+        error,
+        function: functionVersion.function._id,
+        input: agnos,
+        // TODO: meta,
+        type: InvocationType.ERROR,
+        version: functionVersion._id,
+      },
+      { accessToken: options.args.user.accessToken }
+    );
+
+    throw error;
+  }
 }
