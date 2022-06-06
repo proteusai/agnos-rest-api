@@ -193,6 +193,7 @@ export async function runFunctionVersion(
     createInvocation(
       {
         // TODO: caller,
+        env: options.test ? Env.TEST : Env.PRODUCTION,
         function: functionVersion.function._id,
         input: agnos,
         // TODO: meta,
@@ -208,6 +209,7 @@ export async function runFunctionVersion(
     createInvocation(
       {
         // TODO: caller,
+        env: options.test ? Env.TEST : Env.PRODUCTION,
         error,
         function: functionVersion.function._id,
         input: agnos,

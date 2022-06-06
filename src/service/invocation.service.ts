@@ -1,6 +1,7 @@
 import { FilterQuery } from "mongoose";
 import { ServiceOptions } from ".";
 import { websocket } from "../app";
+import { Env } from "../constants/env";
 import InvocationModel, {
   InvocationDocument,
   InvocationInput,
@@ -20,7 +21,10 @@ export async function createInvocationDocument(
   input: InvocationInput,
   options?: { accessToken?: string }
 ) {
-  const invocation = await InvocationModel.create(input);
+  const invocation = await InvocationModel.create({
+    ...input,
+    ...(input.env === Env.TEST && { expiresAt: new Date() }),
+  });
 
   websocket.emit(`invocation:${invocation.function}`, invocation);
   websocket.emit(`invocation:${invocation.version}`, invocation);

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { Env } from "../constants/env";
 import { InvocationType } from "../constants/invocation";
 import { BaseDocument } from "./base.model";
 import { FunctionDocument } from "./function.model";
@@ -6,6 +7,7 @@ import { FunctionVersionDocument } from "./functionVersion.model";
 
 export interface InvocationInput {
   caller?: string; // the ID of whatever made this invocation (could be a plugin, another function etc.)
+  env: Env;
   error?: any;
   function: FunctionDocument["_id"];
   input?: any; // we can store the "agnos" field of the function sandbox here
@@ -25,6 +27,7 @@ export interface InvocationDocument
 const invocationSchema = new mongoose.Schema(
   {
     caller: { type: String },
+    env: { type: String, enum: Object.keys(Env), required: true },
     error: { type: {} },
     expiresAt: { type: Date },
     function: { type: mongoose.Schema.Types.ObjectId, ref: "Function" },
