@@ -182,24 +182,27 @@ export async function runFunctionVersion(
     timeout: 10000,
   });
 
+  const invocation = {
+    // TODO: caller,
+    env: options.test ? Env.TEST : Env.PRODUCTION,
+    function: functionVersion.function._id,
+    input: agnos,
+    meta: {
+      functionName: functionVersion.function.name,
+      versionName: functionVersion.name,
+      user: user?._id,
+    },
+    version: functionVersion._id,
+  };
+
   try {
     const result = vm.run(functionVersion.code);
 
-    // const script = new vm.Script(`(function(){${functionVersion.code}})()`);
-    //   const script = new vm.Script(functionVersion.code);
-    //   const context = vm.createContext(sandbox);
-    //   const result = script.runInContext(context);
-
     createInvocation(
       {
-        // TODO: caller,
-        env: options.test ? Env.TEST : Env.PRODUCTION,
-        function: functionVersion.function._id,
-        input: agnos,
-        // TODO: meta,
+        ...invocation,
         output: result,
-        type: InvocationType.ERROR,
-        version: functionVersion._id,
+        type: InvocationType.SUCCESS,
       },
       { accessToken: options.args.user.accessToken }
     );
@@ -208,14 +211,9 @@ export async function runFunctionVersion(
   } catch (error) {
     createInvocation(
       {
-        // TODO: caller,
-        env: options.test ? Env.TEST : Env.PRODUCTION,
+        ...invocation,
         error,
-        function: functionVersion.function._id,
-        input: agnos,
-        // TODO: meta,
         type: InvocationType.ERROR,
-        version: functionVersion._id,
       },
       { accessToken: options.args.user.accessToken }
     );
