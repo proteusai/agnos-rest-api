@@ -11,12 +11,13 @@ export async function getInvocationsHandler(
     populate = req.query.populate.split(";");
   }
 
-  const logs = await findInvocations(
+  const invocations = await findInvocations(
     {
       ...(req.query.function && { function: req.query.function }),
       ...(req.query.version && { version: req.query.version }),
     },
     { populate }
   );
-  return res.send({ logs });
+
+  return res.send({ invocations });
 }

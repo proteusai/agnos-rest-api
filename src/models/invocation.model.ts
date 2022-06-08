@@ -35,7 +35,7 @@ const invocationSchema = new mongoose.Schema(
     meta: { type: {} },
     output: { type: {} },
     type: { type: String, enum: Object.keys(InvocationType), required: true },
-    version: { type: mongoose.Schema.Types.ObjectId, ref: "FunctionVersion" },
+    version: { type: String, ref: "FunctionVersion" },
   },
   {
     timestamps: true,
