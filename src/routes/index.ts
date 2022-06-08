@@ -4,6 +4,7 @@ import sessionRoutes from "./session.routes";
 import designRoutes from "./design.routes";
 import functionRoutes from "./function.routes";
 import functionVersionRoutes from "./functionVersion.routes";
+import invocationRoutes from "./invocation.routes";
 import logRoutes from "./log.routes";
 import meRoutes from "./me.routes";
 import membershipRoutes from "./membership.routes";
@@ -30,6 +31,7 @@ export default function routes(app: Express) {
   app.use(designRoutes);
   app.use(functionRoutes);
   app.use(functionVersionRoutes);
+  app.use(invocationRoutes);
   app.use(logRoutes);
   app.use(membershipRoutes);
   app.use(pluginRoutes);

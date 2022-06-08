@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { LogType } from "../constants/log";
 import { GetLogsInput } from "../schema/log.schema";
 import { findLogs } from "../service/log.service";
 
