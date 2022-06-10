@@ -6,6 +6,7 @@ import { TeamDocument } from "./team.model";
 import { UserDocument } from "./user.model";
 
 export interface PluginVersionInput {
+  _id: string;
   name: string;
   config: string;
   description?: string;
@@ -17,13 +18,14 @@ export interface PluginVersionInput {
 
 export interface PluginVersionDocument
   extends BaseDocument,
-    PluginVersionInput,
+    Omit<PluginVersionInput, "_id">,
     mongoose.Document {
   menus?: Array<Menu>;
 }
 
 const pluginVersionSchema = new mongoose.Schema(
   {
+    _id: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     config: { type: String, required: true },
     description: { type: String },
@@ -34,6 +36,7 @@ const pluginVersionSchema = new mongoose.Schema(
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   {
+    _id: false,
     timestamps: true,
   }
 );
