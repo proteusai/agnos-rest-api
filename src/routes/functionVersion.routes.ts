@@ -63,9 +63,7 @@ router.post(
   runFunctionVersionHandler
 );
 
-// TODO: function logs, stats (successes, failures) // do not do when ?test=true
 // TODO: schedule a func to run periodically or once in the future
-// TODO: a function needs permission to get data like "user", secrets etc. passed into it
 // a plugin that uses this function must be granted this permission during installation
 
 export default router;

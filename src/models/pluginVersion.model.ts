@@ -10,7 +10,7 @@ export interface PluginVersionInput {
   name: string;
   config: string;
   description?: string;
-  published: boolean; // version cannot be edited once published
+  published?: boolean; // version cannot be edited once published
   plugin: PluginDocument["_id"];
   team: TeamDocument["_id"]; // ref to the team that created this plugin version
   user: UserDocument["_id"]; // ref to the user that created this plugin version

@@ -22,6 +22,10 @@ export async function findPlugin(query: FilterQuery<PluginDocument>) {
   return PluginModel.findOne(query).lean();
 }
 
+export async function findPluginDocument(query: FilterQuery<PluginDocument>) {
+  return PluginModel.findOne(query);
+}
+
 export async function findPlugins(
   query: FilterQuery<PluginDocument>,
   options?: ServiceOptions

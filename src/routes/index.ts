@@ -9,6 +9,7 @@ import logRoutes from "./log.routes";
 import meRoutes from "./me.routes";
 import membershipRoutes from "./membership.routes";
 import pluginRoutes from "./plugin.routes";
+import pluginVersionRoutes from "./pluginVersion.routes";
 import teamRoutes from "./team.routes";
 
 export default function routes(app: Express) {
@@ -35,5 +36,6 @@ export default function routes(app: Express) {
   app.use(logRoutes);
   app.use(membershipRoutes);
   app.use(pluginRoutes);
+  app.use(pluginVersionRoutes);
   app.use(teamRoutes);
 }

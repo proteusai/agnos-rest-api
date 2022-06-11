@@ -161,13 +161,8 @@ export async function runFunctionVersionHandler(
       }
     );
 
-    console.log(">>>>>>>>>>>>>>>>>result:");
-    console.log(result);
-
     return res.send({ result });
   } catch (error) {
-    console.log(">>>>>>>>>>>>>>>>>error:");
-    console.log(error);
     return res.send({ error });
   }
 }
