@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { BaseDocument } from "./base.model";
+import InstallationModel from "./installation.model";
 import { Menu, MenuSchema } from "./menu.model";
 import PluginModel, { PluginDocument } from "./plugin.model";
 import { TeamDocument } from "./team.model";
@@ -48,6 +49,7 @@ pluginVersionSchema.pre("remove", async function (next) {
     { versions: version._id },
     { $pull: { versions: version._id } }
   ).exec();
+  InstallationModel.remove({ version: version._id }).exec();
 
   return next();
 });
