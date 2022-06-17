@@ -8,6 +8,7 @@ export interface Form {
 export interface FormAction {
   title: string;
   run: string;
+  transform?: string;
 }
 
 export interface FormField {
@@ -37,9 +38,11 @@ type HTMLInputTypeAttribute =
   | "password"
   | "radio"
   | "range"
+  | "rating"
   | "reset"
   | "search"
   | "submit"
+  | "switch"
   | "tel"
   | "text"
   | "time"
@@ -61,9 +64,11 @@ const htmlInputTypes = [
   "password",
   "radio",
   "range",
+  "rating",
   "reset",
   "search",
   "submit",
+  "switch",
   "tel",
   "text",
   "time",
