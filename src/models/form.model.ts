@@ -41,6 +41,7 @@ type HTMLInputTypeAttribute =
   | "rating"
   | "reset"
   | "search"
+  | "select"
   | "submit"
   | "switch"
   | "tel"
@@ -67,6 +68,7 @@ const htmlInputTypes = [
   "rating",
   "reset",
   "search",
+  "select",
   "submit",
   "switch",
   "tel",
