@@ -34,6 +34,7 @@ type HTMLInputTypeAttribute =
   | "hidden"
   | "image"
   | "month"
+  | "multi-select"
   | "number"
   | "password"
   | "radio"
@@ -61,6 +62,7 @@ const htmlInputTypes = [
   "hidden",
   "image",
   "month",
+  "multi-select",
   "number",
   "password",
   "radio",
