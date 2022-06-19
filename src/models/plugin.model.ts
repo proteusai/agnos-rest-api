@@ -31,7 +31,7 @@ const pluginSchema = new mongoose.Schema(
     private: { type: Boolean, default: false },
     team: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    versions: [{ type: mongoose.Schema.Types.ObjectId, ref: "PluginVersion" }],
+    versions: [{ type: String, ref: "PluginVersion" }],
   },
   {
     timestamps: true,

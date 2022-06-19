@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import { Form, FormSchema } from "./form.model";
 
 export interface Menu {
@@ -5,6 +6,17 @@ export interface Menu {
   title?: string;
   items?: Array<MenuItem>;
 }
+
+export const createMenu: (id: string, menu: Omit<Menu, "id">) => Menu = (
+  id: string,
+  menu: Omit<Menu, "id">
+) => ({
+  ...menu,
+  id: `${id}-${menu.title || "menu"}-${nanoid()}`,
+  items: menu.items?.map((item: Omit<MenuItem, "id">) =>
+    createMenuItem(`${id}-${menu.title || "menu"}-${nanoid()}`, item)
+  ),
+});
 
 export interface MenuItem {
   id: string;
@@ -15,6 +27,14 @@ export interface MenuItem {
   secrets?: {}; // will be inherited by every component created from this menu
   forms?: Array<Form>;
 }
+
+export const createMenuItem: (
+  id: string,
+  menuItem: Omit<MenuItem, "id">
+) => MenuItem = (id: string, menuItem: Omit<MenuItem, "id">) => ({
+  ...menuItem,
+  id: `${id}-${menuItem.title || "menu-item"}-${nanoid()}`,
+});
 
 export interface SvgPath {
   d: string;
