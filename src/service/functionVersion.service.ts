@@ -127,7 +127,7 @@ export async function runFunctionVersion(
 
   const user = await findUser({ _id: options.args.user._id });
   const agnos = {
-    form: options.args.form || options.test ? testForm : undefined,
+    form: options.args.form || (options.test ? testForm : undefined),
     function: {
       _id: functionVersion.function._id,
       name: functionVersion.function.name,

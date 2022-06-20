@@ -163,6 +163,6 @@ export async function runFunctionVersionHandler(
 
     return res.send({ result });
   } catch (error) {
-    return res.send({ error });
+    return res.send({ error: { message: String(error) } });
   }
 }
