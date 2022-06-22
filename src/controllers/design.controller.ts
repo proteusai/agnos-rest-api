@@ -9,10 +9,7 @@ import { createTeamDesignShare } from "../service/teamDesignShare.service";
 import { findUserDocument } from "../service/user.service";
 import { createUserDesignShare } from "../service/userDesignShare.service";
 
-export async function createDesignHandler(
-  req: Request<{}, {}, CreateDesignInput["body"]>,
-  res: Response
-) {
+export async function createDesignHandler(req: Request<{}, {}, CreateDesignInput["body"]>, res: Response) {
   const user = res.locals.user;
   const userDoc = await findUserDocument({ _id: user._id });
 
@@ -27,9 +24,7 @@ export async function createDesignHandler(
     team = await findTeamDocument({ autoCreated: true, user: user._id });
   }
   if (!team) {
-    return res
-      .status(404)
-      .send({ error: { message: "Could not find the team" } });
+    return res.status(404).send({ error: { message: "Could not find the team" } });
   }
 
   const design = await createDesign({
@@ -60,10 +55,7 @@ export async function createDesignHandler(
   return res.send({ design });
 }
 
-export async function getDesignHandler(
-  req: Request<GetDesignInput["params"]>,
-  res: Response
-) {
+export async function getDesignHandler(req: Request<GetDesignInput["params"]>, res: Response) {
   const design = await findDesign({ _id: req.params.id });
 
   if (!design) {

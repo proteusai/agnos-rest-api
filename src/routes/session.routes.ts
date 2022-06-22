@@ -13,23 +13,12 @@ const router = Router();
 
 router.post(
   "/sessions",
-  [
-    validateResource(createSessionSchema),
-    /**checkAuth0AccessToken,**/ checkAuth0IdToken,
-  ],
+  [validateResource(createSessionSchema), /**checkAuth0AccessToken,**/ checkAuth0IdToken],
   createUserSessionHandler
 );
 
-router.get(
-  "/sessions",
-  [/**checkAuth0AccessToken,**/ requireUser],
-  getUserSessionsHandler
-);
+router.get("/sessions", [/**checkAuth0AccessToken,**/ requireUser], getUserSessionsHandler);
 
-router.delete(
-  "/sessions",
-  [/**checkAuth0AccessToken,**/ requireUser],
-  deleteSessionHandler
-);
+router.delete("/sessions", [/**checkAuth0AccessToken,**/ requireUser], deleteSessionHandler);
 
 export default router;

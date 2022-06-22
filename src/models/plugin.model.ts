@@ -1,9 +1,7 @@
 import mongoose from "mongoose";
 import { DEFAULT_PLUGIN_PICTURE } from "../constants/defaults";
 import { BaseDocument } from "./base.model";
-import PluginVersionModel, {
-  PluginVersionDocument,
-} from "./pluginVersion.model";
+import PluginVersionModel, { PluginVersionDocument } from "./pluginVersion.model";
 import TeamModel, { TeamDocument } from "./team.model";
 import { UserDocument } from "./user.model";
 
@@ -16,10 +14,7 @@ export interface PluginInput {
   user: UserDocument["_id"]; // ref to the user that created this plugin
 }
 
-export interface PluginDocument
-  extends BaseDocument,
-    PluginInput,
-    mongoose.Document {
+export interface PluginDocument extends BaseDocument, PluginInput, mongoose.Document {
   versions?: Array<PluginVersionDocument["_id"]>;
 }
 
@@ -41,10 +36,7 @@ const pluginSchema = new mongoose.Schema(
 pluginSchema.pre("remove", async function (next) {
   let plugin = this as PluginDocument;
 
-  TeamModel.updateMany(
-    { plugins: plugin._id },
-    { $pull: { plugins: plugin._id } }
-  ).exec();
+  TeamModel.updateMany({ plugins: plugin._id }, { $pull: { plugins: plugin._id } }).exec();
   PluginVersionModel.remove({ plugin: plugin._id }).exec();
 
   return next();

@@ -7,10 +7,7 @@ export interface Menu {
   items?: Array<MenuItem>;
 }
 
-export const createMenu: (id: string, menu: Omit<Menu, "id">) => Menu = (
-  id: string,
-  menu: Omit<Menu, "id">
-) => ({
+export const createMenu: (id: string, menu: Omit<Menu, "id">) => Menu = (id: string, menu: Omit<Menu, "id">) => ({
   ...menu,
   id: `${id}-${menu.title || "menu"}-${nanoid()}`,
   items: menu.items?.map((item: Omit<MenuItem, "id">) =>
@@ -28,10 +25,10 @@ export interface MenuItem {
   forms?: Array<Form>;
 }
 
-export const createMenuItem: (
+export const createMenuItem: (id: string, menuItem: Omit<MenuItem, "id">) => MenuItem = (
   id: string,
   menuItem: Omit<MenuItem, "id">
-) => MenuItem = (id: string, menuItem: Omit<MenuItem, "id">) => ({
+) => ({
   ...menuItem,
   id: `${id}-${menuItem.title || "menu-item"}-${nanoid()}`,
 });

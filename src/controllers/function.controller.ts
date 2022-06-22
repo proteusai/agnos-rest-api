@@ -1,22 +1,11 @@
 import { Request, Response } from "express";
 import { IGNORE_LEAST_CARDINALITY } from "../constants/settings";
 import { TeamDocument } from "../models/team.model";
-import {
-  CreateFunctionInput,
-  GetFunctionInput,
-  GetFunctionsInput,
-} from "../schema/function.schema";
-import {
-  createFunction,
-  findFunction,
-  findFunctions,
-} from "../service/function.service";
+import { CreateFunctionInput, GetFunctionInput, GetFunctionsInput } from "../schema/function.schema";
+import { createFunction, findFunction, findFunctions } from "../service/function.service";
 import { findTeam, findTeamDocument } from "../service/team.service";
 
-export async function createFunctionHandler(
-  req: Request<{}, {}, CreateFunctionInput["body"]>,
-  res: Response
-) {
+export async function createFunctionHandler(req: Request<{}, {}, CreateFunctionInput["body"]>, res: Response) {
   const user = res.locals.user;
 
   let team:
@@ -30,9 +19,7 @@ export async function createFunctionHandler(
     team = await findTeamDocument({ autoCreated: true, user: user._id });
   }
   if (!team) {
-    return res
-      .status(404)
-      .send({ error: { message: "Could not find the team" } });
+    return res.status(404).send({ error: { message: "Could not find the team" } });
   }
 
   const func = await createFunction({
@@ -49,10 +36,7 @@ export async function createFunctionHandler(
   return res.send({ function: func });
 }
 
-export async function getFunctionHandler(
-  req: Request<GetFunctionInput["params"]>,
-  res: Response
-) {
+export async function getFunctionHandler(req: Request<GetFunctionInput["params"]>, res: Response) {
   const func = await findFunction({ _id: req.params.id });
 
   if (!func) {
@@ -62,10 +46,7 @@ export async function getFunctionHandler(
   return res.send({ function: func });
 }
 
-export async function getFunctionsHandler(
-  req: Request<{}, {}, {}, GetFunctionsInput["query"]>,
-  res: Response
-) {
+export async function getFunctionsHandler(req: Request<{}, {}, {}, GetFunctionsInput["query"]>, res: Response) {
   let populate: string[] | undefined = undefined;
   if (req.query.populate) {
     populate = req.query.populate.split(";");
@@ -76,9 +57,7 @@ export async function getFunctionsHandler(
     team = await findTeam({ _id: req.query.team });
   }
   if (req.query.team && !team) {
-    return res
-      .status(404)
-      .send({ error: { message: "Could not find the team" } });
+    return res.status(404).send({ error: { message: "Could not find the team" } });
   }
 
   // TODO: if user is not a member of this team return only public functions
@@ -94,10 +73,7 @@ export async function getFunctionsHandler(
   return res.send({ functions });
 }
 
-export async function getMyFunctionsHandler(
-  req: Request<{}, {}, {}, GetFunctionsInput["query"]>,
-  res: Response
-) {
+export async function getMyFunctionsHandler(req: Request<{}, {}, {}, GetFunctionsInput["query"]>, res: Response) {
   let populate: string[] | undefined = undefined;
   if (req.query.populate) {
     populate = req.query.populate.split(";");
@@ -113,9 +89,7 @@ export async function getMyFunctionsHandler(
     team = await findTeam({ autoCreated: true, user: user._id });
   }
   if (!team) {
-    return res
-      .status(404)
-      .send({ error: { message: "Could not find the team" } });
+    return res.status(404).send({ error: { message: "Could not find the team" } });
   }
 
   const functions = await findFunctions(

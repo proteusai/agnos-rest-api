@@ -2,13 +2,9 @@ import mongoose from "mongoose";
 import { DEFAULT_DESIGN_PICTURE } from "../constants/defaults";
 import { BaseDocument } from "./base.model";
 import TeamModel, { TeamDocument } from "./team.model";
-import TeamDesignShareModel, {
-  TeamDesignShareDocument,
-} from "./teamDesignShare.model";
+import TeamDesignShareModel, { TeamDesignShareDocument } from "./teamDesignShare.model";
 import { UserDocument } from "./user.model";
-import UserDesignShareModel, {
-  UserDesignShareDocument,
-} from "./userDesignShare.model";
+import UserDesignShareModel, { UserDesignShareDocument } from "./userDesignShare.model";
 
 export interface DesignInput {
   name: string;
@@ -22,10 +18,7 @@ export interface DesignInput {
   user: UserDocument["_id"]; // ref to the user that created this design
 }
 
-export interface DesignDocument
-  extends BaseDocument,
-    DesignInput,
-    mongoose.Document {
+export interface DesignDocument extends BaseDocument, DesignInput, mongoose.Document {
   teamDesignShares?: Array<TeamDesignShareDocument["_id"]>;
   userDesignShares?: Array<UserDesignShareDocument["_id"]>;
 }
@@ -40,13 +33,9 @@ const designSchema = new mongoose.Schema(
     secrets: { type: {} },
     template: { type: Boolean, default: false },
     team: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },
-    teamDesignShares: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "TeamDesignShare" },
-    ],
+    teamDesignShares: [{ type: mongoose.Schema.Types.ObjectId, ref: "TeamDesignShare" }],
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    userDesignShares: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "UserDesignShare" },
-    ],
+    userDesignShares: [{ type: mongoose.Schema.Types.ObjectId, ref: "UserDesignShare" }],
   },
   {
     timestamps: true,
@@ -56,10 +45,7 @@ const designSchema = new mongoose.Schema(
 designSchema.pre("remove", async function (next) {
   let design = this as DesignDocument;
 
-  TeamModel.updateMany(
-    { designs: design._id },
-    { $pull: { designs: design._id } }
-  ).exec();
+  TeamModel.updateMany({ designs: design._id }, { $pull: { designs: design._id } }).exec();
   TeamDesignShareModel.remove({ design: design._id }).exec();
   UserDesignShareModel.remove({ design: design._id }).exec();
 

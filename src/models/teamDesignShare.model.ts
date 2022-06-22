@@ -10,10 +10,7 @@ export interface TeamDesignShareInput {
   permission: PermissionName;
 }
 
-export interface TeamDesignShareDocument
-  extends BaseDocument,
-    TeamDesignShareInput,
-    mongoose.Document {}
+export interface TeamDesignShareDocument extends BaseDocument, TeamDesignShareInput, mongoose.Document {}
 
 const teamDesignShareSchema = new mongoose.Schema(
   {
@@ -41,9 +38,6 @@ teamDesignShareSchema.pre("remove", function (next) {
   next();
 });
 
-const TeamDesignShareModel = mongoose.model<TeamDesignShareDocument>(
-  "TeamDesignShare",
-  teamDesignShareSchema
-);
+const TeamDesignShareModel = mongoose.model<TeamDesignShareDocument>("TeamDesignShare", teamDesignShareSchema);
 
 export default TeamDesignShareModel;

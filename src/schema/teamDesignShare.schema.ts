@@ -32,9 +32,7 @@ export const getTeamDesignSharesSchema = object({
   ...query,
 });
 
-export type CreateTeamDesignShareInput = TypeOf<
-  typeof createTeamDesignShareSchema
->;
+export type CreateTeamDesignShareInput = TypeOf<typeof createTeamDesignShareSchema>;
 
 export type GetTeamDesignShareInput = TypeOf<typeof getTeamDesignShareSchema>;
 

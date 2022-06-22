@@ -17,10 +17,7 @@ export interface InvocationInput {
   version: FunctionVersionDocument["_id"];
 }
 
-export interface InvocationDocument
-  extends BaseDocument,
-    InvocationInput,
-    mongoose.Document {
+export interface InvocationDocument extends BaseDocument, InvocationInput, mongoose.Document {
   expiresAt?: Date;
 }
 
@@ -43,20 +40,11 @@ const invocationSchema = new mongoose.Schema(
 );
 
 // by default invocations are deleted when their "createdAt" expires
-invocationSchema.index(
-  { createdAt: 1 },
-  { expireAfterSeconds: 60 * 60 * 24 * 30 }
-);
+invocationSchema.index({ createdAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 30 });
 // but invocations created in test environments have an additional "expiresAt" field
 // to get them deleted earlier
-invocationSchema.index(
-  { expiresAt: 1 },
-  { expireAfterSeconds: 60 * 60 * 24 * 7 }
-);
+invocationSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 7 });
 
-const InvocationModel = mongoose.model<InvocationDocument>(
-  "Invocation",
-  invocationSchema
-);
+const InvocationModel = mongoose.model<InvocationDocument>("Invocation", invocationSchema);
 
 export default InvocationModel;

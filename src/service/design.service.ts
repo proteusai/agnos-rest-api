@@ -1,9 +1,6 @@
 import { omit } from "lodash";
 import { FilterQuery } from "mongoose";
-import DesignModel, {
-  DesignDocument,
-  DesignInput,
-} from "../models/design.model";
+import DesignModel, { DesignDocument, DesignInput } from "../models/design.model";
 
 export async function createDesign(input: DesignInput) {
   const design = await createDesignDocument(input);

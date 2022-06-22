@@ -7,10 +7,7 @@ import axios from "axios";
 import request from "request";
 import requireFromUrl from "require-from-url";
 import { ServiceOptions } from ".";
-import FunctionVersionModel, {
-  FunctionVersionDocument,
-  FunctionVersionInput,
-} from "../models/functionVersion.model";
+import FunctionVersionModel, { FunctionVersionDocument, FunctionVersionInput } from "../models/functionVersion.model";
 import { findUser } from "./user.service";
 import { PermissionScope } from "../constants/permissions";
 import { createLog } from "./log.service";
@@ -27,24 +24,17 @@ export async function createFunctionVersion(input: FunctionVersionInput) {
 
   return functionVersion.toJSON();
 }
-export async function createFunctionVersionDocument(
-  input: FunctionVersionInput
-) {
+export async function createFunctionVersionDocument(input: FunctionVersionInput) {
   const functionVersion = await FunctionVersionModel.create(input);
 
   return functionVersion;
 }
 
-export async function findFunctionVersion(
-  query: FilterQuery<FunctionVersionDocument>
-) {
+export async function findFunctionVersion(query: FilterQuery<FunctionVersionDocument>) {
   return FunctionVersionModel.findOne(query).lean();
 }
 
-export async function findFunctionVersions(
-  query: FilterQuery<FunctionVersionDocument>,
-  options?: ServiceOptions
-) {
+export async function findFunctionVersions(query: FilterQuery<FunctionVersionDocument>, options?: ServiceOptions) {
   return FunctionVersionModel.find(query)
     .populate(options?.populate || defaultPopulate)
     .sort({ createdAt: -1 })
@@ -70,13 +60,8 @@ export interface RunOptions {
   };
 }
 
-export async function runFunctionVersion(
-  query: FilterQuery<FunctionVersionDocument>,
-  options: RunOptions
-) {
-  const functionVersion = await FunctionVersionModel.findOne(query)
-    .populate(["function", "team"])
-    .lean();
+export async function runFunctionVersion(query: FilterQuery<FunctionVersionDocument>, options: RunOptions) {
+  const functionVersion = await FunctionVersionModel.findOne(query).populate(["function", "team"]).lean();
 
   if (!functionVersion) {
     throw new Error("Cannot find function version");

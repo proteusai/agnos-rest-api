@@ -1,9 +1,6 @@
 import { FilterQuery } from "mongoose";
 import { ServiceOptions } from ".";
-import MembershipModel, {
-  MembershipDocument,
-  MembershipInput,
-} from "../models/membership.model";
+import MembershipModel, { MembershipDocument, MembershipInput } from "../models/membership.model";
 
 const defaultPopulate = ["user", "team", "permission"];
 
@@ -13,10 +10,7 @@ export async function createMembership(input: MembershipInput) {
   return membership.toJSON();
 }
 
-export async function findMemberships(
-  query: FilterQuery<MembershipDocument>,
-  options?: ServiceOptions
-) {
+export async function findMemberships(query: FilterQuery<MembershipDocument>, options?: ServiceOptions) {
   return MembershipModel.find(query)
     .populate(options?.populate || defaultPopulate)
     .lean();

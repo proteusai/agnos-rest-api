@@ -1,16 +1,9 @@
 import { Request, Response } from "express";
 import { CreateSettingsInput } from "../schema/settings.schema";
-import {
-  createSettings,
-  findAndUpdateSettings,
-  findOneSetOfSettings,
-} from "../service/settings.service";
+import { createSettings, findAndUpdateSettings, findOneSetOfSettings } from "../service/settings.service";
 import { findUserDocument } from "../service/user.service";
 
-export async function createOrUpdateSettingsHandler(
-  req: Request<{}, {}, CreateSettingsInput["body"]>,
-  res: Response
-) {
+export async function createOrUpdateSettingsHandler(req: Request<{}, {}, CreateSettingsInput["body"]>, res: Response) {
   const _id = res.locals.user._id;
   const user = await findUserDocument({ _id });
 

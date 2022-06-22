@@ -1,9 +1,6 @@
 import { FilterQuery } from "mongoose";
 import { ServiceOptions } from ".";
-import PluginModel, {
-  PluginDocument,
-  PluginInput,
-} from "../models/plugin.model";
+import PluginModel, { PluginDocument, PluginInput } from "../models/plugin.model";
 
 const defaultPopulate = ["versions"];
 
@@ -26,10 +23,7 @@ export async function findPluginDocument(query: FilterQuery<PluginDocument>) {
   return PluginModel.findOne(query);
 }
 
-export async function findPlugins(
-  query: FilterQuery<PluginDocument>,
-  options?: ServiceOptions
-) {
+export async function findPlugins(query: FilterQuery<PluginDocument>, options?: ServiceOptions) {
   return PluginModel.find(query)
     .populate(options?.populate || defaultPopulate)
     .lean();

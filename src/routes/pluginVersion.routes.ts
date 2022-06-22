@@ -18,37 +18,25 @@ const router = Router();
 
 router.get(
   "/plugin-versions/:id",
-  [
-    validateResource(getPluginVersionSchema),
-    /**checkAuth0AccessToken,**/ requireUser,
-  ],
+  [validateResource(getPluginVersionSchema), /**checkAuth0AccessToken,**/ requireUser],
   getPluginVersionHandler
 );
 
 router.get(
   "/plugin-versions",
-  [
-    validateResource(getPluginVersionsSchema),
-    /**checkAuth0AccessToken,**/ requireUser,
-  ],
+  [validateResource(getPluginVersionsSchema), /**checkAuth0AccessToken,**/ requireUser],
   getPluginVersionsHandler
 );
 
 router.patch(
   "/plugin-versions/:id",
-  [
-    validateResource(updatePluginVersionSchema),
-    /**checkAuth0AccessToken,**/ requireUser,
-  ],
+  [validateResource(updatePluginVersionSchema), /**checkAuth0AccessToken,**/ requireUser],
   updatePluginVersionHandler
 );
 
 router.post(
   "/plugin-versions",
-  [
-    validateResource(createPluginVersionSchema),
-    /**checkAuth0AccessToken,**/ requireUser,
-  ],
+  [validateResource(createPluginVersionSchema), /**checkAuth0AccessToken,**/ requireUser],
   createPluginVersionHandler
 );
 

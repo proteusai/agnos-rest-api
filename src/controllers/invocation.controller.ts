@@ -2,10 +2,7 @@ import { Request, Response } from "express";
 import { GetInvocationsInput } from "../schema/invocation.schema";
 import { findInvocations } from "../service/invocation.service";
 
-export async function getInvocationsHandler(
-  req: Request<{}, {}, {}, GetInvocationsInput["query"]>,
-  res: Response
-) {
+export async function getInvocationsHandler(req: Request<{}, {}, {}, GetInvocationsInput["query"]>, res: Response) {
   let populate: string[] | undefined = undefined;
   if (req.query.populate) {
     populate = req.query.populate.split(";");

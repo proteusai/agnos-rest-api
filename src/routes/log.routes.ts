@@ -6,10 +6,6 @@ import { getLogsSchema } from "../schema/log.schema";
 
 const router = Router();
 
-router.get(
-  "/logs",
-  [validateResource(getLogsSchema), /**checkAuth0AccessToken,**/ requireUser],
-  getLogsHandler
-);
+router.get("/logs", [validateResource(getLogsSchema), /**checkAuth0AccessToken,**/ requireUser], getLogsHandler);
 
 export default router;

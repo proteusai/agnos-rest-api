@@ -1,10 +1,7 @@
 import { FilterQuery, UpdateQuery, QueryOptions } from "mongoose";
 import { ServiceOptions } from ".";
 import { createMenu, Menu } from "../models/menu.model";
-import PluginVersionModel, {
-  PluginVersionDocument,
-  PluginVersionInput,
-} from "../models/pluginVersion.model";
+import PluginVersionModel, { PluginVersionDocument, PluginVersionInput } from "../models/pluginVersion.model";
 
 const defaultPopulate = ["plugin", "team", "user"];
 
@@ -22,16 +19,11 @@ export async function createPluginVersionDocument(input: PluginVersionInput) {
   return pluginVersion;
 }
 
-export async function findPluginVersion(
-  query: FilterQuery<PluginVersionDocument>
-) {
+export async function findPluginVersion(query: FilterQuery<PluginVersionDocument>) {
   return PluginVersionModel.findOne(query).lean();
 }
 
-export async function findPluginVersions(
-  query: FilterQuery<PluginVersionDocument>,
-  options?: ServiceOptions
-) {
+export async function findPluginVersions(query: FilterQuery<PluginVersionDocument>, options?: ServiceOptions) {
   return PluginVersionModel.find(query)
     .populate(options?.populate || defaultPopulate)
     .sort({ createdAt: -1 })
@@ -60,9 +52,7 @@ function convertConfigToMenus(id: string, config: string): Array<Menu> {
 
   const jsonConfig = JSON.parse(config);
   if (jsonConfig.menus) {
-    jsonConfig.menus.map((menu: Omit<Menu, "id">) =>
-      menus.push(createMenu(id, menu))
-    );
+    jsonConfig.menus.map((menu: Omit<Menu, "id">) => menus.push(createMenu(id, menu)));
   }
 
   return menus;

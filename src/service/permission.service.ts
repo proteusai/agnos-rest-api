@@ -1,8 +1,5 @@
 import { FilterQuery } from "mongoose";
-import PermissionModel, {
-  PermissionDocument,
-  PermissionInput,
-} from "../models/permission.model";
+import PermissionModel, { PermissionDocument, PermissionInput } from "../models/permission.model";
 
 export async function createPermission(input: PermissionInput) {
   const permission = await PermissionModel.create(input);

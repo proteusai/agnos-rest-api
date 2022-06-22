@@ -9,10 +9,7 @@ import { createTeamDocument } from "../service/team.service";
 import { createUserDocument, findUser } from "../service/user.service";
 import logger from "../utils/logger";
 
-export async function createUserHandler(
-  req: Request<{}, {}, CreateUserInput["body"]>,
-  res: Response
-) {
+export async function createUserHandler(req: Request<{}, {}, CreateUserInput["body"]>, res: Response) {
   try {
     const user = await createUserDocument(req.body);
     const team = await createTeamDocument({

@@ -1,30 +1,14 @@
 import { Router } from "express";
-import {
-  createTeamHandler,
-  getTeamHandler,
-  getTeamsHandler,
-} from "../controllers/team.controller";
+import { createTeamHandler, getTeamHandler, getTeamsHandler } from "../controllers/team.controller";
 import requireUser from "../middleware/requireUser";
 import validateResource from "../middleware/validateResource";
-import {
-  createTeamSchema,
-  getTeamSchema,
-  getTeamsSchema,
-} from "../schema/team.schema";
+import { createTeamSchema, getTeamSchema, getTeamsSchema } from "../schema/team.schema";
 
 const router = Router();
 
-router.get(
-  "/teams/:id",
-  [validateResource(getTeamSchema), /**checkAuth0AccessToken,**/ requireUser],
-  getTeamHandler
-);
+router.get("/teams/:id", [validateResource(getTeamSchema), /**checkAuth0AccessToken,**/ requireUser], getTeamHandler);
 
-router.get(
-  "/teams",
-  [validateResource(getTeamsSchema), /**checkAuth0AccessToken,**/ requireUser],
-  getTeamsHandler
-);
+router.get("/teams", [validateResource(getTeamsSchema), /**checkAuth0AccessToken,**/ requireUser], getTeamsHandler);
 
 /**
  * @openapi
@@ -51,10 +35,7 @@ router.get(
  */
 router.post(
   "/teams",
-  [
-    validateResource(createTeamSchema),
-    /**checkAuth0AccessToken,**/ requireUser,
-  ],
+  [validateResource(createTeamSchema), /**checkAuth0AccessToken,**/ requireUser],
   createTeamHandler
 );
 

@@ -8,10 +8,7 @@ const router = Router();
 
 router.get(
   "/invocations",
-  [
-    validateResource(getInvocationsSchema),
-    /**checkAuth0AccessToken,**/ requireUser,
-  ],
+  [validateResource(getInvocationsSchema), /**checkAuth0AccessToken,**/ requireUser],
   getInvocationsHandler
 );
 
