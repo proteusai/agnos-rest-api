@@ -12,10 +12,7 @@ export interface InstallationInput {
   user: UserDocument["_id"]; // ref to the user that created this installation
 }
 
-export interface InstallationDocument
-  extends BaseDocument,
-    InstallationInput,
-    mongoose.Document {}
+export interface InstallationDocument extends BaseDocument, InstallationInput, mongoose.Document {}
 
 const installationSchema = new mongoose.Schema(
   {
@@ -29,9 +26,6 @@ const installationSchema = new mongoose.Schema(
   }
 );
 
-const InstallationModel = mongoose.model<InstallationDocument>(
-  "Installation",
-  installationSchema
-);
+const InstallationModel = mongoose.model<InstallationDocument>("Installation", installationSchema);
 
 export default InstallationModel;

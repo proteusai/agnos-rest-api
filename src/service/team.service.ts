@@ -28,10 +28,7 @@ export async function findTeamDocument(query: FilterQuery<TeamDocument>) {
   return TeamModel.findOne(query);
 }
 
-export async function findTeams(
-  query: FilterQuery<TeamDocument>,
-  options?: ServiceOptions
-) {
+export async function findTeams(query: FilterQuery<TeamDocument>, options?: ServiceOptions) {
   return TeamModel.find(query)
     .populate(options?.populate || defaultPopulate)
     .lean();

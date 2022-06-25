@@ -11,10 +11,7 @@ import {
   RunFunctionVersionInput,
   UpdateFunctionVersionInput,
 } from "../schema/functionVersion.schema";
-import {
-  findFunction,
-  findFunctionDocument,
-} from "../service/function.service";
+import { findFunction, findFunctionDocument } from "../service/function.service";
 import {
   createFunctionVersion,
   findAndUpdateFunctionVersion,
@@ -22,26 +19,22 @@ import {
   findFunctionVersions,
   runFunctionVersion,
 } from "../service/functionVersion.service";
+import { Obj } from "../types";
 
 export async function createFunctionVersionHandler(
-  req: Request<{}, {}, CreateFunctionVersionInput["body"]>,
+  req: Request<Obj, Obj, CreateFunctionVersionInput["body"]>,
   res: Response
 ) {
   const user = res.locals.user;
 
   const func = await findFunctionDocument({ _id: req.body.function });
   if (!func) {
-    return res
-      .status(404)
-      .send({ error: { message: "Could not find the function" } });
+    return res.status(404).send({ error: { message: "Could not find the function" } });
   }
 
   // TODO: check that user has permission in the func.team
 
-  const _id = slugify(
-    `${func.name} ${req.body.name} ${Date.now()} ${nanoid()}`,
-    { lower: true, strict: true }
-  );
+  const _id = slugify(`${func.name} ${req.body.name} ${Date.now()} ${nanoid()}`, { lower: true, strict: true });
 
   const functionVersion = await createFunctionVersion({
     _id,
@@ -59,10 +52,7 @@ export async function createFunctionVersionHandler(
   return res.send({ functionVersion });
 }
 
-export async function getFunctionVersionHandler(
-  req: Request<GetFunctionVersionInput["params"]>,
-  res: Response
-) {
+export async function getFunctionVersionHandler(req: Request<GetFunctionVersionInput["params"]>, res: Response) {
   const functionVersion = await findFunctionVersion({ _id: req.params.id });
 
   if (!functionVersion) {
@@ -73,7 +63,7 @@ export async function getFunctionVersionHandler(
 }
 
 export async function getFunctionVersionsHandler(
-  req: Request<{}, {}, {}, GetFunctionVersionsInput["query"]>,
+  req: Request<Obj, Obj, Obj, GetFunctionVersionsInput["query"]>,
   res: Response
 ) {
   let populate: string[] | undefined = undefined;
@@ -86,26 +76,17 @@ export async function getFunctionVersionsHandler(
     func = await findFunction({ _id: req.query.function });
   }
   if (req.query.function && !func) {
-    return res
-      .status(404)
-      .send({ error: { message: "Could not find the function" } });
+    return res.status(404).send({ error: { message: "Could not find the function" } });
   }
 
   // TODO: if user is not a member of func.team return only published function versions
 
-  const functionVersions = await findFunctionVersions(
-    { ...(func && { function: func._id }) },
-    { populate }
-  );
+  const functionVersions = await findFunctionVersions({ ...(func && { function: func._id }) }, { populate });
   return res.send({ functionVersions });
 }
 
 export async function updateFunctionVersionHandler(
-  req: Request<
-    UpdateFunctionVersionInput["params"],
-    {},
-    UpdateFunctionVersionInput["body"]
-  >,
+  req: Request<UpdateFunctionVersionInput["params"], Obj, UpdateFunctionVersionInput["body"]>,
   res: Response
 ) {
   const _id = req.params.id;
@@ -134,16 +115,13 @@ export async function updateFunctionVersionHandler(
 export async function runFunctionVersionHandler(
   req: Request<
     RunFunctionVersionInput["params"],
-    {},
+    Obj,
     RunFunctionVersionInput["body"],
     RunFunctionVersionInput["query"]
   >,
   res: Response
 ) {
-  const accessToken = get(req, "headers.authorization", "").replace(
-    /^Bearer\s/,
-    ""
-  );
+  const accessToken = get(req, "headers.authorization", "").replace(/^Bearer\s/, "");
   try {
     const result = await runFunctionVersion(
       {
@@ -163,6 +141,6 @@ export async function runFunctionVersionHandler(
 
     return res.send({ result });
   } catch (error) {
-    return res.send({ error });
+    return res.send({ error: { message: String(error) } });
   }
 }

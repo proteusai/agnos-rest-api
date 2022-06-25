@@ -7,12 +7,10 @@ import { createMembership } from "../service/membership.service";
 import { createSettings } from "../service/settings.service";
 import { createTeamDocument } from "../service/team.service";
 import { createUserDocument, findUser } from "../service/user.service";
+import { Obj } from "../types";
 import logger from "../utils/logger";
 
-export async function createUserHandler(
-  req: Request<{}, {}, CreateUserInput["body"]>,
-  res: Response
-) {
+export async function createUserHandler(req: Request<Obj, Obj, CreateUserInput["body"]>, res: Response) {
   try {
     const user = await createUserDocument(req.body);
     const team = await createTeamDocument({

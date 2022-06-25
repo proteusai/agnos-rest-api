@@ -44,7 +44,7 @@ import { object, string, boolean, TypeOf } from "zod";
  *              type: boolean
  *            memberships:
  *              type: array
- *              items: 
+ *              items:
  *                $ref: '#/definitions/membership'
  *            picture:
  *              type: string
@@ -63,9 +63,7 @@ export const createUserSchema = object({
       required_error: "Email is required",
     }).email("Not a valid email"),
     emailIsVerified: boolean().default(false).optional(),
-    password: string()
-      .min(6, "Password too short - should be 6 chars minimum")
-      .optional(),
+    password: string().min(6, "Password too short - should be 6 chars minimum").optional(),
     passwordConfirmation: string().optional(),
     picture: string().optional(),
   }).refine((data) => data.password === data.passwordConfirmation, {
@@ -74,7 +72,4 @@ export const createUserSchema = object({
   }),
 });
 
-export type CreateUserInput = Omit<
-  TypeOf<typeof createUserSchema>,
-  "body.passwordConfirmation"
->;
+export type CreateUserInput = Omit<TypeOf<typeof createUserSchema>, "body.passwordConfirmation">;

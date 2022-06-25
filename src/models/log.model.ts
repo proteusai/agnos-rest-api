@@ -13,10 +13,7 @@ export interface LogInput {
   type?: LogType;
 }
 
-export interface LogDocument
-  extends BaseDocument,
-    LogInput,
-    mongoose.Document {}
+export interface LogDocument extends BaseDocument, LogInput, mongoose.Document {}
 
 const logSchema = new mongoose.Schema(
   {

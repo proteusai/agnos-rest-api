@@ -5,9 +5,7 @@ import DesignModel, { DesignDocument } from "./design.model";
 import FunctionModel, { FunctionDocument } from "./function.model";
 import MembershipModel, { MembershipDocument } from "./membership.model";
 import PluginModel, { PluginDocument } from "./plugin.model";
-import TeamDesignShareModel, {
-  TeamDesignShareDocument,
-} from "./teamDesignShare.model";
+import TeamDesignShareModel, { TeamDesignShareDocument } from "./teamDesignShare.model";
 import { UserDocument } from "./user.model";
 
 export interface TeamInput {
@@ -21,10 +19,7 @@ export interface TeamInput {
   user: UserDocument["_id"]; // ref to the user that created this team
 }
 
-export interface TeamDocument
-  extends BaseDocument,
-    TeamInput,
-    mongoose.Document {
+export interface TeamDocument extends BaseDocument, TeamInput, mongoose.Document {
   designs?: Array<DesignDocument["_id"]>;
   functions?: Array<FunctionDocument["_id"]>;
   memberships?: Array<MembershipDocument["_id"]>;
@@ -46,9 +41,7 @@ const teamSchema = new mongoose.Schema(
     plugins: [{ type: mongoose.Schema.Types.ObjectId, ref: "Plugin" }],
     secrets: { type: {} },
     services: [{ type: mongoose.Schema.Types.ObjectId, ref: "Service" }],
-    teamDesignShares: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "TeamDesignShare" },
-    ],
+    teamDesignShares: [{ type: mongoose.Schema.Types.ObjectId, ref: "TeamDesignShare" }],
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   {
@@ -57,13 +50,33 @@ const teamSchema = new mongoose.Schema(
 );
 
 teamSchema.pre("remove", async function (next) {
-  let team = this as TeamDocument;
+  const team = this as TeamDocument;
 
-  DesignModel.remove({ team: team._id }).exec();
-  FunctionModel.remove({ team: team._id }).exec();
-  MembershipModel.remove({ team: team._id }).exec();
-  PluginModel.remove({ team: team._id }).exec();
-  TeamDesignShareModel.remove({ team: team._id }).exec();
+  DesignModel.remove({ team: team._id })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
+  FunctionModel.remove({ team: team._id })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
+  MembershipModel.remove({ team: team._id })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
+  PluginModel.remove({ team: team._id })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
+  TeamDesignShareModel.remove({ team: team._id })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
 
   return next();
 });

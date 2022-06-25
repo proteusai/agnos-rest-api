@@ -15,26 +15,22 @@ import {
   findPluginVersion,
   findPluginVersions,
 } from "../service/pluginVersion.service";
+import { Obj } from "../types";
 
 export async function createPluginVersionHandler(
-  req: Request<{}, {}, CreatePluginVersionInput["body"]>,
+  req: Request<Obj, Obj, CreatePluginVersionInput["body"]>,
   res: Response
 ) {
   const user = res.locals.user;
 
   const plugin = await findPluginDocument({ _id: req.body.plugin });
   if (!plugin) {
-    return res
-      .status(404)
-      .send({ error: { message: "Could not find the plugin" } });
+    return res.status(404).send({ error: { message: "Could not find the plugin" } });
   }
 
   // TODO: check that user has permission in the plugin.team
 
-  const _id = slugify(
-    `${plugin.name} ${req.body.name} ${Date.now()} ${nanoid()}`,
-    { lower: true, strict: true }
-  );
+  const _id = slugify(`${plugin.name} ${req.body.name} ${Date.now()} ${nanoid()}`, { lower: true, strict: true });
 
   const pluginVersion = await createPluginVersion({
     _id,
@@ -51,10 +47,7 @@ export async function createPluginVersionHandler(
   return res.send({ pluginVersion });
 }
 
-export async function getPluginVersionHandler(
-  req: Request<GetPluginVersionInput["params"]>,
-  res: Response
-) {
+export async function getPluginVersionHandler(req: Request<GetPluginVersionInput["params"]>, res: Response) {
   const pluginVersion = await findPluginVersion({ _id: req.params.id });
 
   if (!pluginVersion) {
@@ -65,7 +58,7 @@ export async function getPluginVersionHandler(
 }
 
 export async function getPluginVersionsHandler(
-  req: Request<{}, {}, {}, GetPluginVersionsInput["query"]>,
+  req: Request<Obj, Obj, Obj, GetPluginVersionsInput["query"]>,
   res: Response
 ) {
   let populate: string[] | undefined = undefined;
@@ -78,26 +71,17 @@ export async function getPluginVersionsHandler(
     plugin = await findPlugin({ _id: req.query.plugin });
   }
   if (req.query.plugin && !plugin) {
-    return res
-      .status(404)
-      .send({ error: { message: "Could not find the plugin" } });
+    return res.status(404).send({ error: { message: "Could not find the plugin" } });
   }
 
   // TODO: if user is not a member of plugin.team return only published plugin versions
 
-  const pluginVersions = await findPluginVersions(
-    { ...(plugin && { plugin: plugin._id }) },
-    { populate }
-  );
+  const pluginVersions = await findPluginVersions({ ...(plugin && { plugin: plugin._id }) }, { populate });
   return res.send({ pluginVersions });
 }
 
 export async function updatePluginVersionHandler(
-  req: Request<
-    UpdatePluginVersionInput["params"],
-    {},
-    UpdatePluginVersionInput["body"]
-  >,
+  req: Request<UpdatePluginVersionInput["params"], Obj, UpdatePluginVersionInput["body"]>,
   res: Response
 ) {
   const _id = req.params.id;

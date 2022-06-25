@@ -17,10 +17,7 @@ export interface PluginVersionInput {
   user: UserDocument["_id"]; // ref to the user that created this plugin version
 }
 
-export interface PluginVersionDocument
-  extends BaseDocument,
-    Omit<PluginVersionInput, "_id">,
-    mongoose.Document {
+export interface PluginVersionDocument extends BaseDocument, Omit<PluginVersionInput, "_id">, mongoose.Document {
   menus?: Array<Menu>;
 }
 
@@ -43,20 +40,22 @@ const pluginVersionSchema = new mongoose.Schema(
 );
 
 pluginVersionSchema.pre("remove", async function (next) {
-  let version = this as PluginVersionDocument;
+  const version = this as PluginVersionDocument;
 
-  PluginModel.updateMany(
-    { versions: version._id },
-    { $pull: { versions: version._id } }
-  ).exec();
-  InstallationModel.remove({ version: version._id }).exec();
+  PluginModel.updateMany({ versions: version._id }, { $pull: { versions: version._id } })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
+  InstallationModel.remove({ version: version._id })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
 
   return next();
 });
 
-const PluginVersionModel = mongoose.model<PluginVersionDocument>(
-  "PluginVersion",
-  pluginVersionSchema
-);
+const PluginVersionModel = mongoose.model<PluginVersionDocument>("PluginVersion", pluginVersionSchema);
 
 export default PluginVersionModel;

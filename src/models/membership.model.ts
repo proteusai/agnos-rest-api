@@ -10,10 +10,7 @@ export interface MembershipInput {
   permission: PermissionName;
 }
 
-export interface MembershipDocument
-  extends BaseDocument,
-    MembershipInput,
-    mongoose.Document {}
+export interface MembershipDocument extends BaseDocument, MembershipInput, mongoose.Document {}
 
 const membershipSchema = new mongoose.Schema(
   {
@@ -27,23 +24,22 @@ const membershipSchema = new mongoose.Schema(
 );
 
 membershipSchema.pre("remove", function (next) {
-  let membership = this as MembershipDocument;
+  const membership = this as MembershipDocument;
 
-  TeamModel.updateMany(
-    { memberships: membership._id },
-    { $pull: { memberships: membership._id } }
-  ).exec();
-  UserModel.updateMany(
-    { memberships: membership._id },
-    { $pull: { memberships: membership._id } }
-  ).exec();
+  TeamModel.updateMany({ memberships: membership._id }, { $pull: { memberships: membership._id } })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
+  UserModel.updateMany({ memberships: membership._id }, { $pull: { memberships: membership._id } })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
 
   next();
 });
 
-const MembershipModel = mongoose.model<MembershipDocument>(
-  "Membership",
-  membershipSchema
-);
+const MembershipModel = mongoose.model<MembershipDocument>("Membership", membershipSchema);
 
 export default MembershipModel;

@@ -15,9 +15,6 @@ export async function findSessions(query: FilterQuery<SessionDocument>) {
   return SessionModel.find(query).lean();
 }
 
-export async function updateSession(
-  query: FilterQuery<SessionDocument>,
-  update: UpdateQuery<SessionDocument>
-) {
+export async function updateSession(query: FilterQuery<SessionDocument>, update: UpdateQuery<SessionDocument>) {
   return SessionModel.updateOne(query, update);
 }

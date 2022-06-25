@@ -1,8 +1,5 @@
 import { FilterQuery, QueryOptions, UpdateQuery } from "mongoose";
-import SettingsModel, {
-  SettingsDocument,
-  SettingsInput,
-} from "../models/settings.model";
+import SettingsModel, { SettingsDocument, SettingsInput } from "../models/settings.model";
 
 export async function createSettings(input: SettingsInput) {
   const settings = await createSettingsDocument(input);
@@ -19,21 +16,15 @@ export async function createSettingsDocument(input: SettingsInput) {
   }
 }
 
-export async function findOneSetOfSettings(
-  query: FilterQuery<SettingsDocument>
-) {
+export async function findOneSetOfSettings(query: FilterQuery<SettingsDocument>) {
   return SettingsModel.findOne(query).lean();
 }
 
-export async function findOneSetOfSettingsDocument(
-  query: FilterQuery<SettingsDocument>
-) {
+export async function findOneSetOfSettingsDocument(query: FilterQuery<SettingsDocument>) {
   return SettingsModel.findOne(query);
 }
 
-export async function findManySetsOfSettings(
-  query: FilterQuery<SettingsDocument>
-) {
+export async function findManySetsOfSettings(query: FilterQuery<SettingsDocument>) {
   return SettingsModel.find(query).lean();
 }
 

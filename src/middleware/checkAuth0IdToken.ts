@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import config from "config";
 import { CreateSessionInput } from "../schema/session.schema";
+import { Obj } from "../types";
 
 const checkAuth0IdToken = async (
-  req: Request<{}, {}, CreateSessionInput["body"]>,
+  req: Request<Obj, Obj, CreateSessionInput["body"]>,
   res: Response,
   next: NextFunction
 ) => {
@@ -26,9 +27,9 @@ const checkAuth0IdToken = async (
 };
 
 function parseJwt(token: string) {
-  var base64Url = token.split(".")[1];
-  var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-  var jsonPayload = decodeURIComponent(
+  const base64Url = token.split(".")[1];
+  const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  const jsonPayload = decodeURIComponent(
     Buffer.from(base64, "base64")
       .toString()
       .split("")

@@ -1,23 +1,13 @@
 import { Request, Response } from "express";
 import { PermissionName } from "../constants/permissions";
 import { IGNORE_LEAST_CARDINALITY } from "../constants/settings";
-import {
-  CreateTeamInput,
-  GetTeamInput,
-  GetTeamsInput,
-} from "../schema/team.schema";
+import { CreateTeamInput, GetTeamInput, GetTeamsInput } from "../schema/team.schema";
 import { createMembership } from "../service/membership.service";
-import {
-  createTeamDocument,
-  findTeam,
-  findTeams,
-} from "../service/team.service";
+import { createTeamDocument, findTeam, findTeams } from "../service/team.service";
 import { findUserDocument } from "../service/user.service";
+import { Obj } from "../types";
 
-export async function createTeamHandler(
-  req: Request<{}, {}, CreateTeamInput["body"]>,
-  res: Response
-) {
+export async function createTeamHandler(req: Request<Obj, Obj, CreateTeamInput["body"]>, res: Response) {
   const user = res.locals.user;
   const userDoc = await findUserDocument({ _id: user._id });
 
@@ -38,10 +28,7 @@ export async function createTeamHandler(
   return res.send({ team: team.toJSON() });
 }
 
-export async function getTeamHandler(
-  req: Request<GetTeamInput["params"]>,
-  res: Response
-) {
+export async function getTeamHandler(req: Request<GetTeamInput["params"]>, res: Response) {
   const team = await findTeam({ _id: req.params.id });
 
   if (!team) {
@@ -51,10 +38,7 @@ export async function getTeamHandler(
   return res.send({ team });
 }
 
-export async function getTeamsHandler(
-  req: Request<{}, {}, {}, GetTeamsInput["query"]>,
-  res: Response
-) {
+export async function getTeamsHandler(req: Request<Obj, Obj, Obj, GetTeamsInput["query"]>, res: Response) {
   let populate: string[] | undefined = undefined;
   if (req.query.populate) {
     populate = req.query.populate.split(";");
@@ -64,10 +48,7 @@ export async function getTeamsHandler(
   return res.send({ teams });
 }
 
-export async function getMyTeamHandler(
-  req: Request<{}, {}, {}, GetTeamsInput["query"]>,
-  res: Response
-) {
+export async function getMyTeamHandler(req: Request<Obj, Obj, Obj, GetTeamsInput["query"]>, res: Response) {
   let populate: string[] | undefined = undefined;
   if (req.query.populate) {
     populate = req.query.populate.split(";");

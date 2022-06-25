@@ -19,10 +19,7 @@ export interface FunctionVersionInput {
   user: UserDocument["_id"]; // ref to the user that created this function version
 }
 
-export interface FunctionVersionDocument
-  extends BaseDocument,
-    Omit<FunctionVersionInput, "_id">,
-    mongoose.Document {}
+export interface FunctionVersionDocument extends BaseDocument, Omit<FunctionVersionInput, "_id">, mongoose.Document {}
 
 const functionVersionSchema = new mongoose.Schema(
   {
@@ -45,19 +42,17 @@ const functionVersionSchema = new mongoose.Schema(
 );
 
 functionVersionSchema.pre("remove", async function (next) {
-  let version = this as FunctionVersionDocument;
+  const version = this as FunctionVersionDocument;
 
-  FunctionModel.updateMany(
-    { versions: version._id },
-    { $pull: { versions: version._id } }
-  ).exec();
+  FunctionModel.updateMany({ versions: version._id }, { $pull: { versions: version._id } })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
 
   return next();
 });
 
-const FunctionVersionModel = mongoose.model<FunctionVersionDocument>(
-  "FunctionVersion",
-  functionVersionSchema
-);
+const FunctionVersionModel = mongoose.model<FunctionVersionDocument>("FunctionVersion", functionVersionSchema);
 
 export default FunctionVersionModel;

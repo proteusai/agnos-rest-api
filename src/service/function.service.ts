@@ -1,9 +1,6 @@
 import { FilterQuery } from "mongoose";
 import { ServiceOptions } from ".";
-import FunctionModel, {
-  FunctionDocument,
-  FunctionInput,
-} from "../models/function.model";
+import FunctionModel, { FunctionDocument, FunctionInput } from "../models/function.model";
 
 const defaultPopulate = ["versions"];
 
@@ -22,16 +19,11 @@ export async function findFunction(query: FilterQuery<FunctionDocument>) {
   return FunctionModel.findOne(query).lean();
 }
 
-export async function findFunctionDocument(
-  query: FilterQuery<FunctionDocument>
-) {
+export async function findFunctionDocument(query: FilterQuery<FunctionDocument>) {
   return FunctionModel.findOne(query);
 }
 
-export async function findFunctions(
-  query: FilterQuery<FunctionDocument>,
-  options?: ServiceOptions
-) {
+export async function findFunctions(query: FilterQuery<FunctionDocument>, options?: ServiceOptions) {
   return FunctionModel.find(query)
     .populate(options?.populate || defaultPopulate)
     .lean();

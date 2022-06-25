@@ -10,10 +10,7 @@ export interface UserDesignShareInput {
   permission: PermissionName;
 }
 
-export interface UserDesignShareDocument
-  extends BaseDocument,
-    UserDesignShareInput,
-    mongoose.Document {}
+export interface UserDesignShareDocument extends BaseDocument, UserDesignShareInput, mongoose.Document {}
 
 const userDesignShareSchema = new mongoose.Schema(
   {
@@ -27,23 +24,25 @@ const userDesignShareSchema = new mongoose.Schema(
 );
 
 userDesignShareSchema.pre("remove", function (next) {
-  let userDesignShare = this as UserDesignShareDocument;
+  const userDesignShare = this as UserDesignShareDocument;
 
   DesignModel.updateMany(
     { userDesignShares: userDesignShare._id },
     { $pull: { userDesignShares: userDesignShare._id } }
-  ).exec();
-  UserModel.updateMany(
-    { userDesignShares: userDesignShare._id },
-    { $pull: { userDesignShares: userDesignShare._id } }
-  ).exec();
+  )
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
+  UserModel.updateMany({ userDesignShares: userDesignShare._id }, { $pull: { userDesignShares: userDesignShare._id } })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
 
   next();
 });
 
-const UserDesignShareModel = mongoose.model<UserDesignShareDocument>(
-  "UserDesignShare",
-  userDesignShareSchema
-);
+const UserDesignShareModel = mongoose.model<UserDesignShareDocument>("UserDesignShare", userDesignShareSchema);
 
 export default UserDesignShareModel;

@@ -11,34 +11,14 @@ const router = Router();
 
 router.get("/me", [/**checkAuth0AccessToken,**/ requireUser], getMeHandler);
 
-router.get(
-  "/me/memberships",
-  [/**checkAuth0AccessToken,**/ requireUser],
-  getMyMembershipsHandler
-);
+router.get("/me/memberships", [/**checkAuth0AccessToken,**/ requireUser], getMyMembershipsHandler);
 
-router.get(
-  "/me/functions",
-  [/**checkAuth0AccessToken,**/ requireUser],
-  getMyFunctionsHandler
-);
+router.get("/me/functions", [/**checkAuth0AccessToken,**/ requireUser], getMyFunctionsHandler);
 
-router.get(
-  "/me/plugins",
-  [/**checkAuth0AccessToken,**/ requireUser],
-  getMyPluginsHandler
-);
+router.get("/me/plugins", [/**checkAuth0AccessToken,**/ requireUser], getMyPluginsHandler);
 
-router.get(
-  "/me/team-designs",
-  [/**checkAuth0AccessToken,**/ requireUser],
-  getMyTeamDesignSharesHandler
-);
+router.get("/me/team-designs", [/**checkAuth0AccessToken,**/ requireUser], getMyTeamDesignSharesHandler);
 
-router.get(
-  "/me/team",
-  [/**checkAuth0AccessToken,**/ requireUser],
-  getMyTeamHandler
-);
+router.get("/me/team", [/**checkAuth0AccessToken,**/ requireUser], getMyTeamHandler);
 
 export default router;

@@ -6,9 +6,7 @@ export interface PermissionInput {
   value: number;
 }
 
-export interface PermissionDocument
-  extends PermissionInput,
-    mongoose.Document {}
+export interface PermissionDocument extends PermissionInput, mongoose.Document {}
 
 const permissionSchema = new mongoose.Schema(
   {
@@ -20,9 +18,6 @@ const permissionSchema = new mongoose.Schema(
   { _id: false }
 );
 
-const PermissionModel = mongoose.model<PermissionDocument>(
-  "Permission",
-  permissionSchema
-);
+const PermissionModel = mongoose.model<PermissionDocument>("Permission", permissionSchema);
 
 export default PermissionModel;

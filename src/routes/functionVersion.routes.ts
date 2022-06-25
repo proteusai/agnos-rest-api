@@ -20,46 +20,31 @@ const router = Router();
 
 router.get(
   "/function-versions/:id",
-  [
-    validateResource(getFunctionVersionSchema),
-    /**checkAuth0AccessToken,**/ requireUser,
-  ],
+  [validateResource(getFunctionVersionSchema), /**checkAuth0AccessToken,**/ requireUser],
   getFunctionVersionHandler
 );
 
 router.get(
   "/function-versions",
-  [
-    validateResource(getFunctionVersionsSchema),
-    /**checkAuth0AccessToken,**/ requireUser,
-  ],
+  [validateResource(getFunctionVersionsSchema), /**checkAuth0AccessToken,**/ requireUser],
   getFunctionVersionsHandler
 );
 
 router.patch(
   "/function-versions/:id",
-  [
-    validateResource(updateFunctionVersionSchema),
-    /**checkAuth0AccessToken,**/ requireUser,
-  ],
+  [validateResource(updateFunctionVersionSchema), /**checkAuth0AccessToken,**/ requireUser],
   updateFunctionVersionHandler
 );
 
 router.post(
   "/function-versions",
-  [
-    validateResource(createFunctionVersionSchema),
-    /**checkAuth0AccessToken,**/ requireUser,
-  ],
+  [validateResource(createFunctionVersionSchema), /**checkAuth0AccessToken,**/ requireUser],
   createFunctionVersionHandler
 );
 
 router.post(
   "/function-versions/:id",
-  [
-    validateResource(runFunctionVersionSchema),
-    /**checkAuth0AccessToken,**/ requireUser,
-  ],
+  [validateResource(runFunctionVersionSchema), /**checkAuth0AccessToken,**/ requireUser],
   runFunctionVersionHandler
 );
 

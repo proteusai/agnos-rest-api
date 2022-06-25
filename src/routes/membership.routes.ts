@@ -8,10 +8,7 @@ const router = Router();
 
 router.post(
   "/memberships",
-  [
-    validateResource(createMembershipSchema),
-    /**checkAuth0AccessToken,**/ requireUser,
-  ],
+  [validateResource(createMembershipSchema), /**checkAuth0AccessToken,**/ requireUser],
   createMembershipHandler
 );
 

@@ -1,16 +1,10 @@
 import { Request, Response } from "express";
-import {
-  createSession,
-  findSessions,
-  updateSession,
-} from "../service/session.service";
+import { createSession, findSessions, updateSession } from "../service/session.service";
 import { findUser } from "../service/user.service";
 import { CreateSessionInput } from "../schema/session.schema";
+import { Obj } from "../types";
 
-export async function createUserSessionHandler(
-  req: Request<{}, {}, CreateSessionInput["body"]>,
-  res: Response
-) {
+export async function createUserSessionHandler(req: Request<Obj, Obj, CreateSessionInput["body"]>, res: Response) {
   const email = req.body.email;
   const accessToken = req.body.accessToken;
 

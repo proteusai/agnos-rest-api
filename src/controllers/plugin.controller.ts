@@ -1,22 +1,12 @@
 import { Request, Response } from "express";
 import { IGNORE_LEAST_CARDINALITY } from "../constants/settings";
 import { TeamDocument } from "../models/team.model";
-import {
-  CreatePluginInput,
-  GetPluginInput,
-  GetPluginsInput,
-} from "../schema/plugin.schema";
-import {
-  createPlugin,
-  findPlugin,
-  findPlugins,
-} from "../service/plugin.service";
+import { CreatePluginInput, GetPluginInput, GetPluginsInput } from "../schema/plugin.schema";
+import { createPlugin, findPlugin, findPlugins } from "../service/plugin.service";
 import { findTeam, findTeamDocument } from "../service/team.service";
+import { Obj } from "../types";
 
-export async function createPluginHandler(
-  req: Request<{}, {}, CreatePluginInput["body"]>,
-  res: Response
-) {
+export async function createPluginHandler(req: Request<Obj, Obj, CreatePluginInput["body"]>, res: Response) {
   const user = res.locals.user;
 
   let team:
@@ -30,9 +20,7 @@ export async function createPluginHandler(
     team = await findTeamDocument({ autoCreated: true, user: user._id });
   }
   if (!team) {
-    return res
-      .status(404)
-      .send({ error: { message: "Could not find the team" } });
+    return res.status(404).send({ error: { message: "Could not find the team" } });
   }
 
   const plugin = await createPlugin({
@@ -49,10 +37,7 @@ export async function createPluginHandler(
   return res.send({ plugin });
 }
 
-export async function getPluginHandler(
-  req: Request<GetPluginInput["params"]>,
-  res: Response
-) {
+export async function getPluginHandler(req: Request<GetPluginInput["params"]>, res: Response) {
   const plugin = await findPlugin({ _id: req.params.id });
 
   if (!plugin) {
@@ -62,10 +47,7 @@ export async function getPluginHandler(
   return res.send({ plugin });
 }
 
-export async function getPluginsHandler(
-  req: Request<{}, {}, {}, GetPluginsInput["query"]>,
-  res: Response
-) {
+export async function getPluginsHandler(req: Request<Obj, Obj, Obj, GetPluginsInput["query"]>, res: Response) {
   let populate: string[] | undefined = undefined;
   if (req.query.populate) {
     populate = req.query.populate.split(";");
@@ -76,9 +58,7 @@ export async function getPluginsHandler(
     team = await findTeam({ _id: req.query.team });
   }
   if (req.query.team && !team) {
-    return res
-      .status(404)
-      .send({ error: { message: "Could not find the team" } });
+    return res.status(404).send({ error: { message: "Could not find the team" } });
   }
 
   // TODO: if user is not a member of this team return only public plugins
@@ -94,10 +74,7 @@ export async function getPluginsHandler(
   return res.send({ plugins });
 }
 
-export async function getMyPluginsHandler(
-  req: Request<{}, {}, {}, GetPluginsInput["query"]>,
-  res: Response
-) {
+export async function getMyPluginsHandler(req: Request<Obj, Obj, Obj, GetPluginsInput["query"]>, res: Response) {
   let populate: string[] | undefined = undefined;
   if (req.query.populate) {
     populate = req.query.populate.split(";");
@@ -113,9 +90,7 @@ export async function getMyPluginsHandler(
     team = await findTeam({ autoCreated: true, user: user._id });
   }
   if (!team) {
-    return res
-      .status(404)
-      .send({ error: { message: "Could not find the team" } });
+    return res.status(404).send({ error: { message: "Could not find the team" } });
   }
 
   const plugins = await findPlugins(

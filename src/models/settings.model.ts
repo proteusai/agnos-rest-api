@@ -8,10 +8,7 @@ export interface SettingsInput {
   user: UserDocument["_id"];
 }
 
-export interface SettingsDocument
-  extends BaseDocument,
-    SettingsInput,
-    mongoose.Document {}
+export interface SettingsDocument extends BaseDocument, SettingsInput, mongoose.Document {}
 
 const settingsSchema = new mongoose.Schema(
   {
@@ -24,9 +21,6 @@ const settingsSchema = new mongoose.Schema(
   }
 );
 
-const SettingsModel = mongoose.model<SettingsDocument>(
-  "Settings",
-  settingsSchema
-);
+const SettingsModel = mongoose.model<SettingsDocument>("Settings", settingsSchema);
 
 export default SettingsModel;

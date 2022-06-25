@@ -15,14 +15,11 @@ export interface UserInput {
   picture?: string;
 }
 
-export interface UserDocument
-  extends BaseDocument,
-    UserInput,
-    mongoose.Document {
+export interface UserDocument extends BaseDocument, UserInput, mongoose.Document {
   memberships?: Array<MembershipDocument["_id"]>;
   settings?: SettingsDocument["_id"];
   userDesignShares?: Array<UserDesignShareDocument["_id"]>;
-  comparePassword(candidatePassword: string): Promise<Boolean>;
+  comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
 const userSchema = new mongoose.Schema(
@@ -34,9 +31,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String },
     picture: { type: String, default: DEFAULT_USER_PICTURE },
     settings: { type: mongoose.Schema.Types.ObjectId, ref: "Settings" },
-    userDesignShares: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "UserDesignShare" },
-    ],
+    userDesignShares: [{ type: mongoose.Schema.Types.ObjectId, ref: "UserDesignShare" }],
   },
   {
     timestamps: true,
@@ -44,7 +39,7 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre("save", async function (next) {
-  let user = this as UserDocument;
+  const user = this as UserDocument;
 
   if (!user.password) {
     return next();
@@ -63,9 +58,7 @@ userSchema.pre("save", async function (next) {
   return next();
 });
 
-userSchema.methods.comparePassword = async function (
-  candidatePassword: string
-): Promise<boolean> {
+userSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
   const user = this as UserDocument;
 
   if (!user.password) {

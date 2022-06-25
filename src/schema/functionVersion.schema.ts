@@ -74,12 +74,8 @@ export const updateFunctionVersionSchema = object({
   ...params,
 });
 
-export type CreateFunctionVersionInput = TypeOf<
-  typeof createFunctionVersionSchema
->;
+export type CreateFunctionVersionInput = TypeOf<typeof createFunctionVersionSchema>;
 export type GetFunctionVersionInput = TypeOf<typeof getFunctionVersionSchema>;
 export type GetFunctionVersionsInput = TypeOf<typeof getFunctionVersionsSchema>;
 export type RunFunctionVersionInput = TypeOf<typeof runFunctionVersionSchema>;
-export type UpdateFunctionVersionInput = TypeOf<
-  typeof updateFunctionVersionSchema
->;
+export type UpdateFunctionVersionInput = TypeOf<typeof updateFunctionVersionSchema>;

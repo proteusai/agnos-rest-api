@@ -10,10 +10,7 @@ export interface SessionInput {
   userAgent?: string;
 }
 
-export interface SessionDocument
-  extends BaseDocument,
-    SessionInput,
-    mongoose.Document {}
+export interface SessionDocument extends BaseDocument, SessionInput, mongoose.Document {}
 
 const sessionSchema = new mongoose.Schema(
   {

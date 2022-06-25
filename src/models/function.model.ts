@@ -1,9 +1,7 @@
 import mongoose from "mongoose";
 import { DEFAULT_FUNCTION_PICTURE } from "../constants/defaults";
 import { BaseDocument } from "./base.model";
-import FunctionVersionModel, {
-  FunctionVersionDocument,
-} from "./functionVersion.model";
+import FunctionVersionModel, { FunctionVersionDocument } from "./functionVersion.model";
 import TeamModel, { TeamDocument } from "./team.model";
 import { UserDocument } from "./user.model";
 
@@ -17,10 +15,7 @@ export interface FunctionInput {
   user: UserDocument["_id"]; // ref to the user that created this plugin
 }
 
-export interface FunctionDocument
-  extends BaseDocument,
-    FunctionInput,
-    mongoose.Document {
+export interface FunctionDocument extends BaseDocument, FunctionInput, mongoose.Document {
   versions?: Array<FunctionVersionDocument["_id"]>;
 }
 
@@ -33,9 +28,7 @@ const functionSchema = new mongoose.Schema(
     secrets: { type: {} },
     team: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    versions: [
-      { type: String, ref: "FunctionVersion" },
-    ],
+    versions: [{ type: String, ref: "FunctionVersion" }],
   },
   {
     timestamps: true,
@@ -43,20 +36,22 @@ const functionSchema = new mongoose.Schema(
 );
 
 functionSchema.pre("remove", async function (next) {
-  let func = this as FunctionDocument;
+  const func = this as FunctionDocument;
 
-  TeamModel.updateMany(
-    { functions: func._id },
-    { $pull: { functions: func._id } }
-  ).exec();
-  FunctionVersionModel.remove({ function: func._id }).exec();
+  TeamModel.updateMany({ functions: func._id }, { $pull: { functions: func._id } })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
+  FunctionVersionModel.remove({ function: func._id })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
 
   return next();
 });
 
-const FunctionModel = mongoose.model<FunctionDocument>(
-  "Function",
-  functionSchema
-);
+const FunctionModel = mongoose.model<FunctionDocument>("Function", functionSchema);
 
 export default FunctionModel;
