@@ -40,10 +40,18 @@ const pluginVersionSchema = new mongoose.Schema(
 );
 
 pluginVersionSchema.pre("remove", async function (next) {
-  let version = this as PluginVersionDocument;
+  const version = this as PluginVersionDocument;
 
-  PluginModel.updateMany({ versions: version._id }, { $pull: { versions: version._id } }).exec();
-  InstallationModel.remove({ version: version._id }).exec();
+  PluginModel.updateMany({ versions: version._id }, { $pull: { versions: version._id } })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
+  InstallationModel.remove({ version: version._id })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
 
   return next();
 });

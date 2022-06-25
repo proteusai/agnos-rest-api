@@ -19,9 +19,10 @@ import {
   findFunctionVersions,
   runFunctionVersion,
 } from "../service/functionVersion.service";
+import { Obj } from "../types";
 
 export async function createFunctionVersionHandler(
-  req: Request<{}, {}, CreateFunctionVersionInput["body"]>,
+  req: Request<Obj, Obj, CreateFunctionVersionInput["body"]>,
   res: Response
 ) {
   const user = res.locals.user;
@@ -62,7 +63,7 @@ export async function getFunctionVersionHandler(req: Request<GetFunctionVersionI
 }
 
 export async function getFunctionVersionsHandler(
-  req: Request<{}, {}, {}, GetFunctionVersionsInput["query"]>,
+  req: Request<Obj, Obj, Obj, GetFunctionVersionsInput["query"]>,
   res: Response
 ) {
   let populate: string[] | undefined = undefined;
@@ -85,7 +86,7 @@ export async function getFunctionVersionsHandler(
 }
 
 export async function updateFunctionVersionHandler(
-  req: Request<UpdateFunctionVersionInput["params"], {}, UpdateFunctionVersionInput["body"]>,
+  req: Request<UpdateFunctionVersionInput["params"], Obj, UpdateFunctionVersionInput["body"]>,
   res: Response
 ) {
   const _id = req.params.id;
@@ -114,7 +115,7 @@ export async function updateFunctionVersionHandler(
 export async function runFunctionVersionHandler(
   req: Request<
     RunFunctionVersionInput["params"],
-    {},
+    Obj,
     RunFunctionVersionInput["body"],
     RunFunctionVersionInput["query"]
   >,

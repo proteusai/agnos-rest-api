@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import config from "config";
 
-export function signJwt(object: Object, options?: jwt.SignOptions | undefined) {
-  return jwt.sign(object, config.get<string>("jwtSecret"), {
+export function signJwt(obj: string | object | Buffer, options?: jwt.SignOptions | undefined) {
+  return jwt.sign(obj, config.get<string>("jwtSecret"), {
     ...(options && options),
     algorithm: "RS256",
   });

@@ -15,9 +15,10 @@ import {
   findPluginVersion,
   findPluginVersions,
 } from "../service/pluginVersion.service";
+import { Obj } from "../types";
 
 export async function createPluginVersionHandler(
-  req: Request<{}, {}, CreatePluginVersionInput["body"]>,
+  req: Request<Obj, Obj, CreatePluginVersionInput["body"]>,
   res: Response
 ) {
   const user = res.locals.user;
@@ -57,7 +58,7 @@ export async function getPluginVersionHandler(req: Request<GetPluginVersionInput
 }
 
 export async function getPluginVersionsHandler(
-  req: Request<{}, {}, {}, GetPluginVersionsInput["query"]>,
+  req: Request<Obj, Obj, Obj, GetPluginVersionsInput["query"]>,
   res: Response
 ) {
   let populate: string[] | undefined = undefined;
@@ -80,7 +81,7 @@ export async function getPluginVersionsHandler(
 }
 
 export async function updatePluginVersionHandler(
-  req: Request<UpdatePluginVersionInput["params"], {}, UpdatePluginVersionInput["body"]>,
+  req: Request<UpdatePluginVersionInput["params"], Obj, UpdatePluginVersionInput["body"]>,
   res: Response
 ) {
   const _id = req.params.id;

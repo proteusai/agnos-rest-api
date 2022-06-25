@@ -4,8 +4,9 @@ import { TeamDocument } from "../models/team.model";
 import { CreatePluginInput, GetPluginInput, GetPluginsInput } from "../schema/plugin.schema";
 import { createPlugin, findPlugin, findPlugins } from "../service/plugin.service";
 import { findTeam, findTeamDocument } from "../service/team.service";
+import { Obj } from "../types";
 
-export async function createPluginHandler(req: Request<{}, {}, CreatePluginInput["body"]>, res: Response) {
+export async function createPluginHandler(req: Request<Obj, Obj, CreatePluginInput["body"]>, res: Response) {
   const user = res.locals.user;
 
   let team:
@@ -46,7 +47,7 @@ export async function getPluginHandler(req: Request<GetPluginInput["params"]>, r
   return res.send({ plugin });
 }
 
-export async function getPluginsHandler(req: Request<{}, {}, {}, GetPluginsInput["query"]>, res: Response) {
+export async function getPluginsHandler(req: Request<Obj, Obj, Obj, GetPluginsInput["query"]>, res: Response) {
   let populate: string[] | undefined = undefined;
   if (req.query.populate) {
     populate = req.query.populate.split(";");
@@ -73,7 +74,7 @@ export async function getPluginsHandler(req: Request<{}, {}, {}, GetPluginsInput
   return res.send({ plugins });
 }
 
-export async function getMyPluginsHandler(req: Request<{}, {}, {}, GetPluginsInput["query"]>, res: Response) {
+export async function getMyPluginsHandler(req: Request<Obj, Obj, Obj, GetPluginsInput["query"]>, res: Response) {
   let populate: string[] | undefined = undefined;
   if (req.query.populate) {
     populate = req.query.populate.split(";");

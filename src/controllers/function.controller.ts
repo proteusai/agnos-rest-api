@@ -4,8 +4,9 @@ import { TeamDocument } from "../models/team.model";
 import { CreateFunctionInput, GetFunctionInput, GetFunctionsInput } from "../schema/function.schema";
 import { createFunction, findFunction, findFunctions } from "../service/function.service";
 import { findTeam, findTeamDocument } from "../service/team.service";
+import { Obj } from "../types";
 
-export async function createFunctionHandler(req: Request<{}, {}, CreateFunctionInput["body"]>, res: Response) {
+export async function createFunctionHandler(req: Request<Obj, Obj, CreateFunctionInput["body"]>, res: Response) {
   const user = res.locals.user;
 
   let team:
@@ -46,7 +47,7 @@ export async function getFunctionHandler(req: Request<GetFunctionInput["params"]
   return res.send({ function: func });
 }
 
-export async function getFunctionsHandler(req: Request<{}, {}, {}, GetFunctionsInput["query"]>, res: Response) {
+export async function getFunctionsHandler(req: Request<Obj, Obj, Obj, GetFunctionsInput["query"]>, res: Response) {
   let populate: string[] | undefined = undefined;
   if (req.query.populate) {
     populate = req.query.populate.split(";");
@@ -73,7 +74,7 @@ export async function getFunctionsHandler(req: Request<{}, {}, {}, GetFunctionsI
   return res.send({ functions });
 }
 
-export async function getMyFunctionsHandler(req: Request<{}, {}, {}, GetFunctionsInput["query"]>, res: Response) {
+export async function getMyFunctionsHandler(req: Request<Obj, Obj, Obj, GetFunctionsInput["query"]>, res: Response) {
   let populate: string[] | undefined = undefined;
   if (req.query.populate) {
     populate = req.query.populate.split(";");

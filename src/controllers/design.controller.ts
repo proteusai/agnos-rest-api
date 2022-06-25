@@ -8,8 +8,9 @@ import { findTeamDocument } from "../service/team.service";
 import { createTeamDesignShare } from "../service/teamDesignShare.service";
 import { findUserDocument } from "../service/user.service";
 import { createUserDesignShare } from "../service/userDesignShare.service";
+import { Obj } from "../types";
 
-export async function createDesignHandler(req: Request<{}, {}, CreateDesignInput["body"]>, res: Response) {
+export async function createDesignHandler(req: Request<Obj, Obj, CreateDesignInput["body"]>, res: Response) {
   const user = res.locals.user;
   const userDoc = await findUserDocument({ _id: user._id });
 

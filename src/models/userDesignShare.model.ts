@@ -24,16 +24,21 @@ const userDesignShareSchema = new mongoose.Schema(
 );
 
 userDesignShareSchema.pre("remove", function (next) {
-  let userDesignShare = this as UserDesignShareDocument;
+  const userDesignShare = this as UserDesignShareDocument;
 
   DesignModel.updateMany(
     { userDesignShares: userDesignShare._id },
     { $pull: { userDesignShares: userDesignShare._id } }
-  ).exec();
-  UserModel.updateMany(
-    { userDesignShares: userDesignShare._id },
-    { $pull: { userDesignShares: userDesignShare._id } }
-  ).exec();
+  )
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
+  UserModel.updateMany({ userDesignShares: userDesignShare._id }, { $pull: { userDesignShares: userDesignShare._id } })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
 
   next();
 });

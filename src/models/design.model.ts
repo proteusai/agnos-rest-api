@@ -43,11 +43,23 @@ const designSchema = new mongoose.Schema(
 );
 
 designSchema.pre("remove", async function (next) {
-  let design = this as DesignDocument;
+  const design = this as DesignDocument;
 
-  TeamModel.updateMany({ designs: design._id }, { $pull: { designs: design._id } }).exec();
-  TeamDesignShareModel.remove({ design: design._id }).exec();
-  UserDesignShareModel.remove({ design: design._id }).exec();
+  TeamModel.updateMany({ designs: design._id }, { $pull: { designs: design._id } })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
+  TeamDesignShareModel.remove({ design: design._id })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
+  UserDesignShareModel.remove({ design: design._id })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
 
   return next();
 });

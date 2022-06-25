@@ -34,10 +34,18 @@ const pluginSchema = new mongoose.Schema(
 );
 
 pluginSchema.pre("remove", async function (next) {
-  let plugin = this as PluginDocument;
+  const plugin = this as PluginDocument;
 
-  TeamModel.updateMany({ plugins: plugin._id }, { $pull: { plugins: plugin._id } }).exec();
-  PluginVersionModel.remove({ plugin: plugin._id }).exec();
+  TeamModel.updateMany({ plugins: plugin._id }, { $pull: { plugins: plugin._id } })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
+  PluginVersionModel.remove({ plugin: plugin._id })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
 
   return next();
 });

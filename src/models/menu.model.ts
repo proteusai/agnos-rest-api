@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import { Obj } from "../types";
 import { Form, FormSchema } from "./form.model";
 
 export interface Menu {
@@ -21,7 +22,7 @@ export interface MenuItem {
   image?: { src: string };
   isDivider?: boolean;
   paths?: Array<SvgPath>;
-  secrets?: {}; // will be inherited by every component created from this menu
+  secrets?: Obj; // will be inherited by every component created from this menu
   forms?: Array<Form>;
 }
 

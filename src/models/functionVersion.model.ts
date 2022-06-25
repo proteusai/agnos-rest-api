@@ -42,9 +42,13 @@ const functionVersionSchema = new mongoose.Schema(
 );
 
 functionVersionSchema.pre("remove", async function (next) {
-  let version = this as FunctionVersionDocument;
+  const version = this as FunctionVersionDocument;
 
-  FunctionModel.updateMany({ versions: version._id }, { $pull: { versions: version._id } }).exec();
+  FunctionModel.updateMany({ versions: version._id }, { $pull: { versions: version._id } })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
 
   return next();
 });

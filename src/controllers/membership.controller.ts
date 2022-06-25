@@ -2,8 +2,9 @@ import { Request, Response } from "express";
 import { PermissionName } from "../constants/permissions";
 import { CreateMembershipInput, GetMembershipsInput } from "../schema/membership.schema";
 import { createMembership, findMemberships } from "../service/membership.service";
+import { Obj } from "../types";
 
-export async function createMembershipHandler(req: Request<{}, {}, CreateMembershipInput["body"]>, res: Response) {
+export async function createMembershipHandler(req: Request<Obj, Obj, CreateMembershipInput["body"]>, res: Response) {
   const membership = await createMembership({
     ...req.body,
     permission: PermissionName[req.body.permission],
@@ -11,7 +12,10 @@ export async function createMembershipHandler(req: Request<{}, {}, CreateMembers
   return res.send({ membership });
 }
 
-export async function getMyMembershipsHandler(req: Request<{}, {}, {}, GetMembershipsInput["query"]>, res: Response) {
+export async function getMyMembershipsHandler(
+  req: Request<Obj, Obj, Obj, GetMembershipsInput["query"]>,
+  res: Response
+) {
   const userId = res.locals.user._id;
   let populate: string[] | undefined = undefined;
   if (req.query.populate) {

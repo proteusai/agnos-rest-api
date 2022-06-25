@@ -50,13 +50,33 @@ const teamSchema = new mongoose.Schema(
 );
 
 teamSchema.pre("remove", async function (next) {
-  let team = this as TeamDocument;
+  const team = this as TeamDocument;
 
-  DesignModel.remove({ team: team._id }).exec();
-  FunctionModel.remove({ team: team._id }).exec();
-  MembershipModel.remove({ team: team._id }).exec();
-  PluginModel.remove({ team: team._id }).exec();
-  TeamDesignShareModel.remove({ team: team._id }).exec();
+  DesignModel.remove({ team: team._id })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
+  FunctionModel.remove({ team: team._id })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
+  MembershipModel.remove({ team: team._id })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
+  PluginModel.remove({ team: team._id })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
+  TeamDesignShareModel.remove({ team: team._id })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
 
   return next();
 });

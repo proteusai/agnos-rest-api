@@ -36,10 +36,18 @@ const functionSchema = new mongoose.Schema(
 );
 
 functionSchema.pre("remove", async function (next) {
-  let func = this as FunctionDocument;
+  const func = this as FunctionDocument;
 
-  TeamModel.updateMany({ functions: func._id }, { $pull: { functions: func._id } }).exec();
-  FunctionVersionModel.remove({ function: func._id }).exec();
+  TeamModel.updateMany({ functions: func._id }, { $pull: { functions: func._id } })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
+  FunctionVersionModel.remove({ function: func._id })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
 
   return next();
 });

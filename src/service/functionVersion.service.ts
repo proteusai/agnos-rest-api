@@ -100,7 +100,9 @@ export async function runFunctionVersion(query: FilterQuery<FunctionVersionDocum
         type,
       },
       { accessToken: options.args.user.accessToken }
-    );
+    ).catch(() => {
+      // TODO: what do we do?
+    });
   };
 
   let testForm = undefined;
@@ -190,7 +192,9 @@ export async function runFunctionVersion(query: FilterQuery<FunctionVersionDocum
         type: InvocationType.SUCCESS,
       },
       { accessToken: options.args.user.accessToken }
-    );
+    ).catch(() => {
+      // TODO: what do we do?
+    });
 
     return result;
   } catch (error) {
@@ -201,7 +205,9 @@ export async function runFunctionVersion(query: FilterQuery<FunctionVersionDocum
         type: InvocationType.ERROR,
       },
       { accessToken: options.args.user.accessToken }
-    );
+    ).catch(() => {
+      // TODO: what do we do?
+    });
 
     throw error;
   }

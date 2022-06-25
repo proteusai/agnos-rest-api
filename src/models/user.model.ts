@@ -19,7 +19,7 @@ export interface UserDocument extends BaseDocument, UserInput, mongoose.Document
   memberships?: Array<MembershipDocument["_id"]>;
   settings?: SettingsDocument["_id"];
   userDesignShares?: Array<UserDesignShareDocument["_id"]>;
-  comparePassword(candidatePassword: string): Promise<Boolean>;
+  comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
 const userSchema = new mongoose.Schema(
@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre("save", async function (next) {
-  let user = this as UserDocument;
+  const user = this as UserDocument;
 
   if (!user.password) {
     return next();
