@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "REST API for Agnos",
   "main": "index.js",
+  "engines": {
+    "node": "18.12.x"
+  },
   "scripts": {
     "build": "ttsc",
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
