@@ -9,7 +9,7 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
-# RUN yarn build
+RUN yarn build
 CMD yarn dev
 
 FROM base as production

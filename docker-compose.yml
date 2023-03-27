@@ -10,7 +10,9 @@ services:
       - 27017:27017
 
   api:
-    build: ./
+    build:
+      context: .
+      target: development
     restart: always
     depends_on:
       - db

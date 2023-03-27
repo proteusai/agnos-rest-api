@@ -1,0 +1,71 @@
+name: aws build and store
+
+inputs:
+  aws_account_id:
+    required: true
+    type: string
+  aws_secret_access_key:
+    required: true
+    type: string
+  cache_key_prefix:
+    required: true
+    type: string
+  push_to_ecr:
+    required: true
+    type: boolean
+  docker_target:
+    required: false
+    default: "production"
+    type: string
+
+outputs:
+  image_already_exists:
+    description: "Indicates if image already exists in ECR"
+    value: ${{ steps.push_to_ecr.outputs.image_already_exists }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: fetch_settings
+      uses: ./.github/actions/fetch_settings
+      with:
+        yaml_settings_file: ./.github/env
+    - id: setup_aws_and_ecr
+      uses: ./.github/actions/setup_aws_and_ecr
+      with:
+        aws_region: ${{ steps.fetch_settings.outputs.aws_env_region }}
+        aws_partition: ${{ steps.fetch_settings.outputs.aws_env_partition }}
+        aws_secret_access_key: ${{ inputs.aws_secret_access_key }}
+        aws_account_id: ${{ inputs.aws_account_id }}
+        aws_role_path: /system/cicd_deploy
+    - name: fetch ssm parameter ENV
+      uses: ./.github/actions/fetch_ssm_parameter
+      with:
+        ssm_parameter_path: /stack/${{ steps.fetch_settings.outputs.stack_name }}/name
+        environment_variable_name: ENV
+    - name: fetch ssm parameter ENV_FULL
+      uses: ./.github/actions/fetch_ssm_parameter
+      with:
+        ssm_parameter_path: /stack/${{ steps.fetch_settings.outputs.stack_name }}/name_full
+        environment_variable_name: ENV_FULL
+    - name: custom service setup
+      uses: ./.github/actions/custom_service_setup
+      with:
+        stack_name: ${{ steps.fetch_settings.outputs.stack_name }}
+        service_name: ${{ steps.fetch_settings.outputs.service_name }}
+    - id: build_and_cache
+      uses: ./.github/actions/build_and_cache
+      with:
+        commit_tag: ${{ steps.setup_aws_and_ecr.outputs.sha_short }}
+        env_fullname: ${{ env.ENV_FULL }}
+        env_name: ${{ env.ENV }}
+        cache_key: ${{ inputs.cache_key_prefix }}_${{ steps.setup_aws_and_ecr.outputs.sha_short }}
+        cache_file_name: docker.img
+        docker_target: ${{ inputs.docker_target }}
+    - id: push_to_ecr
+      if: ${{ fromJSON(inputs.push_to_ecr) }}
+      uses: ./.github/actions/push_to_ecr
+      with:
+        ecr_url: ${{ steps.setup_aws_and_ecr.outputs.ecr_registry_url }}/${{ steps.fetch_settings.outputs.stack_name }}_${{ steps.fetch_settings.outputs.service_name }}:${{ steps.setup_aws_and_ecr.outputs.sha_short }}
+        cache_key: ${{ inputs.cache_key_prefix }}_${{ steps.setup_aws_and_ecr.outputs.sha_short }}
+        cache_file_name: docker.img
