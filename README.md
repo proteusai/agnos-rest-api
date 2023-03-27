@@ -19,7 +19,16 @@ This is the REST API powering the various Agnos clients.
 
 ## Tools
 
+- [Commitlint](https://commitlint.js.org/#/)
+- [ESLint](https://eslint.org/)
+- [Husky](https://github.com/typicode/husky)
+- [Prettier](https://prettier.io/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Yarn](https://yarnpkg.com/)
 
 ## Resources
+
+- [How to Setup a TypeScript + Node.js Project](https://khalilstemmler.com/blogs/typescript/node-starter-project)
+- [How to use ESLint with TypeScript](https://khalilstemmler.com/blogs/typescript/eslint-for-typescript)
+- [How to use Prettier with ESLint and TypeScript in VSCode](https://khalilstemmler.com/blogs/tooling/prettier)
+- [Enforcing Coding Conventions with Husky Pre-commit Hooks](https://khalilstemmler.com/blogs/tooling/enforcing-husky-precommit-hooks)
