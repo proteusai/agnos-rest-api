@@ -50,7 +50,7 @@ const teamSchema = new mongoose.Schema(
 );
 
 teamSchema.pre("remove", async function (next) {
-  const team = this as TeamDocument;
+  const team = this as unknown as TeamDocument;
 
   DesignModel.remove({ team: team._id })
     .exec()

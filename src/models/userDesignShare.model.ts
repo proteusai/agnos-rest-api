@@ -24,7 +24,7 @@ const userDesignShareSchema = new mongoose.Schema(
 );
 
 userDesignShareSchema.pre("remove", function (next) {
-  const userDesignShare = this as UserDesignShareDocument;
+  const userDesignShare = this as unknown as UserDesignShareDocument;
 
   DesignModel.updateMany(
     { userDesignShares: userDesignShare._id },

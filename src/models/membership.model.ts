@@ -24,7 +24,7 @@ const membershipSchema = new mongoose.Schema(
 );
 
 membershipSchema.pre("remove", function (next) {
-  const membership = this as MembershipDocument;
+  const membership = this as unknown as MembershipDocument;
 
   TeamModel.updateMany({ memberships: membership._id }, { $pull: { memberships: membership._id } })
     .exec()

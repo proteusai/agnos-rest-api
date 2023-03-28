@@ -7,18 +7,19 @@ const router = Router();
 
 /**
  * @openapi
- * '/api/users':
+ * '/users':
  *  post:
- *     tags:
- *     - User
- *     summary: Register a user
- *     requestBody:
+ *    summary: Register a user
+ *    description: Register a user
+ *    tags:
+ *      - User
+ *    requestBody:
  *      required: true
  *      content:
  *        application/json:
  *           schema:
  *              $ref: '#/components/schemas/CreateUserInput'
- *     responses:
+ *    responses:
  *      200:
  *        description: Success
  *        content:

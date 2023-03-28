@@ -36,7 +36,7 @@ const functionSchema = new mongoose.Schema(
 );
 
 functionSchema.pre("remove", async function (next) {
-  const func = this as FunctionDocument;
+  const func = this as unknown as FunctionDocument;
 
   TeamModel.updateMany({ functions: func._id }, { $pull: { functions: func._id } })
     .exec()

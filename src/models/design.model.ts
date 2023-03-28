@@ -43,7 +43,7 @@ const designSchema = new mongoose.Schema(
 );
 
 designSchema.pre("remove", async function (next) {
-  const design = this as DesignDocument;
+  const design = this as unknown as DesignDocument;
 
   TeamModel.updateMany({ designs: design._id }, { $pull: { designs: design._id } })
     .exec()

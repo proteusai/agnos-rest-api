@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { CreateSettingsInput } from "../schema/settings.schema";
-import { createSettings, findAndUpdateSettings, findOneSetOfSettings } from "../service/settings.service";
+import { createSettingsDocument, findAndUpdateSettings, findOneSetOfSettings } from "../service/settings.service";
 import { findUserDocument } from "../service/user.service";
 import { Obj } from "../types";
 
@@ -14,7 +14,7 @@ export async function createOrUpdateSettingsHandler(
   let settings = await findOneSetOfSettings({ user: _id });
 
   if (!settings) {
-    settings = await createSettings({ ...req.body, user: _id });
+    settings = await createSettingsDocument({ ...req.body, user: _id });
     if (settings) {
       user!.settings = settings._id;
       await user?.save();
@@ -34,7 +34,7 @@ export async function getSettingsHandler(req: Request, res: Response) {
 
   let settings = await findOneSetOfSettings({ user: _id });
   if (!settings) {
-    settings = await createSettings({ user: _id });
+    settings = await createSettingsDocument({ user: _id });
     if (settings) {
       user!.settings = settings._id;
       await user?.save();

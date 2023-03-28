@@ -11,18 +11,20 @@ This is the REST API powering the various Agnos clients.
 - Using Docker:
   - First, build the Docker image: `docker build --target development -t agnos-rest-api:dev .`
   - Then, run the docker image: `docker run -p 3000:3000 agnos-rest-api:dev`
-- Using Docker Compose: `docker-compose up`
+- Using Docker Compose: `docker-compose up --build`
 
 ### Building for Production
 
-- `docker build --target development -t agnos-rest-api:dev .`
+- `docker build --target production -t agnos-rest-api .`
 
 ## Tools
 
 - [Commitlint](https://commitlint.js.org/#/)
 - [ESLint](https://eslint.org/)
 - [Husky](https://github.com/typicode/husky)
+- [OpenAPI](https://www.openapis.org/)
 - [Prettier](https://prettier.io/)
+- [Swagger](https://swagger.io/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Yarn](https://yarnpkg.com/)
 

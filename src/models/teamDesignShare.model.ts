@@ -24,7 +24,7 @@ const teamDesignShareSchema = new mongoose.Schema(
 );
 
 teamDesignShareSchema.pre("remove", function (next) {
-  const teamDesignShare = this as TeamDesignShareDocument;
+  const teamDesignShare = this as unknown as TeamDesignShareDocument;
 
   DesignModel.updateMany(
     { teamDesignShares: teamDesignShare._id },

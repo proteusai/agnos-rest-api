@@ -12,22 +12,22 @@ import { object, string, boolean, TypeOf } from "zod";
  *      properties:
  *        name:
  *          type: string
- *          default: Jane Doe
+ *          example: Jane Doe
  *        email:
  *          type: string
- *          default: jane.doe@example.com
+ *          example: jane.doe@example.com
  *        emailIsVerified:
  *          type: boolean
- *          default: false
+ *          example: false
  *        password:
  *          type: string
- *          default: stringPassword123
+ *          example: stringPassword123
  *        passwordConfirmation:
  *          type: string
- *          default: stringPassword123
+ *          example: stringPassword123
  *        picture:
  *          type: string
- *          default: https://content.com/image.png
+ *          example: https://content.com/image.png
  *    CreateUserResponse:
  *      type: object
  *      properties:

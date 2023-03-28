@@ -14,6 +14,7 @@ async function connect() {
     await seedPermissions();
   } catch (error) {
     logger.error("Could not connect to db");
+    logger.error(error);
     process.exit(1);
   }
 }

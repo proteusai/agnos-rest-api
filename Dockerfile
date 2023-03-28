@@ -6,6 +6,7 @@ FROM base as development
 COPY package.json yarn.lock ./
 
 RUN yarn install --frozen-lockfile
+RUN yarn add bcrypt --force
 
 COPY . .
 
@@ -18,8 +19,7 @@ COPY --from=development package.json yarn.lock ./
 COPY --from=development ./config ./config
 
 RUN yarn install --production=true --frozen-lockfile
+RUN yarn add bcrypt --force
 
-COPY --from=development ./src ./src
-
-COPY --from=development /home/node/app/built ./built
+COPY --from=development /home/node/app/build ./build
 CMD yarn start

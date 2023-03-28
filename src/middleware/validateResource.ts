@@ -9,7 +9,7 @@ const validate = (schema: AnyZodObject) => (req: Request, res: Response, next: N
       params: req.params,
     });
     next();
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.log(">>>>>>>>>>>>>>>>>>error in validation");
     console.log(error);
     return res.status(400).send({ error });
