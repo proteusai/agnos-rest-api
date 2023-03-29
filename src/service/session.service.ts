@@ -1,10 +1,16 @@
-import { FilterQuery, UpdateQuery } from "mongoose";
+import { FilterQuery, FlattenMaps, LeanDocument, Types, UpdateQuery } from "mongoose";
 import SessionModel, { SessionDocument, SessionInput } from "../models/session.model";
 
 export async function createSession(input: SessionInput) {
   const session = await SessionModel.create(input);
 
-  return session.toJSON();
+  return session.toJSON() as FlattenMaps<
+    LeanDocument<
+      SessionDocument & {
+        _id: Types.ObjectId;
+      }
+    >
+  >;
 }
 
 export async function findSession(query: FilterQuery<SessionDocument>) {

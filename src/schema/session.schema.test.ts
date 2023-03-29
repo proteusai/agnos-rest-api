@@ -1,16 +1,18 @@
-import { createSessionSchema } from "./session.schema";
+import { CreateSessionRequest, createSessionSchema } from "./session.schema";
 
 describe("Create session schema", () => {
   it("should validate well-formed objects", async () => {
+    const request: CreateSessionRequest = {
+      body: {
+        email: "example@email.com",
+        accessToken: "accessToken",
+        idToken: "idToken",
+      },
+    };
     expect(() => {
-      createSessionSchema.parse({
-        body: {
-          email: "example@email.com",
-          accessToken: "accessToken",
-          idToken: "idToken",
-        },
-      });
+      createSessionSchema.parse(request);
     }).not.toThrowError();
+    expect(createSessionSchema.parse(request)).toEqual(request);
   });
 
   it("should not validate malformed objects", async () => {

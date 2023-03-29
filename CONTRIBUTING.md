@@ -13,6 +13,7 @@ Let's assume that the model is called _thing_.
 - [ ] In _src/schema/thing.schema.ts_ create the Zod schema.
 - [ ] In _src/schema/thing.schema.ts_ create the OpenAPI documentations for the schemas `Thing`, `CreateThingInput`, and `CreateThingResponse`.
 - [ ] In _src/schema/thing.schema.test.ts_ create tests for the `CreateThingInput` schema.
-- service
+- [ ] In _src/service/thing.service.ts_ create services.
+- [ ] In _src/service/thing.service.test.ts_ create tests for the services.
 - controller
 - route
