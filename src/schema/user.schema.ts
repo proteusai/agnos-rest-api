@@ -4,6 +4,23 @@ import { object, string, boolean, TypeOf } from "zod";
  * @openapi
  * components:
  *  schemas:
+ *    User:
+ *      type: object
+ *      properties:
+ *        _id:
+ *          type: string
+ *        name:
+ *          type: string
+ *        email:
+ *          type: string
+ *        emailIsVerified:
+ *          type: boolean
+ *        picture:
+ *          type: string
+ *        createdAt:
+ *          type: string
+ *        updatedAt:
+ *          type: string
  *    CreateUserInput:
  *      type: object
  *      required:
@@ -31,27 +48,8 @@ import { object, string, boolean, TypeOf } from "zod";
  *    CreateUserResponse:
  *      type: object
  *      properties:
- *        user:
- *          type: object
- *          properties:
- *            _id:
- *              type: string
- *            name:
- *              type: string
- *            email:
- *              type: string
- *            emailIsVerified:
- *              type: boolean
- *            memberships:
- *              type: array
- *              items:
- *                $ref: '#/definitions/membership'
- *            picture:
- *              type: string
- *            createdAt:
- *              type: string
- *            updatedAt:
- *              type: string
+ *        data:
+ *          $ref: '#/components/schemas/User'
  */
 
 export const createUserSchema = object({

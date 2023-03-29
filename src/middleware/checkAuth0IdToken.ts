@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import config from "config";
-import { CreateSessionInput } from "../schema/session.schema";
+import { CreateSessionRequest } from "../schema/session.schema";
 import { Obj } from "../types";
 
 const checkAuth0IdToken = async (
-  req: Request<Obj, Obj, CreateSessionInput["body"]>,
+  req: Request<Obj, Obj, CreateSessionRequest["body"]>,
   res: Response,
   next: NextFunction
 ) => {
