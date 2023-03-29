@@ -44,3 +44,4 @@ This is the REST API powering the various Agnos clients.
 - [How to use Prettier with ESLint and TypeScript in VSCode](https://khalilstemmler.com/blogs/tooling/prettier)
 - [Enforcing Coding Conventions with Husky Pre-commit Hooks](https://khalilstemmler.com/blogs/tooling/enforcing-husky-precommit-hooks)
 - [Convert Swagger documentation to Postman Collection](https://medium.com/c-sharp-progarmming/convert-swagger-documentation-to-postman-collection-d67fc95c7b14)
+- [Testing Mongoose with Ts-Jest](https://dev.to/dinckan_berat/testing-mongoose-with-ts-jest-264f)

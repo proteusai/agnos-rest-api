@@ -3,6 +3,15 @@ import { connect, disconnect } from "../utils/connect";
 import SessionModel, { SessionInput } from "./session.model";
 
 describe("Session model", () => {
+  const sessionInput: SessionInput = {
+    user: new mongoose.Types.ObjectId(),
+    email: "example@email.com",
+    accessToken: "accessToken",
+    valid: true,
+    userAgent: "userAgent",
+  };
+  const session = new SessionModel({ ...sessionInput });
+
   beforeAll(async () => {
     await connect();
   });
@@ -13,14 +22,6 @@ describe("Session model", () => {
   });
 
   it("should create a session", async () => {
-    const sessionInput: SessionInput = {
-      user: new mongoose.Types.ObjectId(),
-      email: "example@email.com",
-      accessToken: "accessToken",
-      valid: true,
-      userAgent: "userAgent",
-    };
-    const session = new SessionModel({ ...sessionInput });
     const createdSession = await session.save();
     expect(createdSession).toBeDefined();
     expect(createdSession.user).toBe(session.user);
@@ -55,5 +56,33 @@ describe("Session model", () => {
 
     // If session.save() does not throw an error, fail the test
     throw new Error("Expected session.save() to fail with a validation error.");
+  });
+
+  it("should find a session", async () => {
+    await session.save();
+    const foundSession = await SessionModel.findOne({ _id: session._id });
+    expect(foundSession).toBeDefined();
+    expect(foundSession).toMatchObject(sessionInput);
+  });
+
+  it("should update a session", async () => {
+    const sessionUpdateInput: SessionInput = {
+      user: new mongoose.Types.ObjectId(),
+      email: "updated-example@email.com",
+      accessToken: "updatedAccessToken",
+      valid: true,
+      userAgent: "updatedUserAgent",
+    };
+    await SessionModel.updateOne({ _id: session._id }, { ...sessionUpdateInput });
+    const foundSession = await SessionModel.findOne({ _id: session._id });
+    expect(foundSession).toBeDefined();
+    expect(foundSession).toMatchObject(sessionUpdateInput);
+    expect(foundSession).not.toMatchObject(sessionInput);
+  });
+
+  it("should delete a session", async () => {
+    await SessionModel.deleteOne({ _id: session._id });
+    const foundSession = await SessionModel.findOne({ _id: session._id });
+    expect(foundSession).toBeNull();
   });
 });
