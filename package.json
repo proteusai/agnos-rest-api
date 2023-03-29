@@ -10,6 +10,7 @@
     "build": "ttsc",
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
     "docker:build:dev": "docker build --target development -t agnos-rest-api:dev .",
+    "docker:build:prod": "docker build --target production -t agnos-rest-api .",
     "docker:compose:test": "docker-compose -f docker-compose.test.yml up --build --abort-on-container-exit",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
@@ -24,6 +25,7 @@
   "license": "MIT",
   "private": false,
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@types/bcrypt": "^5.0.0",
     "@types/config": "^0.0.41",
     "@types/cors": "^2.8.12",

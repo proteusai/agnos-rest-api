@@ -6,6 +6,7 @@ This is the REST API powering the various Agnos clients.
 
 ### Running Locally (Development Build)
 
+- Create `.env` file in the project root directory and populate it accordingly. See `.env.example` for environment variables expected in `.env`
 - Run `yarn` to install dependencies.
 - Run `yarn dev` to run the development version
 - Using Docker:
@@ -13,9 +14,14 @@ This is the REST API powering the various Agnos clients.
   - Then, run the docker image: `docker run -p 3000:3000 agnos-rest-api:dev`
 - Using Docker Compose: `docker-compose up --build`
 
+### Testing Locally (Using Docker)
+
+- Create `.test.env` file in the project root directory and populate it accordingly. See `.env.example` for environment variables expected in `.test.env`
+- Run `yarn docker:compose:test` to start the relevant Docker containers. The command `yarn test` will then be automatically run in the _agnos-rest-api-api_ container.
+
 ### Building for Production
 
-- `docker build --target production -t agnos-rest-api .`
+- Run `yarn docker:build:prod` which runs the following command: `docker build --target production -t agnos-rest-api .`
 
 ## Tools
 

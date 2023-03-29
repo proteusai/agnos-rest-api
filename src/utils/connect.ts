@@ -3,7 +3,7 @@ import config from "config";
 import logger from "./logger";
 import seedPermissions from "../seeds/permissions.seeds";
 
-async function connect() {
+export async function connect() {
   const dbUri = config.get<string>("dbUri");
 
   try {
@@ -19,4 +19,12 @@ async function connect() {
   }
 }
 
-export default connect;
+export async function disconnect() {
+  try {
+    await mongoose.connection.close();
+  } catch (error) {
+    logger.error("DB disconnect error");
+    logger.error(error);
+    process.exit(1);
+  }
+}

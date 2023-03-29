@@ -3,7 +3,7 @@ import config from "config";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
-import connect from "./utils/connect";
+import { connect } from "./utils/connect";
 import logger from "./utils/logger";
 import routes from "./routes";
 import deserializeUser from "./middleware/deserializeUser";

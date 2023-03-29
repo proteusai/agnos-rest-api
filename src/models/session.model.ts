@@ -15,7 +15,7 @@ export interface SessionDocument extends BaseDocument, SessionInput, mongoose.Do
 const sessionSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    email: { type: String, required: true },
+    email: { type: String, required: true, match: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/ },
     accessToken: { type: String, required: true },
     valid: { type: Boolean, default: true },
     userAgent: { type: String },
