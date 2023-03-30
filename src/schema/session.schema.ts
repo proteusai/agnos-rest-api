@@ -46,6 +46,13 @@ import { object, string, TypeOf } from "zod";
  *      properties:
  *        data:
  *          $ref: '#/components/schemas/Session'
+ *    GetSessionsResponse:
+ *      type: object
+ *      properties:
+ *        data:
+ *          type: array
+ *          items:
+ *            $ref: '#/components/schemas/Session'
  */
 export const createSessionSchema = object({
   body: object({

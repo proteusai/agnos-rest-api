@@ -17,4 +17,7 @@ Let's assume that the model is called _thing_.
 - [ ] In _src/service/thing.service.test.ts_ create tests for the services.
 - [ ] In _src/controllers/thing.controller.ts_ create controllers.
 - [ ] In _src/controllers/thing.controller.test.ts_ create tests for the controllers.
-- route
+- [ ] In _src/routes/thing.routes.ts_ create routes.
+- [ ] In _src/routes/thing.routes.ts_ add `checkAuth0AccessToken` middleware to appropriate routes.
+- [ ] In _src/routes/thing.routes.ts_ add OpenAPI documentations to routes.
+- route test
