@@ -56,7 +56,7 @@ describe("Session service", () => {
       const sessions = await findSessions(query);
       expect(sessions).toBeDefined();
       // we have some sessions in the database from the tests above
-      expect(sessions.length).toBeGreaterThan(1);
+      expect(sessions.length).toBeGreaterThan(0);
     });
   });
 

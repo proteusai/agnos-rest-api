@@ -15,5 +15,6 @@ Let's assume that the model is called _thing_.
 - [ ] In _src/schema/thing.schema.test.ts_ create tests for the `CreateThingInput` schema.
 - [ ] In _src/service/thing.service.ts_ create services.
 - [ ] In _src/service/thing.service.test.ts_ create tests for the services.
-- controller
+- [ ] In _src/controllers/thing.controller.ts_ create controllers.
+- [ ] In _src/controllers/thing.controller.test.ts_ create tests for the controllers.
 - route

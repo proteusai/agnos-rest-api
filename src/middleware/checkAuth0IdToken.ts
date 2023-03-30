@@ -8,7 +8,7 @@ const checkAuth0IdToken = async (
   res: Response,
   next: NextFunction
 ) => {
-  const idToken = req.body.idToken;
+  const { idToken } = req.body;
 
   if (!idToken) {
     return res.status(401).send({ error: { message: "Missing ID token" } });

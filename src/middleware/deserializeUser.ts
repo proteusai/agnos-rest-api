@@ -9,7 +9,7 @@ const deserializeUser = async (req: Request, res: Response, next: NextFunction) 
     return next();
   }
 
-  const session = await findSession({ accessToken });
+  const session = await findSession({ accessToken, valid: true });
 
   if (!session) {
     return next();
