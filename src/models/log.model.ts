@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import { Env } from "../constants/env";
-import { LogType } from "../constants/log";
-import { DataType } from "../constants/log";
-import { BaseDocument } from "./base.model";
+import { Env } from "@constants/env";
+import { LogType } from "@constants/log";
+import { DataType } from "@constants/log";
+import { BaseDocument } from "@models/base.model";
 
 export interface LogInput {
   data: any;

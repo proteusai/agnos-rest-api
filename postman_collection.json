@@ -1,448 +1,342 @@
 {
-  "info": {
-    "_postman_id": "d3a34203-6dac-480e-8aac-0dce44241f83",
-    "name": "REST API Tutorial",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "item": [
-    {
-      "name": "User",
-      "item": [
-        {
-          "name": "Create User",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n   \"name\": \"{{name}}\",\n    \"email\": \"{{email}}\",\n    \"emailIsVerified\": \"{{emailIsVerified}}\",\n    \"password\": \"{{password}}\",\n    \"passwordConfirmation\": \"{{password}}\",\n    \"picture\": \"{{picture}}\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{endpoint}}/api/users",
-              "host": ["{{endpoint}}"],
-              "path": ["api", "users"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Create Session",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "var jsonData = JSON.parse(responseBody);",
-                  "console.log(jsonData)",
-                  "postman.setEnvironmentVariable(\"accessToken\", jsonData.accessToken);",
-                  "postman.setEnvironmentVariable(\"refreshToken\", jsonData.refreshToken);"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{endpoint}}/api/sessions",
-              "host": ["{{endpoint}}"],
-              "path": ["api", "sessions"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Sessions",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "",
-                  "const newAccessToken = responseHeaders['x-access-token']",
-                  "",
-                  "if(newAccessToken){",
-                  "    console.log('Set new access token')",
-                  "postman.setEnvironmentVariable(\"accessToken\", newAccessToken);",
-                  "}",
-                  "",
-                  ""
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "x-refresh",
-                "value": "{{refreshToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{endpoint}}/api/sessions",
-              "host": ["{{endpoint}}"],
-              "path": ["api", "sessions"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Session",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "const newAccessToken = responseHeaders['x-access-token']",
-                  "",
-                  "if(newAccessToken){",
-                  "    console.log('Set new access token')",
-                  "postman.setEnvironmentVariable(\"accessToken\", newAccessToken);",
-                  "}",
-                  "",
-                  ""
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "x-refresh",
-                "value": "{{refreshToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{endpoint}}/api/sessions",
-              "host": ["{{endpoint}}"],
-              "path": ["api", "sessions"]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Product",
-      "item": [
-        {
-          "name": "Create Product",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "var jsonData = JSON.parse(responseBody);",
-                  "postman.setEnvironmentVariable(\"productId\", jsonData.productId);",
-                  "",
-                  "",
-                  "const newAccessToken = responseHeaders['x-access-token']",
-                  "",
-                  "if(newAccessToken){",
-                  "    console.log('Set new access token')",
-                  "postman.setEnvironmentVariable(\"accessToken\", newAccessToken);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "x-refresh",
-                "value": "{{refreshToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"title\": \"Canon EOS 1500D DSLR Camera with 18-55mm Lens\",\n    \"description\": \"Designed for first-time DSLR owners who want impressive results straight out of the box, capture those magic moments no matter your level with the EOS 1500D. With easy to use automatic shooting modes, large 24.1 MP sensor, Canon Camera Connect app integration and built-in feature guide, EOS 1500D is always ready to go.\",\n    \"price\": 879.99,\n    \"image\": \"https://i.imgur.com/QlRphfQ.jpg\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{endpoint}}/api/products",
-              "host": ["{{endpoint}}"],
-              "path": ["api", "products"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Product",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [""],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "method": "GET",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"title\": \"A post title\",\n    \"body\": \"Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{endpoint}}/api/products/{{productId}}",
-              "host": ["{{endpoint}}"],
-              "path": ["api", "products", "{{productId}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Product",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "const newAccessToken = responseHeaders['x-access-token']",
-                  "",
-                  "if(newAccessToken){",
-                  "    console.log('Set new access token')",
-                  "postman.setEnvironmentVariable(\"accessToken\", newAccessToken);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PUT",
-            "header": [
-              {
-                "key": "x-refresh",
-                "value": "{{refreshToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"title\": \"Canon EOS 1500D DSLR Camera with 18-55mm Lens\",\n    \"description\": \"Designed for first-time DSLR owners who want impressive results straight out of the box, capture those magic moments no matter your level with the EOS 1500D. With easy to use automatic shooting modes, large 24.1 MP sensor, Canon Camera Connect app integration and built-in feature guide, EOS 1500D is always ready to go.\",\n    \"price\": 699.99,\n    \"image\": \"https://i.imgur.com/QlRphfQ.jpg\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{endpoint}}/api/products/{{productId}}",
-              "host": ["{{endpoint}}"],
-              "path": ["api", "products", "{{productId}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Product",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "const newAccessToken = responseHeaders['x-access-token']",
-                  "",
-                  "if(newAccessToken){",
-                  "    console.log('Set new access token')",
-                  "postman.setEnvironmentVariable(\"accessToken\", newAccessToken);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "x-refresh",
-                "value": "{{refreshToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"title\": \"A post title\",\n    \"body\": \"Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text Some HTML text\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{endpoint}}/api/products/{{productId}}",
-              "host": ["{{endpoint}}"],
-              "path": ["api", "products", "{{productId}}"]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Metrics",
-      "item": [
-        {
-          "name": "Get metrics",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "http://localhost:9100/metrics",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "9100",
-              "path": ["metrics"]
-            }
-          },
-          "response": []
-        }
-      ]
-    }
-  ],
-  "auth": {
-    "type": "bearer",
-    "bearer": [
-      {
-        "key": "token",
-        "value": "{{accessToken}}",
-        "type": "string"
-      }
-    ]
-  },
-  "event": [
-    {
-      "listen": "prerequest",
-      "script": {
-        "type": "text/javascript",
-        "exec": [""]
-      }
-    },
-    {
-      "listen": "test",
-      "script": {
-        "type": "text/javascript",
-        "exec": [""]
-      }
-    }
-  ],
-  "variable": [
-    {
-      "key": "email",
-      "value": "test@example.com"
-    },
-    {
-      "key": "password",
-      "value": "Password456!"
-    },
-    {
-      "key": "name",
-      "value": "Jane Doe"
-    },
-    {
-      "key": "accessToken",
-      "value": "<accessToken will be set when you create a session>"
-    },
-    {
-      "key": "refreshToken",
-      "value": "<refreshToken will be set when you create a session>"
-    },
-    {
-      "key": "endpoint",
-      "value": "http://localhost:1337"
-    },
-    {
-      "key": "productId",
-      "value": "<productId will be set when you create a session>"
-    }
-  ]
+	"info": {
+		"_postman_id": "7134f261-5539-4537-afc1-c9ff41594dbd",
+		"name": "Agnos REST API Docs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "129342"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "Register a user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"<string>\",\n  \"email\": \"<string>\",\n  \"emailIsVerified\": \"<boolean>\",\n  \"password\": \"<string>\",\n  \"passwordConfirmation\": \"<string>\",\n  \"picture\": \"<string>\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Register a user"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"<string>\",\n  \"email\": \"<string>\",\n  \"emailIsVerified\": \"<boolean>\",\n  \"password\": \"<string>\",\n  \"passwordConfirmation\": \"<string>\",\n  \"picture\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"user\": {\n    \"_id\": \"<string>\",\n    \"name\": \"<string>\",\n    \"email\": \"<string>\",\n    \"emailIsVerified\": \"<boolean>\",\n    \"memberships\": [\n      {\n        \"value\": \"reference #/definitions/membership not found in the OpenAPI spec\"\n      },\n      {\n        \"value\": \"reference #/definitions/membership not found in the OpenAPI spec\"\n      }\n    ],\n    \"picture\": \"<string>\",\n    \"createdAt\": \"<string>\",\n    \"updatedAt\": \"<string>\"\n  }\n}"
+						},
+						{
+							"name": "Bad request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"<string>\",\n  \"email\": \"<string>\",\n  \"emailIsVerified\": \"<boolean>\",\n  \"password\": \"<string>\",\n  \"passwordConfirmation\": \"<string>\",\n  \"picture\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Conflict",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"<string>\",\n  \"email\": \"<string>\",\n  \"emailIsVerified\": \"<boolean>\",\n  \"password\": \"<string>\",\n  \"passwordConfirmation\": \"<string>\",\n  \"picture\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "teams",
+			"item": [
+				{
+					"name": "Create a team",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Team A\",\n  \"email\": \"team.a@example.com\",\n  \"private\": false,\n  \"picture\": \"https://content.com/image.png\",\n  \"secrets\": {\n    \"cupidatat_038\": \"<string>\",\n    \"magnac\": \"<string>\",\n    \"anim_3d_\": \"<string>\",\n    \"sunt2\": \"<string>\"\n  }\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/teams",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"teams"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Team A\",\n  \"email\": \"team.a@example.com\",\n  \"private\": false,\n  \"picture\": \"https://content.com/image.png\",\n  \"secrets\": {\n    \"cupidatat_038\": \"<string>\",\n    \"magnac\": \"<string>\",\n    \"anim_3d_\": \"<string>\",\n    \"sunt2\": \"<string>\"\n  }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/teams",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"teams"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"team\": {\n    \"_id\": \"<string>\",\n    \"name\": \"<string>\",\n    \"email\": \"<string>\",\n    \"private\": \"<boolean>\",\n    \"picture\": \"<string>\",\n    \"userId\": \"<string>\",\n    \"createdAt\": \"<string>\",\n    \"updatedAt\": \"<string>\"\n  }\n}"
+						},
+						{
+							"name": "Bad request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Team A\",\n  \"email\": \"team.a@example.com\",\n  \"private\": false,\n  \"picture\": \"https://content.com/image.png\",\n  \"secrets\": {\n    \"cupidatat_038\": \"<string>\",\n    \"magnac\": \"<string>\",\n    \"anim_3d_\": \"<string>\",\n    \"sunt2\": \"<string>\"\n  }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/teams",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"teams"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "healthcheck",
+			"item": [
+				{
+					"name": "Responds if the app is up and running",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/healthcheck",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"healthcheck"
+							]
+						},
+						"description": "Responds if the app is up and running"
+					},
+					"response": [
+						{
+							"name": "App is up and running",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/healthcheck",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"healthcheck"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "/"
+		}
+	]
 }

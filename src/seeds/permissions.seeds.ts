@@ -1,8 +1,6 @@
-import config from "config";
 import PermissionModel, { PermissionInput } from "../models/permission.model";
 
 async function seedPermissions() {
-  const dbUri = config.get<string>("dbUri");
   const permissions: Array<PermissionInput & { _id: string }> = [
     {
       _id: "READ",

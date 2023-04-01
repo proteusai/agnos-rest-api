@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { PermissionName } from "../constants/permissions";
-import { BaseDocument } from "./base.model";
+import { PermissionName } from "@constants/permissions";
+import { BaseDocument } from "@models/base.model";
 import DesignModel, { DesignDocument } from "./design.model";
 import TeamModel, { TeamDocument } from "./team.model";
 
@@ -24,7 +24,7 @@ const teamDesignShareSchema = new mongoose.Schema(
 );
 
 teamDesignShareSchema.pre("remove", function (next) {
-  const teamDesignShare = this as TeamDesignShareDocument;
+  const teamDesignShare = this as unknown as TeamDesignShareDocument;
 
   DesignModel.updateMany(
     { teamDesignShares: teamDesignShare._id },

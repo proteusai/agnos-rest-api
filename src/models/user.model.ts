@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import config from "config";
-import { BaseDocument } from "./base.model";
-import { DEFAULT_USER_PICTURE } from "../constants/defaults";
+import { BaseDocument } from "@models/base.model";
+import { DEFAULT_USER_PICTURE } from "@constants/defaults";
 import { MembershipDocument } from "./membership.model";
 import { UserDesignShareDocument } from "./userDesignShare.model";
 import { SettingsDocument } from "./settings.model";

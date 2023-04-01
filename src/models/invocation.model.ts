@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import { Env } from "../constants/env";
-import { InvocationType } from "../constants/invocation";
-import { BaseDocument } from "./base.model";
+import { Env } from "@constants/env";
+import { InvocationType } from "@constants/invocation";
+import { BaseDocument } from "@models/base.model";
 import { FunctionDocument } from "./function.model";
 import { FunctionVersionDocument } from "./functionVersion.model";
 

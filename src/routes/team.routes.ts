@@ -12,7 +12,7 @@ router.get("/teams", [validateResource(getTeamsSchema), /**checkAuth0AccessToken
 
 /**
  * @openapi
- * '/api/teams':
+ * '/teams':
  *  post:
  *     tags:
  *     - Team

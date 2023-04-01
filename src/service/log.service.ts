@@ -1,7 +1,7 @@
 import { FilterQuery } from "mongoose";
 import { ServiceOptions } from ".";
 import LogModel, { LogDocument, LogInput } from "../models/log.model";
-import { websocket } from "../app";
+import { websocket } from "../index";
 
 const defaultPopulate: string[] = [];
 

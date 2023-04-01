@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { BaseDocument } from "./base.model";
+import { BaseDocument } from "@models/base.model";
 import { UserDocument } from "./user.model";
 
 export interface SettingsInput {

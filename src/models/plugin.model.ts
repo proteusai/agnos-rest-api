@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { DEFAULT_PLUGIN_PICTURE } from "../constants/defaults";
-import { BaseDocument } from "./base.model";
+import { DEFAULT_PLUGIN_PICTURE } from "@constants/defaults";
+import { BaseDocument } from "@models/base.model";
 import PluginVersionModel, { PluginVersionDocument } from "./pluginVersion.model";
 import TeamModel, { TeamDocument } from "./team.model";
 import { UserDocument } from "./user.model";
@@ -34,7 +34,7 @@ const pluginSchema = new mongoose.Schema(
 );
 
 pluginSchema.pre("remove", async function (next) {
-  const plugin = this as PluginDocument;
+  const plugin = this as unknown as PluginDocument;
 
   TeamModel.updateMany({ plugins: plugin._id }, { $pull: { plugins: plugin._id } })
     .exec()

@@ -13,6 +13,20 @@ import logger from "../utils/logger";
 export async function createUserHandler(req: Request<Obj, Obj, CreateUserInput["body"]>, res: Response) {
   try {
     const user = await createUserDocument(req.body);
+    // create org and org membership
+    /*
+     * when a user tries to perform ACTION on RESOURCE which requires a PERMISSION
+     * 1. Get TEAMS the user belong to in this ORG: teams { user, org }
+     * 2. Get all PERMISSIONS on the RESOURCE >= the required PERMISSION
+     * 3. For each PERMISSION:
+     * 4.  If the PERMISSION is on a user, check if the user is the same as the user performing the ACTION
+     * 5.  If the PERMISSION is on a team, check if the user belongs to the team (if the TEAM is in the list of TEAMS from step 1)
+     *
+     * Org Membership: user, org, permission
+     * Team Membership: user, team, org, permission
+     *
+     * Project Permission: project, permission, user|team
+     */
     const team = await createTeamDocument({
       name: DEFAULT_TEAM_NAME,
       email: user.email,
@@ -38,7 +52,7 @@ export async function createUserHandler(req: Request<Obj, Obj, CreateUserInput["
     await user.save();
 
     return res.send({ user: user.toJSON() });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error(error);
     return res.status(409).send({ error });
   }
@@ -49,7 +63,7 @@ export async function getMeHandler(req: Request, res: Response) {
     const _id = res.locals.user._id;
     const user = await findUser({ _id });
     return res.send({ user });
-  } catch (error: any) {
+  } catch (error: unknown) {
     logger.error(error);
     return res.status(404).send({ error });
   }

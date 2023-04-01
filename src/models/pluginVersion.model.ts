@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { BaseDocument } from "./base.model";
+import { BaseDocument } from "@models/base.model";
 import InstallationModel from "./installation.model";
 import { Menu, MenuSchema } from "./menu.model";
 import PluginModel, { PluginDocument } from "./plugin.model";
@@ -40,7 +40,7 @@ const pluginVersionSchema = new mongoose.Schema(
 );
 
 pluginVersionSchema.pre("remove", async function (next) {
-  const version = this as PluginVersionDocument;
+  const version = this as unknown as PluginVersionDocument;
 
   PluginModel.updateMany({ versions: version._id }, { $pull: { versions: version._id } })
     .exec()

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { DEFAULT_FUNCTION_PICTURE } from "../constants/defaults";
-import { BaseDocument } from "./base.model";
+import { DEFAULT_FUNCTION_PICTURE } from "@constants/defaults";
+import { BaseDocument } from "@models/base.model";
 import FunctionVersionModel, { FunctionVersionDocument } from "./functionVersion.model";
 import TeamModel, { TeamDocument } from "./team.model";
 import { UserDocument } from "./user.model";
@@ -36,7 +36,7 @@ const functionSchema = new mongoose.Schema(
 );
 
 functionSchema.pre("remove", async function (next) {
-  const func = this as FunctionDocument;
+  const func = this as unknown as FunctionDocument;
 
   TeamModel.updateMany({ functions: func._id }, { $pull: { functions: func._id } })
     .exec()

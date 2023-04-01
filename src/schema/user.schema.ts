@@ -4,6 +4,23 @@ import { object, string, boolean, TypeOf } from "zod";
  * @openapi
  * components:
  *  schemas:
+ *    User:
+ *      type: object
+ *      properties:
+ *        _id:
+ *          type: string
+ *        name:
+ *          type: string
+ *        email:
+ *          type: string
+ *        emailIsVerified:
+ *          type: boolean
+ *        picture:
+ *          type: string
+ *        createdAt:
+ *          type: string
+ *        updatedAt:
+ *          type: string
  *    CreateUserInput:
  *      type: object
  *      required:
@@ -12,46 +29,27 @@ import { object, string, boolean, TypeOf } from "zod";
  *      properties:
  *        name:
  *          type: string
- *          default: Jane Doe
+ *          example: Jane Doe
  *        email:
  *          type: string
- *          default: jane.doe@example.com
+ *          example: jane.doe@example.com
  *        emailIsVerified:
  *          type: boolean
- *          default: false
+ *          example: false
  *        password:
  *          type: string
- *          default: stringPassword123
+ *          example: stringPassword123
  *        passwordConfirmation:
  *          type: string
- *          default: stringPassword123
+ *          example: stringPassword123
  *        picture:
  *          type: string
- *          default: https://content.com/image.png
+ *          example: https://content.com/image.png
  *    CreateUserResponse:
  *      type: object
  *      properties:
- *        user:
- *          type: object
- *          properties:
- *            _id:
- *              type: string
- *            name:
- *              type: string
- *            email:
- *              type: string
- *            emailIsVerified:
- *              type: boolean
- *            memberships:
- *              type: array
- *              items:
- *                $ref: '#/definitions/membership'
- *            picture:
- *              type: string
- *            createdAt:
- *              type: string
- *            updatedAt:
- *              type: string
+ *        data:
+ *          $ref: '#/components/schemas/User'
  */
 
 export const createUserSchema = object({

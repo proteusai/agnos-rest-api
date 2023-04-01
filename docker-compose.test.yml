@@ -12,18 +12,12 @@ services:
   api:
     build:
       context: .
-      target: development
+      target: test
     restart: always
     depends_on:
       - db
     env_file:
-      - .env
-    volumes:
-      - ./tsconfig.json:/home/node/app/tsconfig.json
-      - ./src:/home/node/app/src
-      # - ./node_modules:/home/node/app/node_modules
-    ports:
-      - 3000:3000
+      - .test.env
     stdin_open: true
     tty: true
 

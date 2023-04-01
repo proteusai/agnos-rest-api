@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { PermissionScope } from "../constants/permissions";
-import { BaseDocument } from "./base.model";
+import { PermissionScope } from "@constants/permissions";
+import { BaseDocument } from "@models/base.model";
 import FunctionModel, { FunctionDocument } from "./function.model";
 import { TeamDocument } from "./team.model";
 import { UserDocument } from "./user.model";
@@ -42,7 +42,7 @@ const functionVersionSchema = new mongoose.Schema(
 );
 
 functionVersionSchema.pre("remove", async function (next) {
-  const version = this as FunctionVersionDocument;
+  const version = this as unknown as FunctionVersionDocument;
 
   FunctionModel.updateMany({ versions: version._id }, { $pull: { versions: version._id } })
     .exec()
