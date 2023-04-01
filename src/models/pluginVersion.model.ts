@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { BaseDocument } from "./base.model";
+import { BaseDocument } from "@models/base.model";
 import InstallationModel from "./installation.model";
 import { Menu, MenuSchema } from "./menu.model";
 import PluginModel, { PluginDocument } from "./plugin.model";

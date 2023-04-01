@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
-import { createSession, findSessions, updateSession } from "../service/session.service";
-import { findUser } from "../service/user.service";
-import { CreateSessionRequest } from "../schema/session.schema";
-import { Obj } from "../types";
+import { createSession, findSessions, updateSession } from "@services/session.service";
+import { findUser } from "../../../service/user.service";
+import { CreateSessionRequest } from "@schemas/session.schema";
+import { Obj } from "@types";
+import { INVALID_ACCESS_TOKEN } from "@constants/errors";
 
 export async function createUserSessionHandler(req: Request<Obj, Obj, CreateSessionRequest["body"]>, res: Response) {
   const { accessToken, email } = req.body;
@@ -10,7 +11,7 @@ export async function createUserSessionHandler(req: Request<Obj, Obj, CreateSess
   const user = await findUser({ email });
 
   if (!user) {
-    return res.status(401).send({ error: { message: "Invalid access token" } });
+    return res.status(401).send({ error: { message: INVALID_ACCESS_TOKEN } });
   }
 
   const userId = user._id;

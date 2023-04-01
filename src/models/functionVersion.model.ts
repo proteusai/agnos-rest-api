@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { PermissionScope } from "../constants/permissions";
-import { BaseDocument } from "./base.model";
+import { PermissionScope } from "@constants/permissions";
+import { BaseDocument } from "@models/base.model";
 import FunctionModel, { FunctionDocument } from "./function.model";
 import { TeamDocument } from "./team.model";
 import { UserDocument } from "./user.model";

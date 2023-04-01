@@ -1,14 +1,14 @@
 import { Router } from "express";
-import validateResource from "../middleware/validateResource";
-import requireUser from "../middleware/requireUser";
+import validateResource from "@middleware/validateResource";
+import requireUser from "@middleware/requireUser";
 import {
   createUserSessionHandler,
   deleteSessionHandler,
   getUserSessionsHandler,
-} from "../controllers/session.controller";
-import { createSessionSchema } from "../schema/session.schema";
-import checkAuth0IdToken from "../middleware/checkAuth0IdToken";
-import checkAuth0AccessToken from "../middleware/checkAuth0AccessToken";
+} from "@controllers/session.controller";
+import { createSessionSchema } from "@schemas/session.schema";
+import checkAuth0IdToken from "@middleware/checkAuth0IdToken";
+import checkAuth0AccessToken from "@middleware/checkAuth0AccessToken";
 
 const router = Router();
 

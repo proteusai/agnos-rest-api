@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { DEFAULT_TEAM_PICTURE } from "../constants/defaults";
-import { BaseDocument } from "./base.model";
+import { DEFAULT_TEAM_PICTURE } from "@constants/defaults";
+import { BaseDocument } from "@models/base.model";
 import DesignModel, { DesignDocument } from "./design.model";
 import FunctionModel, { FunctionDocument } from "./function.model";
 import MembershipModel, { MembershipDocument } from "./membership.model";

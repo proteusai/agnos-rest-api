@@ -1,6 +1,6 @@
 import { get } from "lodash";
 import { Request, Response, NextFunction } from "express";
-import { findSession } from "../service/session.service";
+import { findSession } from "@services/session.service";
 
 const deserializeUser = async (req: Request, res: Response, next: NextFunction) => {
   const accessToken = get(req, "headers.authorization", "").replace(/^Bearer\s/, "");

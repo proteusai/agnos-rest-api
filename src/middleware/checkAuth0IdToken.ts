@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import config from "config";
-import { CreateSessionRequest } from "../schema/session.schema";
+import { CreateSessionRequest } from "../features/session/schema/session.schema";
 import { Obj } from "../types";
+import { INVALID_ID_TOKEN, MISSING_ID_TOKEN } from "../constants/errors";
 
 const checkAuth0IdToken = async (
   req: Request<Obj, Obj, CreateSessionRequest["body"]>,
@@ -11,7 +12,7 @@ const checkAuth0IdToken = async (
   const { idToken } = req.body;
 
   if (!idToken) {
-    return res.status(401).send({ error: { message: "Missing ID token" } });
+    return res.status(401).send({ error: { message: MISSING_ID_TOKEN } });
   }
 
   const payload = await parseJwt(idToken);
@@ -20,7 +21,7 @@ const checkAuth0IdToken = async (
   const emailMatch = payload.email === req.body.email;
 
   if (!audMatch || !emailMatch) {
-    return res.status(401).send({ error: { message: "Invalid ID token" } });
+    return res.status(401).send({ error: { message: INVALID_ID_TOKEN } });
   }
 
   return next();

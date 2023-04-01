@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { BaseDocument } from "./base.model";
+import { BaseDocument } from "@models/base.model";
 import { PluginDocument } from "./plugin.model";
 import { PluginVersionDocument } from "./pluginVersion.model";
 import { TeamDocument } from "./team.model";

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { DEFAULT_DESIGN_PICTURE } from "../constants/defaults";
-import { BaseDocument } from "./base.model";
+import { DEFAULT_DESIGN_PICTURE } from "@constants/defaults";
+import { BaseDocument } from "@models/base.model";
 import TeamModel, { TeamDocument } from "./team.model";
 import TeamDesignShareModel, { TeamDesignShareDocument } from "./teamDesignShare.model";
 import { UserDocument } from "./user.model";

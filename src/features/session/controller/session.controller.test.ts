@@ -1,13 +1,17 @@
 import { Request, Response } from "express";
-import { createUserSessionHandler, getUserSessionsHandler, deleteSessionHandler } from "./session.controller";
-import { createSession, findSessions, updateSession } from "../service/session.service";
-import { findUser } from "../service/user.service";
-import { CreateSessionRequest } from "../schema/session.schema";
-import { Obj } from "../types";
+import {
+  createUserSessionHandler,
+  getUserSessionsHandler,
+  deleteSessionHandler,
+} from "@controllers/session.controller";
+import { createSession, findSessions, updateSession } from "@services/session.service";
+import { findUser } from "../../../service/user.service";
+import { CreateSessionRequest } from "@schemas/session.schema";
+import { Obj } from "@types";
 import mongoose from "mongoose";
 
-jest.mock("../service/user.service");
-jest.mock("../service/session.service");
+jest.mock("@services/user.service");
+jest.mock("@services/session.service");
 
 const mockedFindUser = findUser as jest.MockedFunction<typeof findUser>;
 const mockedCreateSession = createSession as jest.MockedFunction<typeof createSession>;

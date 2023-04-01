@@ -40,7 +40,7 @@ import { object, string, TypeOf } from "zod";
  *          example: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
  *        idToken:
  *          type: string
- *          example: sxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ *          example: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
  *    CreateSessionResponse:
  *      type: object
  *      properties:

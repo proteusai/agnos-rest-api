@@ -1,6 +1,6 @@
 import { FilterQuery } from "mongoose";
 import { ServiceOptions } from ".";
-import { websocket } from "../app";
+import { websocket } from "../index";
 import { Env } from "../constants/env";
 import InvocationModel, { InvocationDocument, InvocationInput } from "../models/invocation.model";
 
