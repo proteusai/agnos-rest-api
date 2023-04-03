@@ -3,7 +3,7 @@ import { BaseDocument } from "@models/base.model";
 import { PluginDocument } from "./plugin.model";
 import { PluginVersionDocument } from "./pluginVersion.model";
 import { TeamDocument } from "./team.model";
-import { UserDocument } from "./user.model";
+import { UserDocument } from "@models/user.model";
 
 export interface InstallationInput {
   plugin: PluginDocument["_id"];

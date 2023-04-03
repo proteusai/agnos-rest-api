@@ -1,3 +1,4 @@
+import "module-alias/register";
 import http from "http";
 import { Server } from "socket.io";
 import config from "config";
@@ -35,7 +36,7 @@ const io = new Server(server, {
 
 export const websocket = io;
 
-server.listen(port, async () => {
+server.listen(0, async () => {
   logger.info(`App is running at http://localhost:${port}`);
 
   await connect();

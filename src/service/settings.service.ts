@@ -1,5 +1,5 @@
 import { FilterQuery, QueryOptions, UpdateQuery } from "mongoose";
-import SettingsModel, { SettingsDocument, SettingsInput } from "../models/settings.model";
+import SettingsModel, { SettingsDocument, SettingsInput } from "@models/settings.model";
 
 export async function createSettings(input: SettingsInput) {
   const settings = await createSettingsDocument(input);

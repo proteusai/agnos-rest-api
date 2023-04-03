@@ -34,13 +34,21 @@
       "@constants/*": [ "src/constants/*" ],
       "@controllers/*": [
         "src/features/base/controller/*",
-        "src/features/session/controller/*"
+        "src/features/membership/controller/*",
+        "src/features/org/controller/*",
+        "src/features/session/controller/*",
+        "src/features/settings/controller/*",
+        "src/features/user/controller/*"
       ],
       "@features/*": [ "src/features/*" ],
       "@middleware/*": [ "src/middleware/*" ],
       "@models/*": [
         "src/features/base/model/*",
-        "src/features/session/model/*"
+        "src/features/membership/model/*",
+        "src/features/org/model/*",
+        "src/features/session/model/*",
+        "src/features/settings/model/*",
+        "src/features/user/model/*"
       ],
       "@routes": [
         "src/routes",
@@ -48,15 +56,27 @@
       "@routes/*": [
         "src/routes/*",
         "src/features/base/routes/*",
-        "src/features/session/routes/*"
+        "src/features/membership/routes/*",
+        "src/features/org/routes/*",
+        "src/features/session/routes/*",
+        "src/features/settings/routes/*",
+        "src/features/user/routes/*"
       ],
       "@schemas/*": [
-        "src/features/base/schema/*",
-        "src/features/session/schema/*"
+        "src/features/base/schemas/*",
+        "src/features/membership/schemas/*",
+        "src/features/org/schemas/*",
+        "src/features/session/schemas/*",
+        "src/features/settings/schemas/*",
+        "src/features/user/schemas/*"
       ],
       "@services/*": [
         "src/features/base/service/*",
-        "src/features/session/service/*"
+        "src/features/membership/service/*",
+        "src/features/org/service/*",
+        "src/features/session/service/*",
+        "src/features/settings/service/*",
+        "src/features/user/service/*"
       ],
       "@types": [ "src/types" ],
       "@utils/*": [ "src/utils/*" ],
@@ -128,5 +148,6 @@
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
-  }
+  },
+  "include": ["src/**/*"]
 }

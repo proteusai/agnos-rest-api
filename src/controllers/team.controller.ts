@@ -15,7 +15,7 @@ export async function createTeamHandler(req: Request<Obj, Obj, CreateTeamInput["
   const membership = await createMembership({
     user: user._id,
     team: team._id,
-    permission: PermissionName.ADMIN,
+    role: PermissionName.ADMIN,
   });
 
   if (IGNORE_LEAST_CARDINALITY) {

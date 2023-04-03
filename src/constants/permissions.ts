@@ -8,3 +8,15 @@ export enum PermissionScope {
   "READ:ENVIRONMENT" = "READ:ENVIRONMENT",
   "READ:USER" = "READ:USER",
 }
+
+export enum RoleName {
+  "GUEST" = "GUEST",
+  "MEMBER" = "MEMBER",
+  "OWNER" = "OWNER",
+}
+
+export const MapRoleToValue: Record<RoleName, number> = {
+  GUEST: 1,
+  MEMBER: 10,
+  OWNER: 100,
+};

@@ -3,10 +3,10 @@ import { DEFAULT_TEAM_PICTURE } from "@constants/defaults";
 import { BaseDocument } from "@models/base.model";
 import DesignModel, { DesignDocument } from "./design.model";
 import FunctionModel, { FunctionDocument } from "./function.model";
-import MembershipModel, { MembershipDocument } from "./membership.model";
+import MembershipModel, { MembershipDocument } from "@models/membership.model";
 import PluginModel, { PluginDocument } from "./plugin.model";
 import TeamDesignShareModel, { TeamDesignShareDocument } from "./teamDesignShare.model";
-import { UserDocument } from "./user.model";
+import { UserDocument } from "@models/user.model";
 
 export interface TeamInput {
   name: string;

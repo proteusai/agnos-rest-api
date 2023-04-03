@@ -5,7 +5,6 @@ import { FilterQuery, UpdateQuery, QueryOptions } from "mongoose";
 import { VM } from "vm2";
 import axios from "axios";
 import request from "request";
-import requireFromUrl from "require-from-url";
 import { ServiceOptions } from ".";
 import FunctionVersionModel, { FunctionVersionDocument, FunctionVersionInput } from "../models/functionVersion.model";
 import { findUser } from "./user.service";
@@ -149,7 +148,6 @@ export async function runFunctionVersion(query: FilterQuery<FunctionVersionDocum
   const sandbox = {
     axios,
     request,
-    requireFromUrl,
     agnos,
     process: {
       env: {

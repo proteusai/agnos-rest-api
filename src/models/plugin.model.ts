@@ -3,7 +3,7 @@ import { DEFAULT_PLUGIN_PICTURE } from "@constants/defaults";
 import { BaseDocument } from "@models/base.model";
 import PluginVersionModel, { PluginVersionDocument } from "./pluginVersion.model";
 import TeamModel, { TeamDocument } from "./team.model";
-import { UserDocument } from "./user.model";
+import { UserDocument } from "@models/user.model";
 
 export interface PluginInput {
   name: string;

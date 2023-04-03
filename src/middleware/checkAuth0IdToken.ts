@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import config from "config";
-import { CreateSessionRequest } from "../features/session/schema/session.schema";
+import { CreateSessionRequest } from "@schemas/session.schemas";
 import { Obj } from "../types";
 import { INVALID_ID_TOKEN, MISSING_ID_TOKEN } from "../constants/errors";
 

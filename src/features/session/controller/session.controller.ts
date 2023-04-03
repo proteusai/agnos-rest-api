@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { createSession, findSessions, updateSession } from "@services/session.service";
 import { findUser } from "../../../service/user.service";
-import { CreateSessionRequest } from "@schemas/session.schema";
+import { CreateSessionRequest } from "@schemas/session.schemas";
 import { Obj } from "@types";
 import { INVALID_ACCESS_TOKEN } from "@constants/errors";
 

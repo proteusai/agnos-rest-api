@@ -3,9 +3,8 @@ import bcrypt from "bcrypt";
 import config from "config";
 import { BaseDocument } from "@models/base.model";
 import { DEFAULT_USER_PICTURE } from "@constants/defaults";
-import { MembershipDocument } from "./membership.model";
-import { UserDesignShareDocument } from "./userDesignShare.model";
-import { SettingsDocument } from "./settings.model";
+import { MembershipDocument } from "@models/membership.model";
+import { SettingsDocument } from "@models/settings.model";
 
 export interface UserInput {
   name: string;
@@ -18,7 +17,6 @@ export interface UserInput {
 export interface UserDocument extends BaseDocument, UserInput, mongoose.Document {
   memberships?: Array<MembershipDocument["_id"]>;
   settings?: SettingsDocument["_id"];
-  userDesignShares?: Array<UserDesignShareDocument["_id"]>;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -31,7 +29,6 @@ const userSchema = new mongoose.Schema(
     password: { type: String },
     picture: { type: String, default: DEFAULT_USER_PICTURE },
     settings: { type: mongoose.Schema.Types.ObjectId, ref: "Settings" },
-    userDesignShares: [{ type: mongoose.Schema.Types.ObjectId, ref: "UserDesignShare" }],
   },
   {
     timestamps: true,
@@ -61,11 +58,11 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
   const user = this as UserDocument;
 
-  if (!user.password) {
-    return true;
+  if (!user.password || !candidatePassword) {
+    return false;
   }
 
-  return bcrypt.compare(candidatePassword, user.password).catch((e) => false);
+  return bcrypt.compare(candidatePassword, user.password).catch(() => false);
 };
 
 const UserModel = mongoose.model<UserDocument>("User", userSchema);

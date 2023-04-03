@@ -7,7 +7,7 @@ import { Obj } from "../types";
 export async function createMembershipHandler(req: Request<Obj, Obj, CreateMembershipInput["body"]>, res: Response) {
   const membership = await createMembership({
     ...req.body,
-    permission: PermissionName[req.body.permission],
+    role: PermissionName[req.body.permission],
   });
   return res.send({ membership });
 }

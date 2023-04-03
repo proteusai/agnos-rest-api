@@ -38,7 +38,7 @@ export async function createUserHandler(req: Request<Obj, Obj, CreateUserInput["
     const membership = await createMembership({
       user: user._id,
       team: team._id,
-      permission: PermissionName.ADMIN,
+      role: PermissionName.ADMIN,
     });
 
     const settings = await createSettings({ user: user._id });
