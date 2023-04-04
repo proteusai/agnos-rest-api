@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUserHandler } from "../controllers/user.controller";
+import { createUserHandler } from "@controllers/user";
 import { createUserRequestSchema } from "@schemas/user";
 import validateResource from "@middleware/validateResource";
 

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { createUserSessionHandler, getUserSessionsHandler, deleteSessionHandler } from "@controllers/session";
 import { createSession, findSessions, updateSession } from "@services/session";
-import { findUser } from "../../user/service/user.service";
+import { findUser } from "@services/user";
 import { CreateSessionRequest } from "@schemas/session";
 import { Obj } from "@types";
 import mongoose from "mongoose";

@@ -10,7 +10,7 @@ RUN yarn add bcrypt --force
 
 COPY . .
 
-CMD yarn test
+CMD yarn test  --detectOpenHandles
 
 FROM base as development
 COPY package.json yarn.lock ./

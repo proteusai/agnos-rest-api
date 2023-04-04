@@ -31,7 +31,7 @@ const orgSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     description: { type: String },
-    designs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Design" }],
+    // designs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Design" }],
     email: { type: String },
     // functions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Function" }],
     memberships: [{ type: mongoose.Schema.Types.ObjectId, ref: "Membership" }],

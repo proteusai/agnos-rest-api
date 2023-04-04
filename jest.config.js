@@ -14,6 +14,7 @@ module.exports = {
     "^@routes$": "<rootDir>/src/routes",
     "^@routes/(.+)$": "<rootDir>/src/features/$1/routes/$1.routes",
     "^@schemas/(.+)$": "<rootDir>/src/features/$1/schemas/$1.schemas",
+    "^@services$": "<rootDir>/src/service",
     "^@services/(.+)$": "<rootDir>/src/features/$1/service/$1.service",
     "^@types$": "<rootDir>/src/types",
     "^@utils/(.+)$": "<rootDir>/src/utils/$1",

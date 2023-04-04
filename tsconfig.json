@@ -59,6 +59,7 @@
       "@schemas/session": [ "src/features/session/schemas/session.schemas" ],
       "@schemas/settings": [ "src/features/settings/schemas/settings.schemas" ],
       "@schemas/user": [ "src/features/user/schemas/user.schemas" ],
+      "@services": [ "src/service" ],
       "@services/base": [ "src/features/base/service/base.service" ],
       "@services/membership": [ "src/features/membership/service/membership.service" ],
       "@services/org": [ "src/features/org/service/org.service" ],

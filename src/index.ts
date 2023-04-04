@@ -9,6 +9,7 @@ import swaggerDocs from "@utils/swagger";
 // import responseTime from "response-time";
 // import { restResponseTimeHistogram, startMetricsServer } from "./utils/metrics";
 
+const env = config.get<string>("nodeEnv");
 const port = config.get<number>("port");
 
 const server = http.createServer(app);
@@ -36,12 +37,14 @@ const io = new Server(server, {
 
 export const websocket = io;
 
-server.listen(port, async () => {
-  logger.info(`App is running at http://localhost:${port}`);
+if (env !== "test") {
+  server.listen(port, async () => {
+    logger.info(`App is running at http://localhost:${port}`);
 
-  await connect();
+    await connect();
 
-  // startMetricsServer();
+    // startMetricsServer();
 
-  swaggerDocs(app, port);
-});
+    swaggerDocs(app, port);
+  });
+}

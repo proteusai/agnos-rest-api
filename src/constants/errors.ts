@@ -6,5 +6,7 @@ export const EMAIL_MISSING = "Missing email";
 export const ID_TOKEN_INVALID = "Invalid ID token";
 export const ID_TOKEN_MISSING = "Missing ID token";
 export const NAME_MISSING = "Missing name";
+export const ORG_ID_MISSING = "Missing organization ID";
 export const PASSWORD_MISMATCH = "Passwords do not match";
 export const PASSWORD_TOO_SHORT = "Password too short - should be 6 chars minimum";
+export const USER_NOT_FOUND = "User not found";
