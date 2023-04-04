@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { DEFAULT_TEAM_NAME } from "@constants/defaults";
 import { RoleName } from "@constants/permissions";
 import { IGNORE_LEAST_CARDINALITY } from "@constants/settings";
-import { CreateUserInput } from "../schema/user.schema";
+import { CreateUserRequest } from "@schemas/user";
 import { createMembership } from "../service/membership.service";
 import { createSettings } from "../service/settings.service";
 import { createTeamDocument } from "../service/team.service";
@@ -10,7 +10,7 @@ import { createUserDocument, findUser } from "@services/user";
 import { Obj } from "@types";
 import logger from "@utils/logger";
 
-export async function createUserHandler(req: Request<Obj, Obj, CreateUserInput["body"]>, res: Response) {
+export async function createUserHandler(req: Request<Obj, Obj, CreateUserRequest["body"]>, res: Response) {
   try {
     const user = await createUserDocument(req.body);
     // create org and org membership

@@ -1,30 +1,10 @@
+import { EMAIL_INVALID, ACCESS_TOKEN_MISSING, EMAIL_MISSING, ID_TOKEN_MISSING } from "@constants/errors";
 import { object, string, TypeOf } from "zod";
 
 /**
  * @openapi
  * components:
  *  schemas:
- *    Session:
- *      type: object
- *      properties:
- *        _id:
- *          type: string
- *        user:
- *          oneOf:
- *            - $ref: '#/components/schemas/User'
- *            - type: string
- *        email:
- *          type: string
- *        accessToken:
- *          type: string
- *        valid:
- *          type: boolean
- *        userAgent:
- *          type: string
- *        createdAt:
- *          type: string
- *        updatedAt:
- *          type: string
  *    CreateSessionRequestBody:
  *      type: object
  *      required:
@@ -54,18 +34,18 @@ import { object, string, TypeOf } from "zod";
  *          items:
  *            $ref: '#/components/schemas/Session'
  */
-export const createSessionSchema = object({
+export const createSessionRequestSchema = object({
   body: object({
     email: string({
-      required_error: "Email is required",
-    }).email("Not a valid email"),
+      required_error: EMAIL_MISSING,
+    }).email(EMAIL_INVALID),
     accessToken: string({
-      required_error: "Access token is required",
+      required_error: ACCESS_TOKEN_MISSING,
     }),
     idToken: string({
-      required_error: "ID token is required",
+      required_error: ID_TOKEN_MISSING,
     }),
   }),
 });
 
-export type CreateSessionRequest = TypeOf<typeof createSessionSchema>;
+export type CreateSessionRequest = TypeOf<typeof createSessionRequestSchema>;

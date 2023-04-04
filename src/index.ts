@@ -36,7 +36,7 @@ const io = new Server(server, {
 
 export const websocket = io;
 
-server.listen(0, async () => {
+server.listen(port, async () => {
   logger.info(`App is running at http://localhost:${port}`);
 
   await connect();

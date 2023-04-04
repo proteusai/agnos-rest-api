@@ -1,4 +1,10 @@
-export const FORBIDDEN = "Forbidden";
-export const INVALID_ACCESS_TOKEN = "Invalid access token";
-export const INVALID_ID_TOKEN = "Invalid ID token";
-export const MISSING_ID_TOKEN = "Missing ID token";
+export const ACCESS_FORBIDDEN = "Forbidden";
+export const ACCESS_TOKEN_INVALID = "Invalid access token";
+export const ACCESS_TOKEN_MISSING = "Missing access token";
+export const EMAIL_INVALID = "Invalid email";
+export const EMAIL_MISSING = "Missing email";
+export const ID_TOKEN_INVALID = "Invalid ID token";
+export const ID_TOKEN_MISSING = "Missing ID token";
+export const NAME_MISSING = "Missing name";
+export const PASSWORD_MISMATCH = "Passwords do not match";
+export const PASSWORD_TOO_SHORT = "Password too short - should be 6 chars minimum";

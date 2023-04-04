@@ -10,6 +10,11 @@ const query = {
  * @openapi
  * components:
  *  schemas:
+ *    Membership:
+ *      type: object
+ *      properties:
+ *        _id:
+ *          type: string
  *    CreateMembershipInput:
  *      type: object
  *      required:

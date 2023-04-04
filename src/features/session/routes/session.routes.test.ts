@@ -1,7 +1,7 @@
 import request from "supertest";
 import app from "@app";
 import { connect, disconnect } from "@utils/connect";
-import { INVALID_ACCESS_TOKEN } from "@constants/errors";
+import { ACCESS_TOKEN_INVALID } from "@constants/errors";
 import PermissionModel from "../../../models/permission.model";
 import { Request, Response, NextFunction } from "express";
 
@@ -46,7 +46,7 @@ describe("Session routes", () => {
       expect(response.status).toBe(401);
       expect(response.body.error).toBeDefined();
       expect(response.body.error.message).toBeDefined();
-      expect(response.body.error.message).toBe(INVALID_ACCESS_TOKEN);
+      expect(response.body.error.message).toBe(ACCESS_TOKEN_INVALID);
     });
 
     // it("should create a session for a valid user", async () => {
