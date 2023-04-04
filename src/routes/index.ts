@@ -1,6 +1,6 @@
 import { Express, Request, Response } from "express";
 import userRoutes from "./user.routes";
-import sessionRoutes from "@routes/session.routes";
+import sessionRoutes from "@routes/session";
 import designRoutes from "./design.routes";
 import functionRoutes from "./function.routes";
 import functionVersionRoutes from "./functionVersion.routes";

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { PermissionName } from "../constants/permissions";
+import { RoleName } from "../constants/permissions";
 import { CreateMembershipInput, GetMembershipsInput } from "../schema/membership.schema";
 import { createMembership, findMemberships } from "../service/membership.service";
 import { Obj } from "../types";
@@ -7,7 +7,7 @@ import { Obj } from "../types";
 export async function createMembershipHandler(req: Request<Obj, Obj, CreateMembershipInput["body"]>, res: Response) {
   const membership = await createMembership({
     ...req.body,
-    role: PermissionName[req.body.permission],
+    role: RoleName[req.body.role],
   });
   return res.send({ membership });
 }

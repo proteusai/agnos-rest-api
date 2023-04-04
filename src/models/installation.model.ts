@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
-import { BaseDocument } from "@models/base.model";
+import { BaseDocument } from "@models/base";
 import { PluginDocument } from "./plugin.model";
 import { PluginVersionDocument } from "./pluginVersion.model";
 import { TeamDocument } from "./team.model";
-import { UserDocument } from "@models/user.model";
+import { UserDocument } from "@models/user";
 
 export interface InstallationInput {
   plugin: PluginDocument["_id"];

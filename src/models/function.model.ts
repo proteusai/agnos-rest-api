@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 import { DEFAULT_FUNCTION_PICTURE } from "@constants/defaults";
-import { BaseDocument } from "@models/base.model";
+import { BaseDocument } from "@models/base";
 import FunctionVersionModel, { FunctionVersionDocument } from "./functionVersion.model";
 import TeamModel, { TeamDocument } from "./team.model";
-import { UserDocument } from "@models/user.model";
+import { UserDocument } from "@models/user";
 
 export interface FunctionInput {
   name: string;

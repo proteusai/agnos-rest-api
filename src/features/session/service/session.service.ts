@@ -1,5 +1,5 @@
 import { FilterQuery, FlattenMaps, LeanDocument, Types, UpdateQuery } from "mongoose";
-import SessionModel, { SessionDocument, SessionInput } from "@models/session.model";
+import SessionModel, { SessionDocument, SessionInput } from "@models/session";
 
 export async function createSession(input: SessionInput) {
   const session = await SessionModel.create(input);

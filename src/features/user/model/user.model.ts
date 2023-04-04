@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import config from "config";
-import { BaseDocument } from "@models/base.model";
+import { BaseDocument } from "@models/base";
 import { DEFAULT_USER_PICTURE } from "@constants/defaults";
-import { MembershipDocument } from "@models/membership.model";
-import { SettingsDocument } from "@models/settings.model";
+import { MembershipDocument } from "@models/membership";
+import { SettingsDocument } from "@models/settings";
 
 export interface UserInput {
   name: string;

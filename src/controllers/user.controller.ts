@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
-import { DEFAULT_TEAM_NAME } from "../constants/defaults";
-import { PermissionName } from "../constants/permissions";
-import { IGNORE_LEAST_CARDINALITY } from "../constants/settings";
+import { DEFAULT_TEAM_NAME } from "@constants/defaults";
+import { RoleName } from "@constants/permissions";
+import { IGNORE_LEAST_CARDINALITY } from "@constants/settings";
 import { CreateUserInput } from "../schema/user.schema";
 import { createMembership } from "../service/membership.service";
 import { createSettings } from "../service/settings.service";
 import { createTeamDocument } from "../service/team.service";
-import { createUserDocument, findUser } from "../service/user.service";
-import { Obj } from "../types";
-import logger from "../utils/logger";
+import { createUserDocument, findUser } from "@services/user";
+import { Obj } from "@types";
+import logger from "@utils/logger";
 
 export async function createUserHandler(req: Request<Obj, Obj, CreateUserInput["body"]>, res: Response) {
   try {
@@ -37,8 +37,9 @@ export async function createUserHandler(req: Request<Obj, Obj, CreateUserInput["
     });
     const membership = await createMembership({
       user: user._id,
+      org: "TODO: create org",
       team: team._id,
-      role: PermissionName.ADMIN,
+      role: RoleName.OWNER,
     });
 
     const settings = await createSettings({ user: user._id });

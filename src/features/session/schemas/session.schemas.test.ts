@@ -1,4 +1,4 @@
-import { CreateSessionRequest, createSessionSchema } from "@schemas/session.schemas";
+import { CreateSessionRequest, createSessionSchema } from "@schemas/session";
 
 describe("Create session schema", () => {
   it("should validate well-formed objects", async () => {

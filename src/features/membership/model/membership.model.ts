@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 import { RoleName } from "@constants/permissions";
-import { BaseDocument } from "@models/base.model";
+import { BaseDocument } from "@models/base";
 import TeamModel, { TeamDocument } from "../../../models/team.model";
-import UserModel, { UserDocument } from "@models/user.model";
-import OrgModel, { OrgDocument } from "@models/org.model";
+import UserModel, { UserDocument } from "@models/user";
+import OrgModel, { OrgDocument } from "@models/org";
 import logger from "@/utils/logger";
 
 export interface MembershipInput {

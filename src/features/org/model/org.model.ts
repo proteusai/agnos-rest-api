@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 import { DEFAULT_ORG_PICTURE } from "@constants/defaults";
-import { BaseDocument } from "@models/base.model";
-import MembershipModel, { MembershipDocument } from "@models/membership.model";
-import { UserDocument } from "@models/user.model";
-import logger from "@/utils/logger";
+import { BaseDocument } from "@models/base";
+import MembershipModel, { MembershipDocument } from "@models/membership";
+import { UserDocument } from "@models/user";
+import logger from "@utils/logger";
 
 export interface OrgInput {
   name: string;

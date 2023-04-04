@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { PermissionName } from "../constants/permissions";
-import { IGNORE_LEAST_CARDINALITY } from "../constants/settings";
+import { RoleName } from "@constants/permissions";
+import { IGNORE_LEAST_CARDINALITY } from "@constants/settings";
 import { CreateTeamInput, GetTeamInput, GetTeamsInput } from "../schema/team.schema";
 import { createMembership } from "../service/membership.service";
 import { createTeamDocument, findTeam, findTeams } from "../service/team.service";
-import { findUserDocument } from "../service/user.service";
-import { Obj } from "../types";
+import { findUserDocument } from "@services/user";
+import { Obj } from "@types";
 
 export async function createTeamHandler(req: Request<Obj, Obj, CreateTeamInput["body"]>, res: Response) {
   const user = res.locals.user;
@@ -14,8 +14,9 @@ export async function createTeamHandler(req: Request<Obj, Obj, CreateTeamInput["
   const team = await createTeamDocument({ ...req.body, user: user._id });
   const membership = await createMembership({
     user: user._id,
+    org: "create org", // TODO
     team: team._id,
-    role: PermissionName.ADMIN,
+    role: RoleName.OWNER,
   });
 
   if (IGNORE_LEAST_CARDINALITY) {
