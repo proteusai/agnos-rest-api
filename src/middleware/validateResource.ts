@@ -1,3 +1,4 @@
+import errorObject from "@utils/error";
 import { Request, Response, NextFunction } from "express";
 import { AnyZodObject } from "zod";
 
@@ -10,7 +11,7 @@ const validate = (schema: AnyZodObject) => (req: Request, res: Response, next: N
     });
     next();
   } catch (error: unknown) {
-    return res.status(400).send({ error });
+    return res.status(400).send({ error: errorObject(error) });
   }
 };
 

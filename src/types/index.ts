@@ -8,4 +8,7 @@ export type ResponseLocals = { user?: UserDocument & { session?: ObjectId } };
 
 export type ResponseMeta = { result?: UpdateWriteOpResult };
 
-export type Response<T> = ExpressResponse<{ data?: T; error?: unknown; meta?: ResponseMeta }, ResponseLocals>;
+export type Response<T> = ExpressResponse<
+  { data?: T; error?: Pick<Error, "name" | "message">; meta?: ResponseMeta },
+  ResponseLocals
+>;

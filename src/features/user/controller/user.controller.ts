@@ -12,6 +12,7 @@ import logger from "@utils/logger";
 import { UserDocument } from "@models/user";
 import { USER_NOT_FOUND } from "@constants/errors";
 import { createOrgDocument } from "@services/org";
+import errorObject from "@utils/error";
 
 export async function createUserHandler(
   req: Request<Obj, Obj, CreateUserRequest["body"]>,
@@ -47,7 +48,7 @@ export async function createUserHandler(
     return res.send({ data: user });
   } catch (error: unknown) {
     logger.error(error);
-    return res.status(409).send({ error });
+    return res.status(409).send({ error: errorObject(error) });
   }
 }
 
@@ -61,6 +62,6 @@ export async function getMeHandler(req: Request, res: Response<LeanDocument<User
     return res.send({ data: user });
   } catch (error: unknown) {
     logger.error(error);
-    return res.status(404).send({ error });
+    return res.status(404).send({ error: errorObject(error) });
   }
 }

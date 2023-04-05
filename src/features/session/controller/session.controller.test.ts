@@ -38,7 +38,7 @@ describe("Session controller", () => {
       expect(res.status).toHaveBeenCalledTimes(1);
       expect(res.status).toHaveBeenCalledWith(401);
       expect(res.send).toHaveBeenCalledTimes(1);
-      expect(res.send).toHaveBeenCalledWith({ error: { message: "Invalid access token" } });
+      expect(res.send).toHaveBeenCalledWith({ error: { name: "Error", message: "Invalid access token" } });
     });
 
     test("creates session and returns it", async () => {
