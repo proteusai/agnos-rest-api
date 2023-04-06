@@ -3,6 +3,7 @@ import app from "@app";
 import { connect, disconnect } from "@utils/connect";
 import PermissionModel from "../../../models/permission.model";
 import { Request, Response, NextFunction } from "express";
+import { findOrg } from "@services/org";
 
 jest.mock("@middleware/checkAuth0IdToken", () => (_: Request, __: Response, next: NextFunction) => {
   return next();
@@ -47,6 +48,10 @@ describe("User routes", () => {
       expect(response.body.data).toHaveProperty("_id");
       expect(response.body.data).toHaveProperty("name", body.name);
       expect(response.body.data).toHaveProperty("email", body.email);
+
+      // Check that the user has an auto-created personal org
+      const org = await findOrg({ user: response.body.data._id, personal: true });
+      expect(org).toBeDefined();
     });
   });
 });
