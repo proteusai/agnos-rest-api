@@ -4,7 +4,7 @@ import { getMyMembershipsHandler } from "../controllers/membership.controller";
 import { getMyPluginsHandler } from "../controllers/plugin.controller";
 import { getMyTeamHandler } from "../controllers/team.controller";
 import { getMyTeamDesignSharesHandler } from "../controllers/teamDesignShare.controller";
-import { getMeHandler } from "../controllers/user.controller";
+import { getMeHandler } from "@controllers/user";
 import requireUser from "../middleware/requireUser";
 
 const router = Router();

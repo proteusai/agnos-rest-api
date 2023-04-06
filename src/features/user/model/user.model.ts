@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import config from "config";
-import { BaseDocument } from "@models/base.model";
+import { BaseDocument } from "@models/base";
 import { DEFAULT_USER_PICTURE } from "@constants/defaults";
-import { MembershipDocument } from "@models/membership.model";
-import { SettingsDocument } from "@models/settings.model";
+import { MembershipDocument } from "@models/membership";
+import { SettingsDocument } from "@models/settings";
 
 export interface UserInput {
   name: string;
@@ -64,6 +64,39 @@ userSchema.methods.comparePassword = async function (candidatePassword: string):
 
   return bcrypt.compare(candidatePassword, user.password).catch(() => false);
 };
+
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    User:
+ *      type: object
+ *      properties:
+ *        _id:
+ *          type: string
+ *        name:
+ *          type: string
+ *        email:
+ *          type: string
+ *        emailIsVerified:
+ *          type: boolean
+ *        memberships:
+ *          type: array
+ *          items:
+ *            oneOf:
+ *              - $ref: '#/components/schemas/Membership'
+ *              - type: string
+ *        picture:
+ *          type: string
+ *        settings:
+ *          oneOf:
+ *            - $ref: '#/components/schemas/Settings'
+ *            - type: string
+ *        createdAt:
+ *          type: string
+ *        updatedAt:
+ *          type: string
+ */
 
 const UserModel = mongoose.model<UserDocument>("User", userSchema);
 

@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { CreateSettingsInput } from "../schema/settings.schema";
 import { createSettingsDocument, findAndUpdateSettings, findOneSetOfSettings } from "../service/settings.service";
-import { findUserDocument } from "../service/user.service";
-import { Obj } from "../types";
+import { findUserDocument } from "@services/user";
+import { Obj } from "@types";
 
 export async function createOrUpdateSettingsHandler(
   req: Request<Obj, Obj, CreateSettingsInput["body"]>,

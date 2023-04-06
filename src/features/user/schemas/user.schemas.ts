@@ -1,27 +1,11 @@
+import { EMAIL_INVALID, EMAIL_MISSING, NAME_MISSING, PASSWORD_MISMATCH, PASSWORD_TOO_SHORT } from "@constants/errors";
 import { object, string, boolean, TypeOf } from "zod";
 
 /**
  * @openapi
  * components:
  *  schemas:
- *    User:
- *      type: object
- *      properties:
- *        _id:
- *          type: string
- *        name:
- *          type: string
- *        email:
- *          type: string
- *        emailIsVerified:
- *          type: boolean
- *        picture:
- *          type: string
- *        createdAt:
- *          type: string
- *        updatedAt:
- *          type: string
- *    CreateUserInput:
+ *    CreateUserRequestBody:
  *      type: object
  *      required:
  *        - name
@@ -52,22 +36,22 @@ import { object, string, boolean, TypeOf } from "zod";
  *          $ref: '#/components/schemas/User'
  */
 
-export const createUserSchema = object({
+export const createUserRequestSchema = object({
   body: object({
     name: string({
-      required_error: "Name is required",
+      required_error: NAME_MISSING,
     }),
     email: string({
-      required_error: "Email is required",
-    }).email("Not a valid email"),
+      required_error: EMAIL_MISSING,
+    }).email(EMAIL_INVALID),
     emailIsVerified: boolean().default(false).optional(),
-    password: string().min(6, "Password too short - should be 6 chars minimum").optional(),
+    password: string().min(6, PASSWORD_TOO_SHORT).optional(),
     passwordConfirmation: string().optional(),
     picture: string().optional(),
   }).refine((data) => data.password === data.passwordConfirmation, {
-    message: "Passwords do not match",
+    message: PASSWORD_MISMATCH,
     path: ["passwordConfirmation"],
   }),
 });
 
-export type CreateUserInput = Omit<TypeOf<typeof createUserSchema>, "body.passwordConfirmation">;
+export type CreateUserRequest = Omit<TypeOf<typeof createUserRequestSchema>, "body.passwordConfirmation">;

@@ -10,6 +10,11 @@ const query = {
  * @openapi
  * components:
  *  schemas:
+ *    Membership:
+ *      type: object
+ *      properties:
+ *        _id:
+ *          type: string
  *    CreateMembershipInput:
  *      type: object
  *      required:
@@ -58,15 +63,16 @@ export const createMembershipSchema = object({
     user: string({
       required_error: "User ID is required",
     }),
-    team: string({
-      required_error: "Team ID is required",
+    org: string({
+      required_error: "Org ID is required",
     }),
+    team: string(),
     //permission: union([
-    //   literal("READ"),
-    //   literal("WRITE"),
-    //   literal("ADMIN"),
-    // ]).default("READ"),
-    permission: zodEnum(["READ", "WRITE", "ADMIN"] as const).default("READ"),
+    //   literal("GUEST"),
+    //   literal("MEMBER"),
+    //   literal("OWNER"),
+    // ]).default("GUEST"),
+    role: zodEnum(["GUEST", "MEMBER", "OWNER"] as const).default("MEMBER"),
   }),
 });
 

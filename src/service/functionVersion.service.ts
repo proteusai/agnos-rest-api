@@ -7,14 +7,14 @@ import axios from "axios";
 import request from "request";
 import { ServiceOptions } from ".";
 import FunctionVersionModel, { FunctionVersionDocument, FunctionVersionInput } from "../models/functionVersion.model";
-import { findUser } from "./user.service";
-import { PermissionScope } from "../constants/permissions";
+import { findUser } from "@services/user";
+import { PermissionScope } from "@constants/permissions";
 import { createLog } from "./log.service";
-import { Env } from "../constants/env";
-import { DataType } from "../constants/log";
-import { LogType } from "../constants/log";
+import { Env } from "@constants/env";
+import { DataType } from "@constants/log";
+import { LogType } from "@constants/log";
 import { createInvocation } from "./invocation.service";
-import { InvocationType } from "../constants/invocation";
+import { InvocationType } from "@constants/invocation";
 
 const defaultPopulate = ["function", "team", "user"];
 

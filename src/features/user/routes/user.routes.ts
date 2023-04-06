@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { createUserHandler } from "../controllers/user.controller";
-import { createUserSchema } from "../schema/user.schema";
-import validateResource from "../middleware/validateResource";
+import { createUserHandler } from "@controllers/user";
+import { createUserRequestSchema } from "@schemas/user";
+import validateResource from "@middleware/validateResource";
 
 const router = Router();
 
@@ -18,7 +18,7 @@ const router = Router();
  *      content:
  *        application/json:
  *           schema:
- *              $ref: '#/components/schemas/CreateUserInput'
+ *              $ref: '#/components/schemas/CreateUserRequestBody'
  *    responses:
  *      200:
  *        description: Success
@@ -31,6 +31,6 @@ const router = Router();
  *      400:
  *        description: Bad request
  */
-router.post("/users", validateResource(createUserSchema), createUserHandler);
+router.post("/users", validateResource(createUserRequestSchema), createUserHandler);
 
 export default router;

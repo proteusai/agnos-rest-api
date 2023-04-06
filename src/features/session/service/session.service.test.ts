@@ -1,7 +1,7 @@
 import { FilterQuery, UpdateQuery } from "mongoose";
-import SessionModel, { SessionDocument, SessionInput } from "@models/session.model";
+import SessionModel, { SessionDocument, SessionInput } from "@models/session";
 import { connect, disconnect } from "@utils/connect";
-import { createSession, findSession, findSessions, updateSession } from "@services/session.service";
+import { createSession, findSession, findSessions, updateSession } from "@services/session";
 
 describe("Session service", () => {
   const input: SessionInput = {

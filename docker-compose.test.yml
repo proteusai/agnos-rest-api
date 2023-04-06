@@ -8,6 +8,7 @@ services:
       - db:/data/db
     ports:
       - 27017:27017
+    mem_limit: 1g
 
   api:
     build:
@@ -20,6 +21,7 @@ services:
       - .test.env
     stdin_open: true
     tty: true
+    mem_limit: 1g
 
 volumes:
   db:

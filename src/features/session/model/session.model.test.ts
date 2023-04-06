@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { connect, disconnect } from "@utils/connect";
-import SessionModel, { SessionInput } from "@models/session.model";
+import SessionModel, { SessionInput } from "@models/session";
 
 describe("Session model", () => {
   const sessionInput: SessionInput = {

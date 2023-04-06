@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 import { DEFAULT_PLUGIN_PICTURE } from "@constants/defaults";
-import { BaseDocument } from "@models/base.model";
+import { BaseDocument } from "@models/base";
 import PluginVersionModel, { PluginVersionDocument } from "./pluginVersion.model";
 import TeamModel, { TeamDocument } from "./team.model";
-import { UserDocument } from "@models/user.model";
+import { UserDocument } from "@models/user";
 
 export interface PluginInput {
   name: string;

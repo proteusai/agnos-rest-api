@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
-import { PermissionName } from "../constants/permissions";
-import { IGNORE_LEAST_CARDINALITY } from "../constants/settings";
+import { PermissionName } from "@constants/permissions";
+import { IGNORE_LEAST_CARDINALITY } from "@constants/settings";
 import { TeamDocument } from "../models/team.model";
 import { CreateDesignInput, GetDesignInput } from "../schema/design.schema";
 import { createDesign, findDesign } from "../service/design.service";
 import { findTeamDocument } from "../service/team.service";
 import { createTeamDesignShare } from "../service/teamDesignShare.service";
-import { findUserDocument } from "../service/user.service";
+import { findUserDocument } from "@services/user";
 import { createUserDesignShare } from "../service/userDesignShare.service";
-import { Obj } from "../types";
+import { Obj } from "@types";
 
 export async function createDesignHandler(req: Request<Obj, Obj, CreateDesignInput["body"]>, res: Response) {
   const user = res.locals.user;
@@ -47,7 +47,7 @@ export async function createDesignHandler(req: Request<Obj, Obj, CreateDesignInp
   });
 
   if (IGNORE_LEAST_CARDINALITY) {
-    userDoc?.userDesignShares?.push(userDesignShare);
+    // userDoc?.userDesignShares?.push(userDesignShare);
     await userDoc?.save();
     team.teamDesignShares?.push(teamDesignShare);
     await team.save();

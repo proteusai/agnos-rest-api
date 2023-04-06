@@ -1,6 +1,6 @@
 import { FilterQuery } from "mongoose";
 import { omit } from "lodash";
-import UserModel, { UserDocument, UserInput } from "@models/user.model";
+import UserModel, { UserDocument, UserInput } from "@models/user";
 
 export async function createUser(input: UserInput) {
   const user = await createUserDocument(input);
@@ -8,13 +8,9 @@ export async function createUser(input: UserInput) {
   return omit(user.toJSON(), "password");
 }
 export async function createUserDocument(input: UserInput) {
-  try {
-    const user = await UserModel.create(input);
+  const user = await UserModel.create(input);
 
-    return user;
-  } catch (e: any) {
-    throw new Error(e);
-  }
+  return user;
 }
 
 export async function findUser(query: FilterQuery<UserDocument>) {

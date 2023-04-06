@@ -1,12 +1,8 @@
 import { Router } from "express";
 import validateResource from "@middleware/validateResource";
 import requireUser from "@middleware/requireUser";
-import {
-  createUserSessionHandler,
-  deleteSessionHandler,
-  getUserSessionsHandler,
-} from "@controllers/session.controller";
-import { createSessionSchema } from "@schemas/session.schemas";
+import { createUserSessionHandler, deleteSessionHandler, getUserSessionsHandler } from "@controllers/session";
+import { createSessionRequestSchema } from "@schemas/session";
 import checkAuth0IdToken from "@middleware/checkAuth0IdToken";
 import checkAuth0AccessToken from "@middleware/checkAuth0AccessToken";
 
@@ -40,7 +36,7 @@ const router = Router();
  */
 router.post(
   "/sessions",
-  [validateResource(createSessionSchema), checkAuth0AccessToken, checkAuth0IdToken],
+  [validateResource(createSessionRequestSchema), checkAuth0AccessToken, checkAuth0IdToken],
   createUserSessionHandler
 );
 

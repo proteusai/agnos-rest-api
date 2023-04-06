@@ -1,4 +1,4 @@
-import { CreateSessionRequest, createSessionSchema } from "@schemas/session.schemas";
+import { CreateSessionRequest, createSessionRequestSchema } from "@schemas/session";
 
 describe("Create session schema", () => {
   it("should validate well-formed objects", async () => {
@@ -10,15 +10,15 @@ describe("Create session schema", () => {
       },
     };
     expect(() => {
-      createSessionSchema.parse(request);
+      createSessionRequestSchema.parse(request);
     }).not.toThrowError();
-    expect(createSessionSchema.parse(request)).toEqual(request);
+    expect(createSessionRequestSchema.parse(request)).toEqual(request);
   });
 
   it("should not validate malformed objects", async () => {
     // no email
     expect(() => {
-      createSessionSchema.parse({
+      createSessionRequestSchema.parse({
         body: {
           accessToken: "accessToken",
           idToken: "idToken",
@@ -28,7 +28,7 @@ describe("Create session schema", () => {
 
     // no access token
     expect(() => {
-      createSessionSchema.parse({
+      createSessionRequestSchema.parse({
         body: {
           email: "example@email.com",
           idToken: "idToken",
@@ -38,7 +38,7 @@ describe("Create session schema", () => {
 
     // no ID token
     expect(() => {
-      createSessionSchema.parse({
+      createSessionRequestSchema.parse({
         body: {
           email: "example@email.com",
           accessToken: "accessToken",
@@ -48,7 +48,7 @@ describe("Create session schema", () => {
 
     // invalid email
     expect(() => {
-      createSessionSchema.parse({
+      createSessionRequestSchema.parse({
         body: {
           email: "email",
           accessToken: "accessToken",

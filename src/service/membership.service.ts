@@ -1,6 +1,6 @@
 import { FilterQuery } from "mongoose";
 import { ServiceOptions } from ".";
-import MembershipModel, { MembershipDocument, MembershipInput } from "@models/membership.model";
+import MembershipModel, { MembershipDocument, MembershipInput } from "@models/membership";
 
 const defaultPopulate = ["user", "team", "permission"];
 

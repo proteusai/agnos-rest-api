@@ -1,30 +1,37 @@
 import { NextFunction, Request, Response } from "express";
 import config from "config";
-import { CreateSessionRequest } from "@schemas/session.schemas";
-import { Obj } from "../types";
-import { INVALID_ID_TOKEN, MISSING_ID_TOKEN } from "../constants/errors";
+import { CreateSessionRequest } from "@schemas/session";
+import { Obj } from "@types";
+import { ID_TOKEN_INVALID, ID_TOKEN_MISSING } from "@constants/errors";
+import logger from "@utils/logger";
+import errorObject from "@utils/error";
 
 const checkAuth0IdToken = async (
   req: Request<Obj, Obj, CreateSessionRequest["body"]>,
   res: Response,
   next: NextFunction
 ) => {
-  const { idToken } = req.body;
+  try {
+    const { idToken } = req.body;
 
-  if (!idToken) {
-    return res.status(401).send({ error: { message: MISSING_ID_TOKEN } });
+    if (!idToken) {
+      throw new Error(ID_TOKEN_MISSING);
+    }
+
+    const payload = await parseJwt(idToken);
+
+    const audMatch = payload.aud === config.get("auth0ClientId");
+    const emailMatch = payload.email === req.body.email;
+
+    if (!audMatch || !emailMatch) {
+      throw new Error(ID_TOKEN_INVALID);
+    }
+
+    return next();
+  } catch (error: unknown) {
+    logger.error(error);
+    return res.status(401).send({ error: errorObject(error) });
   }
-
-  const payload = await parseJwt(idToken);
-
-  const audMatch = payload.aud === config.get("auth0ClientId");
-  const emailMatch = payload.email === req.body.email;
-
-  if (!audMatch || !emailMatch) {
-    return res.status(401).send({ error: { message: INVALID_ID_TOKEN } });
-  }
-
-  return next();
 };
 
 function parseJwt(token: string) {

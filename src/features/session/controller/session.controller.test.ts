@@ -1,17 +1,13 @@
 import { Request, Response } from "express";
-import {
-  createUserSessionHandler,
-  getUserSessionsHandler,
-  deleteSessionHandler,
-} from "@controllers/session.controller";
-import { createSession, findSessions, updateSession } from "@services/session.service";
-import { findUser } from "../../../service/user.service";
-import { CreateSessionRequest } from "@schemas/session.schemas";
+import { createUserSessionHandler, getUserSessionsHandler, deleteSessionHandler } from "@controllers/session";
+import { createSession, findSessions, updateSession } from "@services/session";
+import { findUser } from "@services/user";
+import { CreateSessionRequest } from "@schemas/session";
 import { Obj } from "@types";
 import mongoose from "mongoose";
 
-jest.mock("@services/user.service");
-jest.mock("@services/session.service");
+jest.mock("@services/user");
+jest.mock("@services/session");
 
 const mockedFindUser = findUser as jest.MockedFunction<typeof findUser>;
 const mockedCreateSession = createSession as jest.MockedFunction<typeof createSession>;
@@ -42,7 +38,7 @@ describe("Session controller", () => {
       expect(res.status).toHaveBeenCalledTimes(1);
       expect(res.status).toHaveBeenCalledWith(401);
       expect(res.send).toHaveBeenCalledTimes(1);
-      expect(res.send).toHaveBeenCalledWith({ error: { message: "Invalid access token" } });
+      expect(res.send).toHaveBeenCalledWith({ error: { name: "Error", message: "Invalid access token" } });
     });
 
     test("creates session and returns it", async () => {

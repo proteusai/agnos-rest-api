@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import { PermissionName } from "@constants/permissions";
-import { BaseDocument } from "@models/base.model";
+import { BaseDocument } from "@models/base";
 import DesignModel, { DesignDocument } from "./design.model";
-import UserModel, { UserDocument } from "@models/user.model";
+import UserModel, { UserDocument } from "@models/user";
 
 export interface UserDesignShareInput {
   design: DesignDocument["_id"];

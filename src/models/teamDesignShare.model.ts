@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { PermissionName } from "@constants/permissions";
-import { BaseDocument } from "@models/base.model";
+import { BaseDocument } from "@models/base";
 import DesignModel, { DesignDocument } from "./design.model";
 import TeamModel, { TeamDocument } from "./team.model";
 

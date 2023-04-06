@@ -3,3 +3,4 @@ build
 config
 jest.config.js
 types.d.ts
+prod-paths.js
