@@ -3,7 +3,7 @@ import { DEFAULT_DESIGN_PICTURE } from "@constants/defaults";
 import { BaseDocument } from "@models/base.model";
 import TeamModel, { TeamDocument } from "./team.model";
 import TeamDesignShareModel, { TeamDesignShareDocument } from "./teamDesignShare.model";
-import { UserDocument } from "./user.model";
+import { UserDocument } from "@models/user.model";
 import UserDesignShareModel, { UserDesignShareDocument } from "./userDesignShare.model";
 
 export interface DesignInput {

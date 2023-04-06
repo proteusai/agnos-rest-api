@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { BaseDocument } from "@models/base.model";
-import { UserDocument } from "../../../models/user.model";
+import { UserDocument } from "@models/user.model";
 
 export interface SessionInput {
   user: UserDocument["_id"];

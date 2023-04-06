@@ -4,7 +4,7 @@ import InstallationModel from "./installation.model";
 import { Menu, MenuSchema } from "./menu.model";
 import PluginModel, { PluginDocument } from "./plugin.model";
 import { TeamDocument } from "./team.model";
-import { UserDocument } from "./user.model";
+import { UserDocument } from "@models/user.model";
 
 export interface PluginVersionInput {
   _id: string;

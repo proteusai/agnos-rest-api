@@ -6,7 +6,7 @@ import {
   deleteSessionHandler,
   getUserSessionsHandler,
 } from "@controllers/session.controller";
-import { createSessionSchema } from "@schemas/session.schema";
+import { createSessionSchema } from "@schemas/session.schemas";
 import checkAuth0IdToken from "@middleware/checkAuth0IdToken";
 import checkAuth0AccessToken from "@middleware/checkAuth0AccessToken";
 
