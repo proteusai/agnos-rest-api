@@ -28,7 +28,7 @@ describe("User Controller", () => {
         send: jest.fn().mockReturnThis(),
         status: jest.fn().mockReturnThis(),
       } as unknown as Response;
-      const mockMongooseDocumentPrototype = new UserModel(); //new mongoose.Document({});
+      const mockMongooseDocumentPrototype = new UserModel();
       const mockMongooseDocument = {
         $assertPopulated: jest.fn(),
         $clone: jest.fn(),
