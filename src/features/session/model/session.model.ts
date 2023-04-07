@@ -48,8 +48,10 @@ const sessionSchema = new mongoose.Schema(
  *          type: string
  *        createdAt:
  *          type: string
+ *          format: date-time
  *        updatedAt:
  *          type: string
+ *          format: date-time
  */
 
 const SessionModel = mongoose.model<SessionDocument>("Session", sessionSchema);

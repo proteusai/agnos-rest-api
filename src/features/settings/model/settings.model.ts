@@ -24,6 +24,36 @@ const settingsSchema = new mongoose.Schema(
   }
 );
 
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    Settings:
+ *      type: object
+ *      properties:
+ *        _id:
+ *          type: string
+ *        autoSave:
+ *          type: boolean
+ *        colorMode:
+ *          type: string
+ *          enum:
+ *           - DARK
+ *           - LIGHT
+ *        useGrayscaleIcons:
+ *          type: boolean
+ *        user:
+ *          oneOf:
+ *            - $ref: '#/components/schemas/User'
+ *            - type: string
+ *        createdAt:
+ *          type: string
+ *          format: date-time
+ *        updatedAt:
+ *          type: string
+ *          format: date-time
+ */
+
 const SettingsModel = mongoose.model<SettingsDocument>("Settings", settingsSchema);
 
 export default SettingsModel;

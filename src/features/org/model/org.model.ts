@@ -9,11 +9,12 @@ export interface OrgInput {
   name: string;
   description?: string;
   email?: string;
+  emailIsVerified?: boolean;
   personal?: boolean;
   private?: boolean;
   picture?: string;
   secrets?: object;
-  user: UserDocument["_id"]; // ref to the user that created this team
+  user: UserDocument["_id"];
 }
 
 export interface OrgDocument extends BaseDocument, OrgInput, mongoose.Document {
@@ -33,6 +34,7 @@ const orgSchema = new mongoose.Schema(
     description: { type: String },
     // designs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Design" }],
     email: { type: String },
+    emailIsVerified: { type: Boolean, default: false },
     // functions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Function" }],
     memberships: [{ type: mongoose.Schema.Types.ObjectId, ref: "Membership" }],
     personal: { type: Boolean, default: false },
@@ -59,6 +61,50 @@ orgSchema.pre("remove", async function (next) {
 
   return next();
 });
+
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    Organization:
+ *      type: object
+ *      properties:
+ *        _id:
+ *          type: string
+ *        name:
+ *          type: string
+ *        description:
+ *          type: string
+ *        email:
+ *          type: string
+ *        emailIsVerified:
+ *          type: boolean
+ *        memberships:
+ *          type: array
+ *          items:
+ *            oneOf:
+ *              - $ref: '#/components/schemas/Membership'
+ *              - type: string
+ *        personal:
+ *          type: boolean
+ *        private:
+ *          type: boolean
+ *        picture:
+ *          type: string
+ *        secrets:
+ *          type: object
+ *          additionalProperties: true
+ *        user:
+ *          oneOf:
+ *            - $ref: '#/components/schemas/User'
+ *            - type: string
+ *        createdAt:
+ *          type: string
+ *          format: date-time
+ *        updatedAt:
+ *          type: string
+ *          format: date-time
+ */
 
 const OrgModel = mongoose.model<OrgDocument>("Organization", orgSchema);
 

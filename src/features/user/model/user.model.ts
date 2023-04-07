@@ -94,8 +94,10 @@ userSchema.methods.comparePassword = async function (candidatePassword: string):
  *            - type: string
  *        createdAt:
  *          type: string
+ *          format: date-time
  *        updatedAt:
  *          type: string
+ *          format: date-time
  */
 
 const UserModel = mongoose.model<UserDocument>("User", userSchema);
