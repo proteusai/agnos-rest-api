@@ -5,6 +5,7 @@ import { BaseDocument } from "@models/base";
 import { DEFAULT_USER_PICTURE } from "@constants/defaults";
 import { MembershipDocument } from "@models/membership";
 import { SettingsDocument } from "@models/settings";
+import { CollaborationDocument } from "@models/collaboration";
 
 export interface UserInput {
   name: string;
@@ -15,6 +16,7 @@ export interface UserInput {
 }
 
 export interface UserDocument extends BaseDocument, UserInput, mongoose.Document {
+  collaborations?: Array<CollaborationDocument["_id"]>;
   memberships?: Array<MembershipDocument["_id"]>;
   settings?: SettingsDocument["_id"];
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -23,6 +25,7 @@ export interface UserDocument extends BaseDocument, UserInput, mongoose.Document
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
+    collaborations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collaboration" }],
     email: { type: String, required: true, unique: true },
     emailIsVerified: { type: Boolean, default: false },
     memberships: [{ type: mongoose.Schema.Types.ObjectId, ref: "Membership" }],
@@ -76,6 +79,12 @@ userSchema.methods.comparePassword = async function (candidatePassword: string):
  *          type: string
  *        name:
  *          type: string
+ *        collaborations:
+ *          type: array
+ *          items:
+ *            oneOf:
+ *              - $ref: '#/components/schemas/Collaboration'
+ *              - type: string
  *        email:
  *          type: string
  *        emailIsVerified:

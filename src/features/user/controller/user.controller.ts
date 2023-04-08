@@ -1,6 +1,6 @@
 import { Request } from "express";
 import { LeanDocument, ObjectId } from "mongoose";
-import { DEFAULT_ORG_NAME, DEFAULT_ORG_PICTURE } from "@constants/defaults";
+import { DEFAULT_ORG_PICTURE } from "@constants/defaults";
 import { RoleName } from "@constants/permissions";
 import { IGNORE_LEAST_CARDINALITY } from "@constants/settings";
 import { CreateUserRequest } from "@schemas/user";
@@ -21,12 +21,12 @@ export async function createUserHandler(
   try {
     const user = await createUserDocument(req.body);
     const org = await createOrgDocument({
-      name: DEFAULT_ORG_NAME,
+      name: user.name,
       email: user.email,
       personal: true,
       description: "This is my own space and I can invite people in.",
       private: true,
-      picture: DEFAULT_ORG_PICTURE,
+      picture: user.picture || DEFAULT_ORG_PICTURE,
       user: user._id,
     });
     const membership = await createMembership({

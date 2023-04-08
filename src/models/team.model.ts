@@ -7,6 +7,7 @@ import MembershipModel, { MembershipDocument } from "@models/membership";
 import PluginModel, { PluginDocument } from "./plugin.model";
 import TeamDesignShareModel, { TeamDesignShareDocument } from "./teamDesignShare.model";
 import { UserDocument } from "@models/user";
+import CollaborationModel, { CollaborationDocument } from "@models/collaboration";
 
 export interface TeamInput {
   name: string;
@@ -20,6 +21,7 @@ export interface TeamInput {
 }
 
 export interface TeamDocument extends BaseDocument, TeamInput, mongoose.Document {
+  collaborations?: Array<CollaborationDocument["_id"]>;
   designs?: Array<DesignDocument["_id"]>;
   functions?: Array<FunctionDocument["_id"]>;
   memberships?: Array<MembershipDocument["_id"]>;
@@ -30,6 +32,7 @@ export interface TeamDocument extends BaseDocument, TeamInput, mongoose.Document
 const teamSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
+    collaborations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collaboration" }],
     autoCreated: { type: Boolean, default: false },
     description: { type: String },
     designs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Design" }],
@@ -52,6 +55,11 @@ const teamSchema = new mongoose.Schema(
 teamSchema.pre("remove", async function (next) {
   const team = this as unknown as TeamDocument;
 
+  CollaborationModel.remove({ team: team._id })
+    .exec()
+    .catch(() => {
+      // TODO: what do we do?
+    });
   DesignModel.remove({ team: team._id })
     .exec()
     .catch(() => {
