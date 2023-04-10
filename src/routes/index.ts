@@ -1,6 +1,7 @@
 import { Express, Request, Response } from "express";
 import userRoutes from "@routes/user";
 import sessionRoutes from "@routes/session";
+import settingsRoutes from "@routes/settings";
 import designRoutes from "./design.routes";
 import functionRoutes from "./function.routes";
 import functionVersionRoutes from "./functionVersion.routes";
@@ -28,6 +29,7 @@ export default function routes(app: Express) {
 
   app.use(userRoutes);
   app.use(sessionRoutes);
+  app.use(settingsRoutes);
   app.use(meRoutes);
   app.use(designRoutes);
   app.use(functionRoutes);

@@ -5,7 +5,7 @@ import { RoleName } from "@constants/permissions";
 import { IGNORE_LEAST_CARDINALITY } from "@constants/settings";
 import { CreateUserRequest } from "@schemas/user";
 import { createMembership } from "../../../service/membership.service";
-import { createSettings } from "../../../service/settings.service";
+import { createSettings } from "@services/settings";
 import { createUserDocument, findUser } from "@services/user";
 import { Obj, Response } from "@types";
 import logger from "@utils/logger";

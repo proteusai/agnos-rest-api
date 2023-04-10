@@ -4,7 +4,7 @@ import { findUser } from "@services/user";
 import { CreateSessionRequest } from "@schemas/session";
 import { Obj, Response } from "@types";
 import { ACCESS_TOKEN_INVALID } from "@constants/errors";
-import { SessionDocument } from "../model/session.model";
+import { SessionDocument } from "@models/session";
 import { LeanDocument, ObjectId } from "mongoose";
 import logger from "@utils/logger";
 import errorObject from "@utils/error";

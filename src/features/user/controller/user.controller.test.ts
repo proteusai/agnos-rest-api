@@ -3,7 +3,7 @@ import { createUserHandler, getMeHandler } from "./user.controller";
 import * as userService from "@services/user";
 import * as orgService from "@services/org";
 import * as membershipService from "../../../service/membership.service";
-import * as settingsService from "../../../service/settings.service";
+import * as settingsService from "@services/settings";
 import { RoleName } from "@constants/permissions";
 import { DEFAULT_ORG_NAME, DEFAULT_ORG_PICTURE } from "@constants/defaults";
 import mongoose from "mongoose";
@@ -12,7 +12,7 @@ import UserModel from "../model/user.model";
 jest.mock("@services/user");
 jest.mock("@services/org");
 jest.mock("../../../service/membership.service");
-jest.mock("../../../service/settings.service");
+jest.mock("@services/settings");
 
 describe("User Controller", () => {
   describe("createUserHandler", () => {

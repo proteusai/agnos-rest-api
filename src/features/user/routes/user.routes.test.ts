@@ -4,6 +4,7 @@ import { connect, disconnect } from "@utils/connect";
 import PermissionModel from "../../../models/permission.model";
 import { Request, Response, NextFunction } from "express";
 import { findOrg } from "@services/org";
+import { findSettings } from "@services/settings";
 
 jest.mock("@middleware/checkAuth0IdToken", () => (_: Request, __: Response, next: NextFunction) => {
   return next();
@@ -52,6 +53,10 @@ describe("User routes", () => {
       // Check that the user has an auto-created personal org
       const org = await findOrg({ user: response.body.data._id, personal: true });
       expect(org).toBeDefined();
+
+      // Check that the user has an auto-created settings document
+      const settings = await findSettings({ user: response.body.data._id });
+      expect(settings).toBeDefined();
     });
   });
 });
