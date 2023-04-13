@@ -1,4 +1,4 @@
-import { EMAIL_INVALID, NAME_MISSING, ORG_ID_MISSING } from "@constants/errors";
+import { NAME_MISSING, ORG_ID_MISSING } from "@constants/errors";
 import { object, string, boolean, TypeOf } from "zod";
 
 const params = {
@@ -19,7 +19,7 @@ const query = {
  * @openapi
  * components:
  *  schemas:
- *    CreateOrganizationRequestBody:
+ *    CreateProjectRequestBody:
  *      type: object
  *      required:
  *        - name
@@ -30,9 +30,9 @@ const query = {
  *        description:
  *          type: string
  *          example: A test organization
- *        email:
+ *        org:
  *          type: string
- *          example: test.org@example.com
+ *          example: 125436678907543098765432
  *        private:
  *          type: boolean
  *          example: false
@@ -48,13 +48,13 @@ const query = {
  *        data:
  *          $ref: '#/components/schemas/Organization'
  */
-export const createOrgRequestSchema = object({
+export const createProjectRequestSchema = object({
   body: object({
     name: string({
       required_error: NAME_MISSING,
     }),
     description: string().optional(),
-    email: string().email(EMAIL_INVALID).optional(),
+    org: string().optional(), // if missing, create the project under the user's personal org (and set project.personal to true)
     private: boolean().optional(),
     picture: string().optional(),
     secrets: object({}).optional(),
@@ -65,13 +65,13 @@ export const createOrgRequestSchema = object({
  * @openapi
  * components:
  *  schemas:
- *    GetOrganizationResponse:
+ *    GetProjectResponse:
  *      type: object
  *      properties:
  *        data:
- *          $ref: '#/components/schemas/Organization'
+ *          $ref: '#/components/schemas/Project'
  */
-export const getOrgRequestSchema = object({
+export const getProjectRequestSchema = object({
   ...params,
   ...query,
 });
@@ -80,18 +80,18 @@ export const getOrgRequestSchema = object({
  * @openapi
  * components:
  *  schemas:
- *    GetOrganizationsResponse:
+ *    GetProjectsResponse:
  *      type: object
  *      properties:
  *        data:
  *          type: array
  *          items:
- *            $ref: '#/components/schemas/Organization'
+ *            $ref: '#/components/schemas/Project'
  */
-export const getOrgsRequestSchema = object({
+export const getProjectsRequestSchema = object({
   ...query,
 });
 
-export type CreateOrgRequest = TypeOf<typeof createOrgRequestSchema>;
-export type GetOrgRequest = TypeOf<typeof getOrgRequestSchema>;
-export type GetOrgsRequest = TypeOf<typeof getOrgsRequestSchema>;
+export type CreateProjectRequest = TypeOf<typeof createProjectRequestSchema>;
+export type GetProjectRequest = TypeOf<typeof getProjectRequestSchema>;
+export type GetProjectsRequest = TypeOf<typeof getProjectsRequestSchema>;

@@ -59,7 +59,7 @@ describe("Session model", () => {
   });
 
   it("should find a session", async () => {
-    await session.save();
+    // await session.save();
     const foundSession = await SessionModel.findOne({ _id: session._id });
     expect(foundSession).toBeDefined();
     expect(foundSession).toMatchObject(sessionInput);

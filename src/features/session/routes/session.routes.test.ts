@@ -9,6 +9,9 @@ import { createUserHandler } from "@controllers/user";
 jest.mock("@middleware/checkAuth0IdToken", () => (_: Request, __: Response, next: NextFunction) => {
   return next();
 });
+jest.mock("@middleware/checkAuth0AccessToken", () => (_: Request, __: Response, next: NextFunction) => {
+  return next();
+});
 
 describe("Session routes", () => {
   beforeAll(async () => {
@@ -51,9 +54,6 @@ describe("Session routes", () => {
     });
 
     it("should create a session for a valid user", async () => {
-      jest.mock("@middleware/checkAuth0AccessToken", () => (_: Request, __: Response, next: NextFunction) => {
-        return next();
-      });
       const req = {
         body: {
           name: "John Doe",

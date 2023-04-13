@@ -1,11 +1,11 @@
 import { Request } from "express";
 import { LeanDocument, ObjectId } from "mongoose";
-import { DEFAULT_ORG_NAME, DEFAULT_ORG_PICTURE } from "@constants/defaults";
+import { DEFAULT_ORG_PICTURE } from "@constants/defaults";
 import { RoleName } from "@constants/permissions";
 import { IGNORE_LEAST_CARDINALITY } from "@constants/settings";
 import { CreateUserRequest } from "@schemas/user";
 import { createMembership } from "../../../service/membership.service";
-import { createSettings } from "../../../service/settings.service";
+import { createSettings } from "@services/settings";
 import { createUserDocument, findUser } from "@services/user";
 import { Obj, Response } from "@types";
 import logger from "@utils/logger";
@@ -19,31 +19,33 @@ export async function createUserHandler(
   res: Response<LeanDocument<UserDocument & { _id: ObjectId }>>
 ) {
   try {
-    const user = await createUserDocument(req.body);
+    const userDoc = await createUserDocument(req.body);
     const org = await createOrgDocument({
-      name: DEFAULT_ORG_NAME,
-      email: user.email,
+      name: userDoc.name,
+      email: userDoc.email,
       personal: true,
       description: "This is my own space and I can invite people in.",
       private: true,
-      picture: DEFAULT_ORG_PICTURE,
-      user: user._id,
+      picture: userDoc.picture || DEFAULT_ORG_PICTURE,
+      user: userDoc._id,
     });
     const membership = await createMembership({
-      user: user._id,
+      user: userDoc._id,
       org: org._id,
       role: RoleName.OWNER,
     });
 
-    const settings = await createSettings({ user: user._id });
+    const settings = await createSettings({ user: userDoc._id });
 
     if (IGNORE_LEAST_CARDINALITY) {
       org.memberships?.push(membership);
       await org.save();
-      user.memberships?.push(membership);
+      userDoc.memberships?.push(membership);
     }
-    user.settings = settings._id;
-    await user.save();
+    userDoc.settings = settings._id;
+    await userDoc.save();
+
+    const user = await findUser({ _id: userDoc._id });
 
     return res.send({ data: user });
   } catch (error: unknown) {
