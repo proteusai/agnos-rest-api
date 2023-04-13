@@ -88,4 +88,4 @@ export const getOrgsRequestSchema = object({
 
 export type CreateOrgRequest = TypeOf<typeof createOrgRequestSchema>;
 export type GetOrgRequest = TypeOf<typeof getOrgRequestSchema>;
-export type GetOrgInput = TypeOf<typeof getOrgsRequestSchema>;
+export type GetOrgsRequest = TypeOf<typeof getOrgsRequestSchema>;

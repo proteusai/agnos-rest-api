@@ -49,4 +49,25 @@ describe("User Model", () => {
 
     expect(isMatch).toBe(true);
   });
+
+  it("should fail to create a user with invalid email", async () => {
+    const userInput: UserInput = {
+      name: "John Doe",
+      email: "email",
+    };
+    const user = new UserModel(userInput);
+
+    try {
+      await user.save();
+    } catch (error) {
+      // Check that the error is a validation error
+      expect(error).toHaveProperty("name", "ValidationError");
+      // Check that the error message contains the "email" field
+      expect(error).toHaveProperty("message", expect.stringContaining("email"));
+      return;
+    }
+
+    // If user.save() does not throw an error, fail the test
+    throw new Error("Expected user.save() to fail with a validation error.");
+  });
 });

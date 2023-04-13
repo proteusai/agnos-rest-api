@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     collaborations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collaboration" }],
-    email: { type: String, required: true, unique: true },
+    email: { type: String, match: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/, required: true, unique: true },
     emailIsVerified: { type: Boolean, default: false },
     memberships: [{ type: mongoose.Schema.Types.ObjectId, ref: "Membership" }],
     password: { type: String },

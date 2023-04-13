@@ -37,7 +37,7 @@ const orgSchema = new mongoose.Schema(
     collaborations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collaboration" }],
     description: { type: String },
     // designs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Design" }],
-    email: { type: String },
+    email: { type: String, match: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/ },
     emailIsVerified: { type: Boolean, default: false },
     // functions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Function" }],
     memberships: [{ type: mongoose.Schema.Types.ObjectId, ref: "Membership" }],
