@@ -28,4 +28,26 @@ describe("Settings Model", () => {
 
     await expect(settings.save()).resolves.toBeDefined();
   });
+
+  it("should not create 2 settings documents for a unique user", async () => {
+    const userId = new mongoose.Types.ObjectId();
+
+    const settingsInput1: SettingsInput = {
+      colorMode: ColorMode.DARK,
+      useGrayscaleIcons: true,
+      user: userId,
+    };
+    const settings1 = new SettingsModel(settingsInput1);
+
+    const settingsInput2: SettingsInput = {
+      colorMode: ColorMode.DARK,
+      useGrayscaleIcons: true,
+      user: userId,
+    };
+    const settings2 = new SettingsModel(settingsInput2);
+
+    await expect(settings1.save()).resolves.toBeDefined();
+    // can't create 2 settings for the same user
+    await expect(settings2.save()).rejects.toThrow();
+  });
 });

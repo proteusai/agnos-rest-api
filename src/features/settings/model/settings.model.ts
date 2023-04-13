@@ -17,7 +17,7 @@ const settingsSchema = new mongoose.Schema(
     autoSave: { type: Boolean, default: false },
     colorMode: { type: String, enum: Object.keys(ColorMode), default: ColorMode.LIGHT },
     useGrayscaleIcons: { type: Boolean, default: false },
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, unique: true },
   },
   {
     timestamps: true,
