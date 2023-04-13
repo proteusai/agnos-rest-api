@@ -3,16 +3,13 @@ import { createOrgHandler, getOrgHandler, getOrgsHandler } from "@controllers/or
 import requireUser from "@middleware/requireUser";
 import validateResource from "@middleware/validateResource";
 import { createOrgRequestSchema, getOrgRequestSchema, getOrgsRequestSchema } from "@schemas/org";
+import checkAuth0AccessToken from "@middleware/checkAuth0AccessToken";
 
 const router = Router();
 
-router.get(
-  "/orgs/:id",
-  [validateResource(getOrgRequestSchema), /**checkAuth0AccessToken,**/ requireUser],
-  getOrgHandler
-);
+router.get("/orgs/:id", [validateResource(getOrgRequestSchema), checkAuth0AccessToken, requireUser], getOrgHandler);
 
-router.get("/orgs", [validateResource(getOrgsRequestSchema), /**checkAuth0AccessToken,**/ requireUser], getOrgsHandler);
+router.get("/orgs", [validateResource(getOrgsRequestSchema), checkAuth0AccessToken, requireUser], getOrgsHandler);
 
 /**
  * @openapi
@@ -37,10 +34,6 @@ router.get("/orgs", [validateResource(getOrgsRequestSchema), /**checkAuth0Access
  *      400:
  *        description: Bad request
  */
-router.post(
-  "/orgs",
-  [validateResource(createOrgRequestSchema), /**checkAuth0AccessToken,**/ requireUser],
-  createOrgHandler
-);
+router.post("/orgs", [validateResource(createOrgRequestSchema), checkAuth0AccessToken, requireUser], createOrgHandler);
 
 export default router;

@@ -19,31 +19,33 @@ export async function createUserHandler(
   res: Response<LeanDocument<UserDocument & { _id: ObjectId }>>
 ) {
   try {
-    const user = await createUserDocument(req.body);
+    const userDoc = await createUserDocument(req.body);
     const org = await createOrgDocument({
-      name: user.name,
-      email: user.email,
+      name: userDoc.name,
+      email: userDoc.email,
       personal: true,
       description: "This is my own space and I can invite people in.",
       private: true,
-      picture: user.picture || DEFAULT_ORG_PICTURE,
-      user: user._id,
+      picture: userDoc.picture || DEFAULT_ORG_PICTURE,
+      user: userDoc._id,
     });
     const membership = await createMembership({
-      user: user._id,
+      user: userDoc._id,
       org: org._id,
       role: RoleName.OWNER,
     });
 
-    const settings = await createSettings({ user: user._id });
+    const settings = await createSettings({ user: userDoc._id });
 
     if (IGNORE_LEAST_CARDINALITY) {
       org.memberships?.push(membership);
       await org.save();
-      user.memberships?.push(membership);
+      userDoc.memberships?.push(membership);
     }
-    user.settings = settings._id;
-    await user.save();
+    userDoc.settings = settings._id;
+    await userDoc.save();
+
+    const user = await findUser({ _id: userDoc._id });
 
     return res.send({ data: user });
   } catch (error: unknown) {

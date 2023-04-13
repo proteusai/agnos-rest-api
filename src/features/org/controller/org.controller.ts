@@ -1,34 +1,44 @@
-import { Request, Response } from "express";
+import { Request } from "express";
 import { RoleName } from "@constants/permissions";
 import { IGNORE_LEAST_CARDINALITY } from "@constants/settings";
 import { CreateOrgRequest, GetOrgRequest, GetOrgsRequest } from "@schemas/org";
 import { createMembership } from "../../../service/membership.service";
 import { createOrgDocument, findOrg, findOrgs } from "@services/org";
 import { findUserDocument } from "@services/user";
-import { Obj } from "@types";
+import { Obj, Response } from "@types";
+import { OrgDocument } from "@models/org";
+import { LeanDocument, ObjectId } from "mongoose";
 
-export async function createOrgHandler(req: Request<Obj, Obj, CreateOrgRequest["body"]>, res: Response) {
-  const user = res.locals.user;
-  const userDoc = await findUserDocument({ _id: user._id });
+export async function createOrgHandler(
+  req: Request<Obj, Obj, CreateOrgRequest["body"]>,
+  res: Response<LeanDocument<OrgDocument & { _id: ObjectId }>>
+) {
+  const userId = res.locals.user?._id;
+  const userDoc = await findUserDocument({ _id: userId });
 
-  const org = await createOrgDocument({ ...req.body, user: user._id });
+  const orgDoc = await createOrgDocument({ ...req.body, user: userId });
   const membership = await createMembership({
-    user: user._id,
-    org: org._id,
+    user: userId,
+    org: orgDoc._id,
     role: RoleName.OWNER,
   });
 
   if (IGNORE_LEAST_CARDINALITY) {
     userDoc?.memberships?.push(membership);
     await userDoc?.save();
-    org.memberships?.push(membership);
-    await org.save();
+    orgDoc.memberships?.push(membership);
+    await orgDoc.save();
   }
 
-  return res.send({ data: org.toJSON() });
+  const org = await findOrg({ _id: orgDoc._id });
+
+  return res.send({ data: org });
 }
 
-export async function getOrgHandler(req: Request<GetOrgRequest["params"]>, res: Response) {
+export async function getOrgHandler(
+  req: Request<GetOrgRequest["params"]>,
+  res: Response<LeanDocument<OrgDocument & { _id: ObjectId }>>
+) {
   const org = await findOrg({ _id: req.params.id });
 
   if (!org) {
@@ -38,7 +48,10 @@ export async function getOrgHandler(req: Request<GetOrgRequest["params"]>, res: 
   return res.send({ data: org });
 }
 
-export async function getOrgsHandler(req: Request<Obj, Obj, Obj, GetOrgsRequest["query"]>, res: Response) {
+export async function getOrgsHandler(
+  req: Request<Obj, Obj, Obj, GetOrgsRequest["query"]>,
+  res: Response<LeanDocument<Array<OrgDocument & { _id: ObjectId }>>>
+) {
   let populate: string[] | undefined = undefined; // TODO: move this to a middleware; put it in res.locals
   if (req.query.populate) {
     populate = req.query.populate.split(";");
@@ -48,14 +61,17 @@ export async function getOrgsHandler(req: Request<Obj, Obj, Obj, GetOrgsRequest[
   return res.send({ data: orgs });
 }
 
-export async function getMyOrgHandler(req: Request<Obj, Obj, Obj, GetOrgsRequest["query"]>, res: Response) {
+export async function getMyOrgHandler(
+  req: Request<Obj, Obj, Obj, GetOrgsRequest["query"]>,
+  res: Response<LeanDocument<OrgDocument & { _id: ObjectId }>>
+) {
   let populate: string[] | undefined = undefined;
   if (req.query.populate) {
     populate = req.query.populate.split(";");
   }
 
-  const user = res.locals.user;
+  const userId = res.locals.user?._id;
 
-  const org = await findOrg({ personal: true, user: user._id });
+  const org = await findOrg({ personal: true, user: userId });
   return res.send({ data: org });
 }
