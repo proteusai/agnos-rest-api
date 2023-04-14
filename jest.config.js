@@ -10,6 +10,7 @@ module.exports = {
     "^@controllers/(.+)$": "<rootDir>/src/features/$1/controller/$1.controller",
     "^@features/(.+)$": "<rootDir>/src/features/$1",
     "^@middleware/(.+)$": "<rootDir>/src/middleware/$1",
+    "^@mocks/(.+)$": "<rootDir>/src/mocks/$1",
     "^@models/(.+)$": "<rootDir>/src/features/$1/model/$1.model",
     "^@routes$": "<rootDir>/src/routes",
     "^@routes/(.+)$": "<rootDir>/src/features/$1/routes/$1.routes",

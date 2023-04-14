@@ -97,6 +97,7 @@
     "@controllers/user": "src/features/user/controller/user.controller",
     "@features": "src/features",
     "@middleware": "src/middleware",
+    "@mocks": "src/mocks",
     "@models/base": "src/features/base/model/base.model",
     "@models/collaboration": "src/features/collaboration/model/collaboration.model",
     "@models/membership": "src/features/membership/model/membership.model",

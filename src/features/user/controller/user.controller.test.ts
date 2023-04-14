@@ -7,7 +7,7 @@ import * as settingsService from "@services/settings";
 import { RoleName } from "@constants/permissions";
 import { DEFAULT_ORG_NAME, DEFAULT_ORG_PICTURE } from "@constants/defaults";
 import mongoose from "mongoose";
-import UserModel from "../model/user.model";
+import { mockMongooseDocument } from "@mocks/mongoose";
 
 jest.mock("@services/user");
 jest.mock("@services/org");
@@ -28,62 +28,6 @@ describe("User Controller", () => {
         send: jest.fn().mockReturnThis(),
         status: jest.fn().mockReturnThis(),
       } as unknown as Response;
-      const mockMongooseDocumentPrototype = new UserModel();
-      const mockMongooseDocument = {
-        $assertPopulated: jest.fn(),
-        $clone: jest.fn(),
-        $getAllSubdocs: jest.fn(),
-        $ignore: jest.fn(),
-        $isDefault: jest.fn(),
-        $isDeleted: jest.fn().mockReturnValue(false),
-        $getPopulatedDocs: jest.fn(),
-        $inc: jest.fn(),
-        $isEmpty: jest.fn().mockReturnValue(true),
-        $isValid: jest.fn().mockReturnValue(true),
-        $locals: { data: "some data" },
-        $markValid: jest.fn(),
-        $model: jest.fn(),
-        $op: null,
-        $session: jest.fn(),
-        $set: jest.fn(),
-        $where: {},
-        collection: mockMongooseDocumentPrototype.collection,
-        db: mockMongooseDocumentPrototype.db,
-        delete: jest.fn(),
-        deleteOne: jest.fn(),
-        depopulate: jest.fn(),
-        directModifiedPaths: jest.fn(),
-        equals: jest.fn(),
-        get: jest.fn(),
-        getChanges: jest.fn().mockReturnValue({}),
-        increment: jest.fn(),
-        init: jest.fn(),
-        invalidate: jest.fn(),
-        isDirectModified: jest.fn(),
-        isDirectSelected: jest.fn(),
-        isInit: jest.fn(),
-        isModified: jest.fn(),
-        isNew: true,
-        isSelected: jest.fn(),
-        markModified: jest.fn(),
-        modifiedPaths: jest.fn(),
-        overwrite: jest.fn(),
-        $parent: jest.fn(),
-        populate: jest.fn(),
-        populated: jest.fn(),
-        remove: jest.fn(),
-        replaceOne: jest.fn(),
-        save: jest.fn(),
-        schema: mockMongooseDocumentPrototype.schema,
-        set: jest.fn(),
-        toJSON: jest.fn(),
-        toObject: jest.fn(),
-        unmarkModified: jest.fn(),
-        update: jest.fn(),
-        updateOne: jest.fn(),
-        validate: jest.fn(),
-        validateSync: jest.fn(),
-      };
       jest.spyOn(userService, "createUserDocument").mockImplementation(() => {
         return Promise.resolve({
           _id: new mongoose.Types.ObjectId(),

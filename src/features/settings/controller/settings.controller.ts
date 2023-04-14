@@ -1,9 +1,11 @@
 import { Request } from "express";
 import { createSettings, findAndUpdateSettings, findSettings } from "@services/settings";
 import { findUserDocument } from "@services/user";
-import { Response } from "@types";
+import { Obj, Response } from "@types";
 import { SettingsDocument } from "@models/settings";
+import { UpdateSettingsRequest } from "@schemas/settings";
 import { LeanDocument, ObjectId } from "mongoose";
+import { ColorMode } from "@constants/settings";
 
 export async function getSettingsHandler(
   req: Request,
@@ -15,7 +17,7 @@ export async function getSettingsHandler(
   let settings = await findSettings({ user: _id });
 
   if (!settings) {
-    settings = await createSettings({ ...req.body, user: _id });
+    settings = await createSettings({ user: _id });
     if (settings && user) {
       user.settings = settings._id;
       await user?.save();
@@ -26,7 +28,7 @@ export async function getSettingsHandler(
 }
 
 export async function updateSettingsHandler(
-  req: Request,
+  req: Request<Obj, Obj, UpdateSettingsRequest["body"]>,
   res: Response<LeanDocument<SettingsDocument & { _id: ObjectId }>>
 ) {
   const _id = res.locals.user?._id;
@@ -35,7 +37,11 @@ export async function updateSettingsHandler(
   let settings = await findSettings({ user: _id });
 
   if (!settings) {
-    settings = await createSettings({ ...req.body, user: _id });
+    settings = await createSettings({
+      ...req.body,
+      ...(req.body.colorMode && { colorMode: ColorMode[req.body.colorMode] }),
+      user: _id,
+    });
     if (settings && user) {
       user.settings = settings._id;
       await user?.save();
