@@ -1,10 +1,10 @@
 import { Request } from "express";
 import { IGNORE_LEAST_CARDINALITY } from "@constants/settings";
-import { CreateProjectRequest, GetProjectRequest, GetProjectsRequest } from "@schemas/project";
+import { CreateProjectRequest, GetProjectRequest } from "@schemas/project";
 import { createProjectDocument, findProject, findProjects } from "@services/project";
 import { findUserDocument } from "@services/user";
 import { Obj, Response } from "@types";
-import { LeanDocument, ObjectId } from "mongoose";
+import { FilterQuery, LeanDocument, ObjectId } from "mongoose";
 import { ProjectDocument } from "@models/project";
 import errorObject from "@utils/error";
 import logger from "@utils/logger";
@@ -13,6 +13,7 @@ import { findOrgDocument } from "@services/org";
 import { ORG_NOT_FOUND, PROJECT_NOT_FOUND } from "@/constants/errors";
 import { createCollaboration } from "@services/collaboration";
 import { PermissionName } from "@/constants/permissions";
+import { ServiceOptions } from "@services";
 
 export async function createProjectHandler(
   req: Request<Obj, Obj, CreateProjectRequest["body"]>,
@@ -82,15 +83,21 @@ export async function getProjectHandler(
 }
 
 export async function getProjectsHandler(
-  req: Request<Obj, Obj, Obj, GetProjectsRequest["query"]>,
+  req: Request,
   res: Response<LeanDocument<Array<ProjectDocument & { _id: ObjectId }>>>
 ) {
-  let populate: string[] | undefined = undefined;
-  if (req.query.populate) {
-    populate = req.query.populate.split(";");
-  }
+  const parsedQuery = (res.locals as Obj).query;
+  console.log(parsedQuery);
 
-  const projects = await findProjects({}, { populate });
+  const projects = await findProjects(
+    (parsedQuery as Obj).filter as FilterQuery<ProjectDocument>,
+    parsedQuery as ServiceOptions
+  );
 
-  return res.send({ data: projects });
+  const size = (parsedQuery as Obj).limit as number;
+  const page = ((parsedQuery as Obj).skip as number) / size + 1; // skip = (page - 1) * size // => page = skip / size + 1
+  return res.send({
+    data: projects,
+    meta: { pagination: { size, page, prev: Math.max(0, page - 1), next: page + 1 } },
+  });
 }

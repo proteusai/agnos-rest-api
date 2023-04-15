@@ -1,21 +1,18 @@
 import { Router } from "express";
 import requireUser from "@middleware/requireUser";
 import validateResource from "@middleware/validateResource";
-import { createProjectRequestSchema, getProjectRequestSchema, getProjectsRequestSchema } from "@schemas/project";
+import { createProjectRequestSchema, getProjectRequestSchema } from "@schemas/project";
 import { createProjectHandler, getProjectHandler, getProjectsHandler } from "@controllers/project";
 import checkAuth0AccessToken from "@middleware/checkAuth0AccessToken";
+import queryParser from "@middleware/queryParser";
 
 const router = Router();
 
-router.get(
-  "/projects",
-  [validateResource(getProjectsRequestSchema), checkAuth0AccessToken, requireUser],
-  getProjectsHandler
-);
+router.get("/projects", [checkAuth0AccessToken, requireUser, queryParser], getProjectsHandler);
 
 router.get(
   "/projects/:id",
-  [validateResource(getProjectRequestSchema), checkAuth0AccessToken, requireUser],
+  [validateResource(getProjectRequestSchema), checkAuth0AccessToken, requireUser, queryParser],
   getProjectHandler
 );
 

@@ -76,7 +76,7 @@ export async function getPluginVersionsHandler(
 
   // TODO: if user is not a member of plugin.team return only published plugin versions
 
-  const pluginVersions = await findPluginVersions({ ...(plugin && { plugin: plugin._id }) }, { populate });
+  const pluginVersions = await findPluginVersions({ ...(plugin && { plugin: plugin._id }) });
   return res.send({ pluginVersions });
 }
 

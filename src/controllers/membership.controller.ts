@@ -21,6 +21,6 @@ export async function getMyMembershipsHandler(
   if (req.query.populate) {
     populate = req.query.populate.split(";");
   }
-  const memberships = await findMemberships({ user: userId }, { populate });
+  const memberships = await findMemberships({ user: userId });
   return res.send({ memberships });
 }

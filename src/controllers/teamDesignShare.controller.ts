@@ -38,11 +38,6 @@ export async function getMyTeamDesignSharesHandler(
     return res.status(404).send({ error: { message: "Could not find the team" } });
   }
 
-  const teamDesignShares = await findTeamDesignShares(
-    { team: team._id },
-    {
-      populate,
-    }
-  );
+  const teamDesignShares = await findTeamDesignShares({ team: team._id });
   return res.send({ teamDesignShares });
 }

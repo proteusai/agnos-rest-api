@@ -3,8 +3,6 @@ import { FilterQuery } from "mongoose";
 import { ServiceOptions } from "@services";
 import OrgModel, { OrgDocument, OrgInput } from "@models/org";
 
-const defaultPopulate: string[] = [];
-
 export async function createOrg(input: OrgInput) {
   const team = await createOrgDocument(input);
 
@@ -24,8 +22,6 @@ export async function findOrgDocument(query: FilterQuery<OrgDocument>) {
   return OrgModel.findOne(query);
 }
 
-export async function findOrgs(query: FilterQuery<OrgDocument>, options?: ServiceOptions) {
-  return OrgModel.find(query)
-    .populate(options?.populate || defaultPopulate)
-    .lean();
+export async function findOrgs(query: FilterQuery<OrgDocument>, options: ServiceOptions) {
+  return OrgModel.find(query).populate(options.populate).lean();
 }

@@ -9,13 +9,10 @@ export async function getInvocationsHandler(req: Request<Obj, Obj, Obj, GetInvoc
     populate = req.query.populate.split(";");
   }
 
-  const invocations = await findInvocations(
-    {
-      ...(req.query.function && { function: req.query.function }),
-      ...(req.query.version && { version: req.query.version }),
-    },
-    { populate }
-  );
+  const invocations = await findInvocations({
+    ...(req.query.function && { function: req.query.function }),
+    ...(req.query.version && { version: req.query.version }),
+  });
 
   return res.send({ invocations });
 }

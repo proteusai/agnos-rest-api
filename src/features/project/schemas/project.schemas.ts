@@ -9,12 +9,6 @@ const params = {
   }),
 };
 
-const query = {
-  query: object({
-    populate: string().optional(),
-  }),
-};
-
 /**
  * @openapi
  * components:
@@ -70,16 +64,6 @@ export const createProjectRequestSchema = object({
  *      properties:
  *        data:
  *          $ref: '#/components/schemas/Project'
- */
-export const getProjectRequestSchema = object({
-  ...params,
-  ...query,
-});
-
-/**
- * @openapi
- * components:
- *  schemas:
  *    GetProjectsResponse:
  *      type: object
  *      properties:
@@ -88,10 +72,9 @@ export const getProjectRequestSchema = object({
  *          items:
  *            $ref: '#/components/schemas/Project'
  */
-export const getProjectsRequestSchema = object({
-  ...query,
+export const getProjectRequestSchema = object({
+  ...params,
 });
 
 export type CreateProjectRequest = TypeOf<typeof createProjectRequestSchema>;
 export type GetProjectRequest = TypeOf<typeof getProjectRequestSchema>;
-export type GetProjectsRequest = TypeOf<typeof getProjectsRequestSchema>;

@@ -7,7 +7,8 @@ import { createOrgDocument, findOrg, findOrgs } from "@services/org";
 import { findUserDocument } from "@services/user";
 import { Obj, Response } from "@types";
 import { OrgDocument } from "@models/org";
-import { LeanDocument, ObjectId } from "mongoose";
+import { FilterQuery, LeanDocument, ObjectId } from "mongoose";
+import { ServiceOptions } from "@services";
 
 export async function createOrgHandler(
   req: Request<Obj, Obj, CreateOrgRequest["body"]>,
@@ -52,12 +53,9 @@ export async function getOrgsHandler(
   req: Request<Obj, Obj, Obj, GetOrgsRequest["query"]>,
   res: Response<LeanDocument<Array<OrgDocument & { _id: ObjectId }>>>
 ) {
-  let populate: string[] | undefined = undefined; // TODO: move this to a middleware; put it in res.locals
-  if (req.query.populate) {
-    populate = req.query.populate.split(";");
-  }
+  const parsedQuery = (res.locals as Obj).query;
 
-  const orgs = await findOrgs({}, { populate });
+  const orgs = await findOrgs((parsedQuery as Obj).filter as FilterQuery<OrgDocument>, parsedQuery as ServiceOptions);
   return res.send({ data: orgs });
 }
 
@@ -65,11 +63,6 @@ export async function getMyOrgHandler(
   req: Request<Obj, Obj, Obj, GetOrgsRequest["query"]>,
   res: Response<LeanDocument<OrgDocument & { _id: ObjectId }>>
 ) {
-  let populate: string[] | undefined = undefined;
-  if (req.query.populate) {
-    populate = req.query.populate.split(";");
-  }
-
   const userId = res.locals.user?._id;
 
   const org = await findOrg({ personal: true, user: userId });
