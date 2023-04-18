@@ -10,7 +10,7 @@ import ProjectModel, { ProjectDocument } from "@models/project";
 export interface CollaborationInput {
   user?: UserDocument["_id"];
   org: OrgDocument["_id"];
-  project: ProjectDocument["_id"];
+  project?: ProjectDocument["_id"];
   team?: TeamDocument["_id"];
   permission?: PermissionName;
 }
@@ -21,7 +21,7 @@ const collaborationSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     org: { type: mongoose.Schema.Types.ObjectId, ref: "Organization", required: true },
-    project: { type: mongoose.Schema.Types.ObjectId, ref: "Project", required: true },
+    project: { type: mongoose.Schema.Types.ObjectId, ref: "Project" },
     team: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },
     permission: { type: String, enum: Object.keys(PermissionName), default: PermissionName.WRITE },
   },

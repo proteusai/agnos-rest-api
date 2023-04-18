@@ -9,7 +9,7 @@ import {
 import { Request, Response, NextFunction } from "express";
 
 const queryParser = (req: Request, res: Response, next: NextFunction) => {
-  // example: ?@limit=20
+  // example: ?@size=20
   let limit = req.query && req.query["@size"] ? parseInt(req.query["@size"] as string) : DEFAULT_QUERY_LIMIT;
   limit = Math.min(DEFAULT_QUERY_MAX_LIMIT, Math.max(DEFAULT_QUERY_MIN_LIMIT, limit));
 

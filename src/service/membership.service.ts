@@ -10,6 +10,10 @@ export async function createMembership(input: MembershipInput) {
   return membership.toJSON();
 }
 
+export async function findMembership(query: FilterQuery<MembershipDocument>) {
+  return MembershipModel.findOne(query).lean();
+}
+
 export async function findMemberships(query: FilterQuery<MembershipDocument>, options?: ServiceOptions) {
   return MembershipModel.find(query)
     .populate(options?.populate || defaultPopulate)

@@ -37,7 +37,7 @@ export async function createProjectHandler(
       throw new Error(ORG_NOT_FOUND);
     }
 
-    const projectDoc = await createProjectDocument({ ...req.body, user: userId, org: org._id });
+    const projectDoc = await createProjectDocument({ ...req.body, user: userId, org: org._id, personal: org.personal });
     const collaboration = await createCollaboration({
       org: org._id,
       permission: PermissionName.ADMIN,
@@ -87,7 +87,6 @@ export async function getProjectsHandler(
   res: Response<LeanDocument<Array<ProjectDocument & { _id: ObjectId }>>>
 ) {
   const parsedQuery = (res.locals as Obj).query;
-  console.log(parsedQuery);
 
   const projects = await findProjects(
     (parsedQuery as Obj).filter as FilterQuery<ProjectDocument>,
