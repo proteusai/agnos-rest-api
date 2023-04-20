@@ -45,7 +45,7 @@ export async function getTeamsHandler(req: Request<Obj, Obj, Obj, GetTeamsInput[
     populate = req.query.populate.split(";");
   }
 
-  const teams = await findTeams({}, { populate });
+  const teams = await findTeams({});
   return res.send({ teams });
 }
 

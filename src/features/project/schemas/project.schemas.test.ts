@@ -37,7 +37,6 @@ describe("Project schema", () => {
         params: {
           id: "12234459847373782",
         },
-        query: {},
       };
       expect(() => {
         getProjectRequestSchema.parse(request);

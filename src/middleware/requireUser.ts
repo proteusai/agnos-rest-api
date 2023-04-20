@@ -1,11 +1,11 @@
-import { ACCESS_FORBIDDEN } from "@/constants/errors";
+import { ACCESS_UNAUTHORIZED } from "@/constants/errors";
 import { Request, Response, NextFunction } from "express";
 
 const requireUser = (req: Request, res: Response, next: NextFunction) => {
   const user = res.locals.user;
 
   if (!user) {
-    return res.status(403).send({ error: { message: ACCESS_FORBIDDEN } });
+    return res.status(401).send({ error: { message: ACCESS_UNAUTHORIZED } });
   }
 
   return next();

@@ -3,8 +3,6 @@ import { FilterQuery } from "mongoose";
 import { ServiceOptions } from "@services";
 import ProjectModel, { ProjectDocument, ProjectInput } from "@models/project";
 
-const defaultPopulate: string[] = [];
-
 export async function createProject(input: ProjectInput) {
   const project = await createProjectDocument(input);
 
@@ -24,8 +22,11 @@ export async function findProjectDocument(query: FilterQuery<ProjectDocument>) {
   return ProjectModel.findOne(query);
 }
 
-export async function findProjects(query: FilterQuery<ProjectDocument>, options?: ServiceOptions) {
+export async function findProjects(query: FilterQuery<ProjectDocument>, options: ServiceOptions) {
   return ProjectModel.find(query)
-    .populate(options?.populate || defaultPopulate)
+    .skip(options.skip)
+    .limit(options.limit)
+    .sort(options.sort)
+    .populate(options.populate)
     .lean();
 }

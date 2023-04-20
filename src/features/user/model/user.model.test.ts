@@ -19,7 +19,7 @@ describe("User Model", () => {
   it("should hash the password before saving the user", async () => {
     const userInput: UserInput = {
       name: "John Doe",
-      email: "johndoe@example.com",
+      email: "johndoe10@example.com",
       password: "password123",
     };
 
@@ -37,7 +37,7 @@ describe("User Model", () => {
   it("should compare the password correctly", async () => {
     const userInput: UserInput = {
       name: "John Doe",
-      email: "johndoe@example.com",
+      email: "johndoe0@example.com",
       password: "password123",
     };
 

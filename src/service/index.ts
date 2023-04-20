@@ -1,10 +1,15 @@
+import { SortOrder } from "mongoose";
+
 export interface ServiceOptions {
-  populate?: PopulateOptions | (PopulateOptions | string)[];
+  limit: number;
+  populate: PopulateOptions[];
+  sort: { [key: string]: SortOrder };
+  skip: number;
 }
 
 export interface PopulateOptions {
   /** space delimited path(s) to populate */
   path: string;
   /** fields to select */
-  select?: any;
+  select?: string;
 }

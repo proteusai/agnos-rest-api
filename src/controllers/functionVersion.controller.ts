@@ -81,7 +81,7 @@ export async function getFunctionVersionsHandler(
 
   // TODO: if user is not a member of func.team return only published function versions
 
-  const functionVersions = await findFunctionVersions({ ...(func && { function: func._id }) }, { populate });
+  const functionVersions = await findFunctionVersions({ ...(func && { function: func._id }) });
   return res.send({ functionVersions });
 }
 

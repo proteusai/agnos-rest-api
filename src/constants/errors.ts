@@ -1,6 +1,7 @@
 export const ACCESS_FORBIDDEN = "Forbidden";
 export const ACCESS_TOKEN_INVALID = "Invalid access token";
 export const ACCESS_TOKEN_MISSING = "Missing access token";
+export const ACCESS_UNAUTHORIZED = "Unauthorized";
 export const EMAIL_INVALID = "Invalid email";
 export const EMAIL_MISSING = "Missing email";
 export const ID_TOKEN_INVALID = "Invalid ID token";

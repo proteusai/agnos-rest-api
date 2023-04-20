@@ -9,12 +9,6 @@ const params = {
   }),
 };
 
-const query = {
-  query: object({
-    populate: string().optional(),
-  }),
-};
-
 /**
  * @openapi
  * components:
@@ -26,13 +20,13 @@ const query = {
  *      properties:
  *        name:
  *          type: string
- *          example: Test Org
+ *          example: Test Project
  *        description:
  *          type: string
- *          example: A test organization
+ *          example: A test project
  *        org:
  *          type: string
- *          example: 125436678907543098765432
+ *          example: 12543667890754309
  *        private:
  *          type: boolean
  *          example: false
@@ -42,11 +36,20 @@ const query = {
  *        secrets:
  *          type: object
  *          additionalProperties: true
- *    CreateOrganizationResponse:
+ *    CreateProjectResponse:
  *      type: object
  *      properties:
  *        data:
- *          $ref: '#/components/schemas/Organization'
+ *          $ref: '#/components/schemas/Project'
+ *    GetProjectResponse:
+ *      type: object
+ *      properties:
+ *        data:
+ *          $ref: '#/components/schemas/Project'
+ *    GetProjectsResponse:
+ *      type: array
+ *      items:
+ *        $ref: '#/components/schemas/Project'
  */
 export const createProjectRequestSchema = object({
   body: object({
@@ -70,16 +73,6 @@ export const createProjectRequestSchema = object({
  *      properties:
  *        data:
  *          $ref: '#/components/schemas/Project'
- */
-export const getProjectRequestSchema = object({
-  ...params,
-  ...query,
-});
-
-/**
- * @openapi
- * components:
- *  schemas:
  *    GetProjectsResponse:
  *      type: object
  *      properties:
@@ -88,10 +81,9 @@ export const getProjectRequestSchema = object({
  *          items:
  *            $ref: '#/components/schemas/Project'
  */
-export const getProjectsRequestSchema = object({
-  ...query,
+export const getProjectRequestSchema = object({
+  ...params,
 });
 
 export type CreateProjectRequest = TypeOf<typeof createProjectRequestSchema>;
 export type GetProjectRequest = TypeOf<typeof getProjectRequestSchema>;
-export type GetProjectsRequest = TypeOf<typeof getProjectsRequestSchema>;

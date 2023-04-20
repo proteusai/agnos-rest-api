@@ -63,14 +63,9 @@ export async function getFunctionsHandler(req: Request<Obj, Obj, Obj, GetFunctio
 
   // TODO: if user is not a member of this team return only public functions
 
-  const functions = await findFunctions(
-    {
-      ...(team && { team: team._id }),
-    },
-    {
-      populate,
-    }
-  );
+  const functions = await findFunctions({
+    ...(team && { team: team._id }),
+  });
   return res.send({ functions });
 }
 
@@ -93,11 +88,6 @@ export async function getMyFunctionsHandler(req: Request<Obj, Obj, Obj, GetFunct
     return res.status(404).send({ error: { message: "Could not find the team" } });
   }
 
-  const functions = await findFunctions(
-    { team: team._id },
-    {
-      populate,
-    }
-  );
+  const functions = await findFunctions({ team: team._id });
   return res.send({ functions });
 }

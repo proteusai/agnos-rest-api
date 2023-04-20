@@ -63,14 +63,9 @@ export async function getPluginsHandler(req: Request<Obj, Obj, Obj, GetPluginsIn
 
   // TODO: if user is not a member of this team return only public plugins
 
-  const plugins = await findPlugins(
-    {
-      ...(team && { team: team._id }),
-    },
-    {
-      populate,
-    }
-  );
+  const plugins = await findPlugins({
+    ...(team && { team: team._id }),
+  });
   return res.send({ plugins });
 }
 
@@ -93,11 +88,6 @@ export async function getMyPluginsHandler(req: Request<Obj, Obj, Obj, GetPlugins
     return res.status(404).send({ error: { message: "Could not find the team" } });
   }
 
-  const plugins = await findPlugins(
-    { team: team._id },
-    {
-      populate,
-    }
-  );
+  const plugins = await findPlugins({ team: team._id });
   return res.send({ plugins });
 }
