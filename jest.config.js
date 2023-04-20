@@ -5,6 +5,7 @@ module.exports = {
   testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/build/', '<rootDir>/config/'],
   moduleNameMapper: {
     "^@/(.+)$": "<rootDir>/src/$1",
+    "^@ai/services/(.+)$": "<rootDir>/src/integrations/ai/$1/service/$1.service",
     "^@app$": "<rootDir>/src/app",
     "^@constants/(.+)$": "<rootDir>/src/constants/$1",
     "^@controllers/(.+)$": "<rootDir>/src/features/$1/controller/$1.controller",

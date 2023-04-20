@@ -24,7 +24,7 @@ export async function createUserHandler(
       name: userDoc.name,
       email: userDoc.email,
       personal: true,
-      description: "This is my own space and I can invite people in.",
+      description: "This is my own space and I can invite people in",
       private: true,
       picture: userDoc.picture || DEFAULT_ORG_PICTURE,
       user: userDoc._id,

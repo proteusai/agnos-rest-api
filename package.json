@@ -85,6 +85,8 @@
   },
   "_moduleAliases": {
     "@": "src",
+    "@ai/services/base": "src/integrations/ai/base/service/base.service",
+    "@ai/services/openai": "src/integrations/ai/openai/service/openai.service",
     "@app": "src/app",
     "@constants": "src/constants",
     "@controllers/base": "src/features/base/controller/base.controller",
