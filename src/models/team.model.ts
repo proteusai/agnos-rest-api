@@ -89,6 +89,22 @@ teamSchema.pre("remove", async function (next) {
   return next();
 });
 
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    Team:
+ *      type: object
+ *      properties:
+ *        _id:
+ *          type: string
+ *        createdAt:
+ *          type: string
+ *          format: date-time
+ *        updatedAt:
+ *          type: string
+ *          format: date-time
+ */
 const TeamModel = mongoose.model<TeamDocument>("Team", teamSchema);
 
 export default TeamModel;

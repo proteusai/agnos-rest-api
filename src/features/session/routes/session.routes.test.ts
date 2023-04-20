@@ -70,7 +70,7 @@ describe("Session routes", () => {
       const body = {
         email: "john.doe@example.com",
         accessToken: "valid-access-token",
-        idToken: "test-id-token",
+        idToken: "test-id-token", // this is possible because we mocked the auth middleware
       };
       const response = await request(app).post("/sessions").send(body);
       expect(response.status).toBe(200);
