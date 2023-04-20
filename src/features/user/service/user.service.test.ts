@@ -2,6 +2,7 @@ import { createUser, createUserDocument, findUser, findUserDocument, findUsers }
 import UserModel, { UserDocument, UserInput } from "@models/user";
 import { connect, disconnect } from "@utils/connect";
 import { FilterQuery } from "mongoose";
+import { MOCK_SERVICE_OPTIONS } from "@/mocks";
 
 describe("User service", () => {
   const input: UserInput = {
@@ -78,7 +79,7 @@ describe("User service", () => {
       await createUserDocument(input1);
       await createUserDocument(input2);
       const query: FilterQuery<UserDocument> = { name: { $regex: /testuser/ } };
-      const users = await findUsers(query);
+      const users = await findUsers(query, MOCK_SERVICE_OPTIONS);
       expect(users).toBeDefined();
       expect(users).toHaveLength(2);
       expect(users[0]).toMatchObject({ name: input1.name });
