@@ -53,9 +53,13 @@ export async function getOrgsHandler(
   req: Request<Obj, Obj, Obj, GetOrgsRequest["query"]>,
   res: Response<LeanDocument<Array<OrgDocument & { _id: ObjectId }>>>
 ) {
+  const userId = res.locals.user?._id;
   const parsedQuery = (res.locals as Obj).query;
 
-  const orgs = await findOrgs((parsedQuery as Obj).filter as FilterQuery<OrgDocument>, parsedQuery as ServiceOptions);
+  const orgs = await findOrgs(
+    { ...((parsedQuery as Obj).filter as Obj), user: userId } as FilterQuery<OrgDocument>,
+    parsedQuery as ServiceOptions
+  );
   return res.send({ data: orgs });
 }
 

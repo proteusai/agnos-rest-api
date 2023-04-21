@@ -86,10 +86,11 @@ export async function getProjectsHandler(
   req: Request,
   res: Response<LeanDocument<Array<ProjectDocument & { _id: ObjectId }>>>
 ) {
+  const userId = res.locals.user?._id;
   const parsedQuery = (res.locals as Obj).query;
 
   const projects = await findProjects(
-    (parsedQuery as Obj).filter as FilterQuery<ProjectDocument>,
+    { ...((parsedQuery as Obj).filter as Obj), user: userId } as FilterQuery<ProjectDocument>,
     parsedQuery as ServiceOptions
   );
 

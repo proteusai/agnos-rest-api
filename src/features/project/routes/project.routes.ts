@@ -104,7 +104,7 @@ router.post(
     validateResource(createProjectRequestSchema),
     checkAuth0AccessToken,
     requireUser,
-    requireUserRole(RoleName.MEMBER, "body.org"),
+    requireUserRole(RoleName.OWNER, "body.org"),
   ],
   createProjectHandler
 );
