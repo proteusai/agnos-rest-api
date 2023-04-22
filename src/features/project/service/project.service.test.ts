@@ -42,7 +42,7 @@ describe("Project service", () => {
       const foundProject = await findProject(query);
       expect(foundProject).toBeDefined();
       expect(String(foundProject?.user)).toBe(String(project.user));
-      expect(String(project.org)).toBe(String(input.org));
+      expect(String(foundProject?.org)).toBe(String(project.org));
     });
   });
 

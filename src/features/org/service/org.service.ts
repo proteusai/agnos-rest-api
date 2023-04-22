@@ -9,9 +9,7 @@ export async function createOrg(input: OrgInput) {
   return omit(team.toJSON(), "secrets");
 }
 export async function createOrgDocument(input: OrgInput) {
-  const team = await OrgModel.create(input);
-
-  return team;
+  return OrgModel.create(input);
 }
 
 export async function findOrg(query: FilterQuery<OrgDocument>) {
@@ -23,5 +21,10 @@ export async function findOrgDocument(query: FilterQuery<OrgDocument>) {
 }
 
 export async function findOrgs(query: FilterQuery<OrgDocument>, options: ServiceOptions) {
-  return OrgModel.find(query).populate(options.populate).lean();
+  return OrgModel.find(query)
+    .skip(options.skip)
+    .limit(options.limit)
+    .sort(options.sort)
+    .populate(options.populate)
+    .lean();
 }

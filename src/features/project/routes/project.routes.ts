@@ -63,10 +63,11 @@ router.get(
     checkAuth0AccessToken,
     requireUser,
     requireUserPermission(PermissionName.READ, "project", "params.id"),
-    queryParser,
   ],
   getProjectHandler
 );
+
+// TODO: GET /projects/:id/collaborations
 
 /**
  * @openapi

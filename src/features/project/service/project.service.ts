@@ -9,9 +9,7 @@ export async function createProject(input: ProjectInput) {
   return omit(project.toJSON(), "secrets");
 }
 export async function createProjectDocument(input: ProjectInput) {
-  const project = await ProjectModel.create(input);
-
-  return project;
+  return ProjectModel.create(input);
 }
 
 export async function findProject(query: FilterQuery<ProjectDocument>) {

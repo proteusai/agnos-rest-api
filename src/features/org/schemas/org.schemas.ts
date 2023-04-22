@@ -9,12 +9,6 @@ const params = {
   }),
 };
 
-const query = {
-  query: object({
-    populate: string().optional(),
-  }),
-};
-
 /**
  * @openapi
  * components:
@@ -70,16 +64,6 @@ export const createOrgRequestSchema = object({
  *      properties:
  *        data:
  *          $ref: '#/components/schemas/Organization'
- */
-export const getOrgRequestSchema = object({
-  ...params,
-  ...query,
-});
-
-/**
- * @openapi
- * components:
- *  schemas:
  *    GetOrganizationsResponse:
  *      type: object
  *      properties:
@@ -88,10 +72,9 @@ export const getOrgRequestSchema = object({
  *          items:
  *            $ref: '#/components/schemas/Organization'
  */
-export const getOrgsRequestSchema = object({
-  ...query,
+export const getOrgRequestSchema = object({
+  ...params,
 });
 
 export type CreateOrgRequest = TypeOf<typeof createOrgRequestSchema>;
 export type GetOrgRequest = TypeOf<typeof getOrgRequestSchema>;
-export type GetOrgsRequest = TypeOf<typeof getOrgsRequestSchema>;

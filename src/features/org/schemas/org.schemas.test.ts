@@ -43,7 +43,6 @@ describe("Org schema", () => {
         params: {
           id: "12234459847373782",
         },
-        query: {},
       };
       expect(() => {
         getOrgRequestSchema.parse(request);
