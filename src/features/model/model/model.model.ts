@@ -22,6 +22,7 @@ The story:
         - value?: the value of the field (if applicable)
         - opposite?: the opposite event (if applicable)
 - when a ModelChangeEventSet is created, it will trigger the onModelChanged events in the components
+- Introduce ModelCanvas to store physical positions of models as well as orientation
  */
 
 export interface ModelInput {

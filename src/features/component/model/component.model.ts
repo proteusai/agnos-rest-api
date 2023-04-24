@@ -24,12 +24,12 @@ export interface ComponentInput {
   onEnvDeployed?: string; // code to run when env is deployed
   onInit?: string; // code to run when component is initialized
   onModelChanged?: string; // code to run when model is created/updated/deleted
-  org: OrgDocument["_id"]; //
+  org: OrgDocument["_id"];
   personal?: boolean;
   private?: boolean;
   picture?: string;
   scopes?: Array<PermissionScope>;
-  supportedEnvs?: Array<string>; //
+  supportedEnvLocations?: Array<string>; // e.g. ["aws", "gcp/ubuntu", "azure/windows@10", "local/mac"]
   tags?: Array<string>;
   user: UserDocument["_id"];
   version: string;
