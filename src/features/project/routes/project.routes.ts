@@ -62,7 +62,7 @@ router.get(
     validateResource(getProjectRequestSchema),
     checkAuth0AccessToken,
     requireUser,
-    requireUserPermission(PermissionName.READ, "project", "params.id"),
+    requireUserPermission(PermissionName.read, "project", "params.id"),
   ],
   getProjectHandler
 );
@@ -105,7 +105,7 @@ router.post(
     validateResource(createProjectRequestSchema),
     checkAuth0AccessToken,
     requireUser,
-    requireUserRole(RoleName.OWNER, "body.org"),
+    requireUserRole(RoleName.owner, "body.org"),
   ],
   createProjectHandler
 );

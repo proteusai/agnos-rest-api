@@ -5,45 +5,46 @@ import { UserDocument } from "@models/user";
 import logger from "@utils/logger";
 import OrgModel, { OrgDocument } from "@models/org";
 import CollaborationModel, { CollaborationDocument } from "@models/collaboration";
+import { PermissionScope } from "@constants/permissions";
+import { Form, FormSchema } from "@models/form";
 
 /*
 The story:
-- to register changes to models we need to create a ModelChangeEventSet (capped collection)
-    - name: the name of the changeset; auto-generated
-    - description: the description of the changeset; auto-generated
-    - project: the project that the model belongs to
-    - user: the user that created the changeset
-    - before: snapshot of the models before the changeset
-    - after: snapshot of the models after the changeset
-    - events: the events that make up the changeset
-        - type: create_model|update_model|delete_model|create_field|update_field|delete_field
-        - model?: the model that was changed
-        - field?: the field that was changed (if applicable)
-        - value?: the value of the field (if applicable)
-        - opposite?: the opposite event (if applicable)
-- when a ModelChangeEventSet is created, it will trigger the onModelChanged events in the components
+- user creates a Component (in an org or personal)
+- user can publish the component to the marketplace (as a Publication)
+- user can install a published component (a Publication) into an org as an Installation
+- user can add an Instance of a Publication (into a Design); to do that the org must have an Installation of the Publication
  */
 
-export interface ModelInput {
+export interface ComponentInput {
   name: string;
   description?: string;
+  forms?: Array<Form>; // "inputs" will be derived from this and env.values
+  onEnvChanged?: string; // code to run when env is created/updated/deleted
+  onEnvDeployed?: string; // code to run when env is deployed
+  onInit?: string; // code to run when component is initialized
+  onModelChanged?: string; // code to run when model is created/updated/deleted
+  org: OrgDocument["_id"]; //
   personal?: boolean;
   private?: boolean;
   picture?: string;
-  secrets?: object;
-  org: OrgDocument["_id"];
+  scopes?: Array<PermissionScope>;
+  supportedEnvs?: Array<string>; //
+  tags?: Array<string>;
   user: UserDocument["_id"];
+  version: string;
 }
 
-export interface ProjectDocument extends BaseDocument, ModelInput, mongoose.Document {
+export interface ComponentDocument extends BaseDocument, ComponentInput, mongoose.Document {
   collaborations?: Array<CollaborationDocument["_id"]>;
 }
 
-const projectSchema = new mongoose.Schema(
+const componentSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     collaborations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collaboration" }],
     description: { type: String },
+    forms: [FormSchema],
     personal: { type: Boolean, default: false },
     private: { type: Boolean, default: false },
     picture: { type: String, default: DEFAULT_ORG_PICTURE },
@@ -56,8 +57,8 @@ const projectSchema = new mongoose.Schema(
   }
 );
 
-projectSchema.pre("remove", async function (next) {
-  const project = this as unknown as ProjectDocument;
+componentSchema.pre("remove", async function (next) {
+  const project = this as unknown as ComponentDocument;
 
   CollaborationModel.remove({ project: project._id })
     .exec()
@@ -117,6 +118,6 @@ projectSchema.pre("remove", async function (next) {
  *          format: date-time
  */
 
-const ProjectModel = mongoose.model<ProjectDocument>("Project", projectSchema);
+const ComponentModel = mongoose.model<ComponentDocument>("Component", componentSchema);
 
-export default ProjectModel;
+export default ComponentModel;

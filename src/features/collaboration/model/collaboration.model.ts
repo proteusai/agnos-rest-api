@@ -6,11 +6,13 @@ import UserModel, { UserDocument } from "@models/user";
 import OrgModel, { OrgDocument } from "@models/org";
 import logger from "@/utils/logger";
 import ProjectModel, { ProjectDocument } from "@models/project";
+import ResourceModel, { ResourceDocument } from "@models/resource";
 
 export interface CollaborationInput {
   user?: UserDocument["_id"];
   org: OrgDocument["_id"];
   project?: ProjectDocument["_id"];
+  resource?: ResourceDocument["_id"];
   team?: TeamDocument["_id"];
   permission?: PermissionName;
 }
@@ -22,8 +24,9 @@ const collaborationSchema = new mongoose.Schema(
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     org: { type: mongoose.Schema.Types.ObjectId, ref: "Organization", required: true },
     project: { type: mongoose.Schema.Types.ObjectId, ref: "Project" },
+    resource: { type: mongoose.Schema.Types.ObjectId, ref: "Resource" },
     team: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },
-    permission: { type: String, enum: Object.keys(PermissionName), default: PermissionName.WRITE },
+    permission: { type: String, enum: Object.keys(PermissionName), default: PermissionName.write },
   },
   {
     timestamps: true,
@@ -41,7 +44,12 @@ collaborationSchema.pre("remove", function (next) {
   ProjectModel.updateMany({ collaborations: collaboration._id }, { $pull: { collaborations: collaboration._id } })
     .exec()
     .catch((reason) => {
-      logger.error("Error removing collaborations for project", { reason, org: collaboration.org });
+      logger.error("Error removing collaborations for project", { reason, project: collaboration.project });
+    });
+  ResourceModel.updateMany({ collaborations: collaboration._id }, { $pull: { collaborations: collaboration._id } })
+    .exec()
+    .catch((reason) => {
+      logger.error("Error removing collaborations for resource", { reason, resource: collaboration.resource });
     });
   TeamModel.updateMany({ collaborations: collaboration._id }, { $pull: { collaborations: collaboration._id } })
     .exec()
@@ -73,12 +81,16 @@ collaborationSchema.pre("remove", function (next) {
  *        permission:
  *          type: string
  *          enum:
- *           - ADMIN
- *           - READ
- *           - WRITE
+ *           - admin
+ *           - read
+ *           - write
  *        project:
  *          oneOf:
  *            - $ref: '#/components/schemas/Project'
+ *            - type: string
+ *        resource:
+ *          oneOf:
+ *            - $ref: '#/components/schemas/Resource'
  *            - type: string
  *        team:
  *          oneOf:

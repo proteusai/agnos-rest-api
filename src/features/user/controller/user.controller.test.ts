@@ -60,7 +60,7 @@ describe("User Controller", () => {
           _id: new mongoose.Types.ObjectId(),
           user: new mongoose.Types.ObjectId(),
           org: new mongoose.Types.ObjectId(),
-          role: RoleName.OWNER,
+          role: RoleName.owner,
           createdAt: new Date(),
           updatedAt: new Date(),
         });

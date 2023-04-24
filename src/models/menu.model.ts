@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 import { Obj } from "../types";
-import { Form, FormSchema } from "./form.model";
+import { Form, FormSchema } from "@models/form";
 
 export interface Menu {
   id: string;

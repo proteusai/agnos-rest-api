@@ -5,7 +5,7 @@ describe("Update settings schema", () => {
     const request: UpdateSettingsRequest = {
       body: {
         autoSave: true,
-        colorMode: "DARK",
+        colorMode: "dark",
         useGrayscaleIcons: true,
       },
     };

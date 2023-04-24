@@ -3,20 +3,20 @@ import PermissionModel, { PermissionInput } from "../models/permission.model";
 async function seedPermissions() {
   const permissions: Array<PermissionInput & { _id: string }> = [
     {
-      _id: "READ",
-      name: "READ",
+      _id: "read",
+      name: "read",
       value: 10,
       description: "Read-only permission",
     },
     {
-      _id: "WRITE",
-      name: "WRITE",
+      _id: "write",
+      name: "write",
       value: 100,
       description: "Read-write permission",
     },
     {
-      _id: "ADMIN",
-      name: "ADMIN",
+      _id: "admin",
+      name: "admin",
       value: 1000,
       description: "Administrative permission",
     },

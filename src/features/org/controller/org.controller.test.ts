@@ -69,7 +69,7 @@ describe("Organization controller", () => {
       expect(mockedCreateMembership).toHaveBeenCalledWith({
         org: mockedOrgDoc._id,
         user: userId,
-        role: RoleName.OWNER,
+        role: RoleName.owner,
       });
       expect(mockedFindOrg).toHaveBeenCalledWith({ _id: mockedOrgDoc._id });
       expect(res.send).toHaveBeenCalledWith({ data: mockedOrg });

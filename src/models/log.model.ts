@@ -26,7 +26,7 @@ const logSchema = new mongoose.Schema(
     env: { type: String, enum: Object.keys(Env), required: true },
     meta: { type: {} },
     source: { type: String, required: true },
-    type: { type: String, enum: Object.keys(LogType), default: LogType.INFO },
+    type: { type: String, enum: Object.keys(LogType), default: LogType.info },
   },
   {
     timestamps: true,

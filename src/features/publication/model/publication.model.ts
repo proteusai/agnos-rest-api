@@ -4,45 +4,35 @@ import { BaseDocument } from "@models/base";
 import { UserDocument } from "@models/user";
 import logger from "@utils/logger";
 import OrgModel, { OrgDocument } from "@models/org";
-import CollaborationModel, { CollaborationDocument } from "@models/collaboration";
 import { PermissionScope } from "@constants/permissions";
+import { ResourceDocument } from "@models/resource";
 
-export interface ResourceInput {
+export interface PublicationInput {
   name: string;
   description?: string;
-  docker?: string; // url to or content of docker file
-  // image?: string; // docker image
-  onInit?: string; // code to run when resource is initialized
-  onModelCreated?: string; // code to run when model is created
-  onModelDeleted?: string; // code to run when model is deleted
-  onModelUpdated?: string; // code to run when model is updated
+  docker?: string;
+  onInit?: string;
+  onModelCreated?: string;
+  onModelDeleted?: string;
+  onModelUpdated?: string;
+  onRefresh?: string;
   org: OrgDocument["_id"];
   personal?: boolean;
-  precursor?: ResourceDocument["_id"];
   private?: boolean;
   picture?: string;
-  published?: boolean; // used to indicate that the resource is in the marketplace and cannot be edited/re-published
-  // purchased?: boolean; // used to indicate that the resource was purchased; this is NOT good cuz it becomes hard to count the number of installations
+  resource: ResourceDocument["_id"];
   scopes?: Array<PermissionScope>;
-  secrets?: object;
-  serviceDefinition?: string; // the docker-compose service definition (without some stuff like "depends_on")
-  successor?: ResourceDocument["_id"];
+  serviceDefinition?: string;
   tags?: Array<string>;
   user: UserDocument["_id"];
   version: string;
-  versionFamily: string; // used to indicate that the resource is a version of another resource; precursor.versionFamily OR auto-generated
 }
 
-// create publishedResource and installedResource and instance (will have inputs and outputs and models they subscribe to) models
+export interface PublicationDocument extends BaseDocument, PublicationInput, mongoose.Document {}
 
-export interface ResourceDocument extends BaseDocument, ResourceInput, mongoose.Document {
-  collaborations?: Array<CollaborationDocument["_id"]>;
-}
-
-const resourceSchema = new mongoose.Schema(
+const publicationSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    collaborations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collaboration" }],
     description: { type: String },
     personal: { type: Boolean, default: false },
     private: { type: Boolean, default: false },
@@ -56,14 +46,9 @@ const resourceSchema = new mongoose.Schema(
   }
 );
 
-resourceSchema.pre("remove", async function (next) {
-  const project = this as unknown as ResourceDocument;
+publicationSchema.pre("remove", async function (next) {
+  const project = this as unknown as PublicationDocument;
 
-  CollaborationModel.remove({ project: project._id })
-    .exec()
-    .catch((reason: unknown) => {
-      logger.error("Error removing collaborations for project", { reason, project: project._id });
-    });
   OrgModel.updateMany({ projects: project._id }, { $pull: { projects: project._id } })
     .exec()
     .catch((reason) => {
@@ -117,6 +102,6 @@ resourceSchema.pre("remove", async function (next) {
  *          format: date-time
  */
 
-const ResourceModel = mongoose.model<ResourceDocument>("Project", resourceSchema);
+const ResourceModel = mongoose.model<PublicationDocument>("Resource", publicationSchema);
 
 export default ResourceModel;

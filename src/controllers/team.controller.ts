@@ -16,7 +16,7 @@ export async function createTeamHandler(req: Request<Obj, Obj, CreateTeamInput["
     user: user._id,
     org: "create org", // TODO
     team: team._id,
-    role: RoleName.OWNER,
+    role: RoleName.owner,
   });
 
   if (IGNORE_LEAST_CARDINALITY) {

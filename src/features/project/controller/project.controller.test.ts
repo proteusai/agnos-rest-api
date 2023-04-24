@@ -105,7 +105,7 @@ describe("Project controller", () => {
       });
       expect(mockedCreateCollaboration).toHaveBeenCalledWith({
         org: mockedOrgDoc._id,
-        permission: PermissionName.ADMIN,
+        permission: PermissionName.admin,
         user: userId,
         project: mockedProjectDoc._id,
       });
@@ -134,7 +134,7 @@ describe("Project controller", () => {
       });
       expect(mockedCreateCollaboration).toHaveBeenCalledWith({
         org: mockedOrgDoc._id,
-        permission: PermissionName.ADMIN,
+        permission: PermissionName.admin,
         user: userId,
         project: mockedProjectDoc._id,
       });

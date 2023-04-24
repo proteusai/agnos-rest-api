@@ -16,11 +16,11 @@ export const createTeamDesignShareSchema = object({
       required_error: "Team ID is required",
     }),
     //  permission: union([
-    //   literal("READ"),
-    //   literal("WRITE"),
-    //   literal("ADMIN"),
-    // ]).default("READ"),
-    permission: zodEnum(["READ", "WRITE", "ADMIN"] as const).default("READ"),
+    //   literal("read"),
+    //   literal("write"),
+    //   literal("admin"),
+    // ]).default("read"),
+    permission: zodEnum(["read", "write", "admin"] as const).default("read"),
   }),
 });
 

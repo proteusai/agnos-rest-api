@@ -14,7 +14,7 @@ const payload = {
     code: string().optional(),
     description: string().optional(),
     published: boolean().optional(),
-    scopes: zodEnum(["READ:DESIGN", "READ:ENVIRONMENT", "READ:USER"] as const)
+    scopes: zodEnum(["read:design", "read:environment", "read:user"] as const)
       .array()
       .optional(),
     secrets: object({}).optional(),
@@ -42,7 +42,7 @@ export const createFunctionVersionSchema = object({
       required_error: "Function ID is required",
     }),
     published: boolean().optional(),
-    scopes: zodEnum(["READ:DESIGN", "READ:ENVIRONMENT", "READ:USER"] as const)
+    scopes: zodEnum(["read:design", "read:environment", "read:user"] as const)
       .array()
       .optional(),
     secrets: object({}).optional(),

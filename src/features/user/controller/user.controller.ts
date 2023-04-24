@@ -32,7 +32,7 @@ export async function createUserHandler(
     const membership = await createMembership({
       user: userDoc._id,
       org: org._id,
-      role: RoleName.OWNER,
+      role: RoleName.owner,
     });
 
     const settings = await createSettings({ user: userDoc._id });

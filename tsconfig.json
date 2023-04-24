@@ -47,6 +47,8 @@
       "@mocks/*": [ "src/mocks/*" ],
       "@models/base": [ "src/features/base/model/base.model" ],
       "@models/collaboration": [ "src/features/collaboration/model/collaboration.model" ],
+      "@models/component": [ "src/features/component/model/component.model" ],
+      "@models/form": [ "src/features/form/model/form.model" ],
       "@models/membership": [ "src/features/membership/model/membership.model" ],
       "@models/org": [ "src/features/org/model/org.model" ],
       "@models/project": [ "src/features/project/model/project.model" ],

@@ -62,7 +62,7 @@ router.get(
     validateResource(getOrgRequestSchema),
     checkAuth0AccessToken,
     requireUser,
-    requireUserRole(RoleName.MEMBER, "params.id"),
+    requireUserRole(RoleName.member, "params.id"),
   ],
   getOrgHandler
 );

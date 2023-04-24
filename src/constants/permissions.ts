@@ -1,30 +1,30 @@
 export enum PermissionName {
-  "READ" = "READ",
-  "WRITE" = "WRITE",
-  "ADMIN" = "ADMIN",
+  "read" = "read",
+  "write" = "write",
+  "admin" = "admin",
 }
 export enum PermissionScope {
-  "READ:DESIGN" = "READ:DESIGN",
-  "READ:ENVIRONMENT" = "READ:ENVIRONMENT",
-  "READ:USER" = "READ:USER",
+  "read:design" = "read:design",
+  "read:environment" = "read:environment",
+  "read:user" = "read:user",
 }
 
 export enum RoleName {
-  "GUEST" = "GUEST",
-  "MEMBER" = "MEMBER",
-  "OWNER" = "OWNER",
+  "guest" = "guest",
+  "member" = "member",
+  "owner" = "owner",
 }
 
 export const MapPermissionToValue: Record<PermissionName, number> = {
-  READ: 1,
-  WRITE: 10,
-  ADMIN: 100,
+  read: 1,
+  write: 10,
+  admin: 100,
 };
 
 export const MapRoleToValue: Record<RoleName, number> = {
-  GUEST: 1,
-  MEMBER: 10,
-  OWNER: 100,
+  guest: 1,
+  member: 10,
+  owner: 100,
 };
 
 export type ResourceTypes = "org" | "team" | "project";

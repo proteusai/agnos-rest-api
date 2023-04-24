@@ -24,7 +24,7 @@ export async function createOrgHandler(
   const membership = await createMembership({
     user: userId,
     org: orgDoc._id,
-    role: RoleName.OWNER,
+    role: RoleName.owner,
   });
 
   if (IGNORE_LEAST_CARDINALITY) {

@@ -36,12 +36,12 @@ describe("requireUserPermission middleware", () => {
       user: new mongoose.Types.ObjectId(),
       org: new mongoose.Types.ObjectId(),
       project: projectId,
-      permission: PermissionName.ADMIN,
+      permission: PermissionName.admin,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
-    await requireUserPermission(PermissionName.ADMIN, "project", "params.id")(
+    await requireUserPermission(PermissionName.admin, "project", "params.id")(
       mockRequest,
       mockResponse,
       mockNextFunction
@@ -80,12 +80,12 @@ describe("requireUserPermission middleware", () => {
       org: new mongoose.Types.ObjectId(),
       team: teamId,
       project: projectId,
-      permission: PermissionName.ADMIN,
+      permission: PermissionName.admin,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
-    await requireUserPermission(PermissionName.ADMIN, "project", "params.id")(
+    await requireUserPermission(PermissionName.admin, "project", "params.id")(
       mockRequest,
       mockResponse,
       mockNextFunction
@@ -116,14 +116,14 @@ describe("requireUserPermission middleware", () => {
       user: new mongoose.Types.ObjectId(),
       org: new mongoose.Types.ObjectId(),
       project: projectId,
-      permission: PermissionName.WRITE,
+      permission: PermissionName.write,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
     mockedFindMemberships.mockResolvedValueOnce([]);
 
-    await requireUserPermission(PermissionName.ADMIN, "project", "params.id")(
+    await requireUserPermission(PermissionName.admin, "project", "params.id")(
       mockRequest,
       mockResponse,
       mockNextFunction
@@ -161,12 +161,12 @@ describe("requireUserPermission middleware", () => {
       org: new mongoose.Types.ObjectId(),
       team: teamId,
       project: projectId,
-      permission: PermissionName.WRITE,
+      permission: PermissionName.write,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
-    await requireUserPermission(PermissionName.ADMIN, "project", "params.id")(
+    await requireUserPermission(PermissionName.admin, "project", "params.id")(
       mockRequest,
       mockResponse,
       mockNextFunction
@@ -186,7 +186,7 @@ describe("requireUserPermission middleware", () => {
     mockedFindCollaboration.mockResolvedValueOnce(null);
     mockedFindMemberships.mockResolvedValueOnce([]);
 
-    await requireUserPermission(PermissionName.ADMIN, "project", "params.id")(
+    await requireUserPermission(PermissionName.admin, "project", "params.id")(
       mockRequest,
       mockResponse,
       mockNextFunction

@@ -14,7 +14,7 @@ export interface FormAction {
 export interface FormField {
   name: string;
   title: string;
-  default?: any;
+  default?: unknown;
   type?: HTMLInputTypeAttribute;
 }
 

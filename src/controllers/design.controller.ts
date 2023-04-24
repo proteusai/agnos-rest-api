@@ -37,13 +37,13 @@ export async function createDesignHandler(req: Request<Obj, Obj, CreateDesignInp
   const userDesignShare = await createUserDesignShare({
     user: user._id,
     design: design._id,
-    permission: PermissionName.ADMIN,
+    permission: PermissionName.admin,
   });
 
   const teamDesignShare = await createTeamDesignShare({
     team: team._id,
     design: design._id,
-    permission: PermissionName.ADMIN,
+    permission: PermissionName.admin,
   });
 
   if (IGNORE_LEAST_CARDINALITY) {

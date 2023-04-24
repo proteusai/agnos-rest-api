@@ -40,7 +40,7 @@ export async function createProjectHandler(
     const projectDoc = await createProjectDocument({ ...req.body, user: userId, org: org._id, personal: org.personal });
     const collaboration = await createCollaboration({
       org: org._id,
-      permission: PermissionName.ADMIN,
+      permission: PermissionName.admin,
       project: projectDoc._id,
       user: userId,
     });

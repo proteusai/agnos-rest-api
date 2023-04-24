@@ -19,7 +19,7 @@ describe("Settings Model", () => {
 
   it("should successfully create a settings document", async () => {
     const settingsInput: SettingsInput = {
-      colorMode: ColorMode.DARK,
+      colorMode: ColorMode.dark,
       useGrayscaleIcons: true,
       user: new mongoose.Types.ObjectId(),
     };
@@ -33,14 +33,14 @@ describe("Settings Model", () => {
     const userId = new mongoose.Types.ObjectId();
 
     const settingsInput1: SettingsInput = {
-      colorMode: ColorMode.DARK,
+      colorMode: ColorMode.dark,
       useGrayscaleIcons: true,
       user: userId,
     };
     const settings1 = new SettingsModel(settingsInput1);
 
     const settingsInput2: SettingsInput = {
-      colorMode: ColorMode.DARK,
+      colorMode: ColorMode.dark,
       useGrayscaleIcons: true,
       user: userId,
     };

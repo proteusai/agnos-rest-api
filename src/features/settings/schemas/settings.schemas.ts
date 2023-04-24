@@ -13,9 +13,9 @@ import { boolean, enum as zodEnum, object, TypeOf } from "zod";
  *        colorMode:
  *          type: string
  *          enum:
- *           - DARK
- *           - LIGHT
- *          example: DARK
+ *           - dark
+ *           - light
+ *          example: dark
  *        useGrayscaleIcons:
  *          type: boolean
  *          example: true
@@ -33,7 +33,7 @@ import { boolean, enum as zodEnum, object, TypeOf } from "zod";
 export const updateSettingsRequestSchema = object({
   body: object({
     autoSave: boolean().optional(),
-    colorMode: zodEnum(["DARK", "LIGHT"] as const).default("LIGHT"),
+    colorMode: zodEnum(["dark", "light"] as const).default("light"),
     useGrayscaleIcons: boolean().optional(),
   }),
 });

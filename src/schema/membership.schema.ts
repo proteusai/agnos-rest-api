@@ -27,7 +27,7 @@ const query = {
  *          type: string
  *        permission:
  *          type: string
- *          default: READ
+ *          default: read
  *    CreateMembershipResponse:
  *      type: object
  *      properties:
@@ -68,11 +68,11 @@ export const createMembershipSchema = object({
     }),
     team: string(),
     //permission: union([
-    //   literal("GUEST"),
-    //   literal("MEMBER"),
-    //   literal("OWNER"),
-    // ]).default("GUEST"),
-    role: zodEnum(["GUEST", "MEMBER", "OWNER"] as const).default("MEMBER"),
+    //   literal("guest"),
+    //   literal("member"),
+    //   literal("owner"),
+    // ]).default("guest"),
+    role: zodEnum(["guest", "member", "owner"] as const).default("member"),
   }),
 });
 
