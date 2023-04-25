@@ -8,6 +8,7 @@ import CollaborationModel, { CollaborationDocument } from "@models/collaboration
 import ProjectModel, { ProjectDocument } from "@models/project";
 import ComponentModel, { ComponentDocument } from "@models/component";
 import PublicationModel, { PublicationDocument } from "@models/publication";
+import InstallationModel, { InstallationDocument } from "@models/installation";
 
 export interface OrgInput {
   name: string;
@@ -25,7 +26,7 @@ export interface OrgDocument extends BaseDocument, OrgInput, mongoose.Document {
   collaborations?: Array<CollaborationDocument["_id"]>;
   components?: Array<ComponentDocument["_id"]>;
   // functions?: Array<FunctionDocument["_id"]>;
-  // generators?: Array<GeneratorDocument["_id"]>;
+  installations?: Array<InstallationDocument["_id"]>;
   memberships?: Array<MembershipDocument["_id"]>;
   // plugins?: Array<PluginDocument["_id"]>;
   projects?: Array<ProjectDocument["_id"]>;
@@ -44,6 +45,7 @@ const orgSchema = new mongoose.Schema(
     email: { type: String, match: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/ },
     emailIsVerified: { type: Boolean, default: false },
     // functions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Function" }],
+    installations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Installation" }],
     memberships: [{ type: mongoose.Schema.Types.ObjectId, ref: "Membership" }],
     personal: { type: Boolean, default: false },
     private: { type: Boolean, default: false },
@@ -88,6 +90,12 @@ orgSchema.pre("remove", async function (next) {
       logger.error("Error removing collaborations for org", { reason, org: org._id });
     });
 
+  InstallationModel.remove({ org: org._id })
+    .exec()
+    .catch((reason: unknown) => {
+      logger.error("Error removing installations for org", { reason, org: org._id });
+    });
+
   MembershipModel.remove({ org: org._id })
     .exec()
     .catch((reason: unknown) => {
@@ -126,6 +134,12 @@ orgSchema.pre("remove", async function (next) {
  *          type: string
  *        emailIsVerified:
  *          type: boolean
+ *        installations:
+ *          type: array
+ *          items:
+ *            oneOf:
+ *              - $ref: '#/components/schemas/Installation'
+ *              - type: string
  *        memberships:
  *          type: array
  *          items:

@@ -49,6 +49,7 @@
       "@models/collaboration": [ "src/features/collaboration/model/collaboration.model" ],
       "@models/component": [ "src/features/component/model/component.model" ],
       "@models/form": [ "src/features/form/model/form.model" ],
+      "@models/installation": [ "src/features/installation/model/installation.model" ],
       "@models/license": [ "src/features/license/model/license.model" ],
       "@models/membership": [ "src/features/membership/model/membership.model" ],
       "@models/org": [ "src/features/org/model/org.model" ],

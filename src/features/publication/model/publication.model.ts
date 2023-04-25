@@ -8,6 +8,7 @@ import { PermissionScope } from "@constants/permissions";
 import ComponentModel, { ComponentDocument } from "@models/component";
 import { Form, FormSchema } from "@models/form";
 import { License, LicenseSchema } from "@models/license";
+import InstallationModel, { InstallationDocument } from "@models/installation";
 
 export interface PublicationInput {
   name: string;
@@ -20,6 +21,7 @@ export interface PublicationInput {
   onInit?: string;
   onModelChanged?: string;
   org: OrgDocument["_id"];
+  paidUpgrade?: boolean; // if true, the org needs to pay to upgrade from another version to this publication
   personal?: boolean;
   private?: boolean;
   picture?: string;
@@ -30,7 +32,10 @@ export interface PublicationInput {
   version: string;
 }
 
-export interface PublicationDocument extends BaseDocument, PublicationInput, mongoose.Document {}
+export interface PublicationDocument extends BaseDocument, PublicationInput, mongoose.Document {
+  installations?: Array<InstallationDocument["_id"]>;
+  installationsCount?: bigint; // for each installation: { $inc: { installationsCount: 1 }}
+}
 
 const publicationSchema = new mongoose.Schema(
   {
@@ -38,12 +43,15 @@ const publicationSchema = new mongoose.Schema(
     component: { type: mongoose.Schema.Types.ObjectId, ref: "Component" },
     description: { type: String },
     forms: [FormSchema],
+    installations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Installation" }],
+    installationsCount: { type: Number },
     licenses: [LicenseSchema],
     onEnvChanged: { type: String },
     onEnvDeployed: { type: String },
     onInit: { type: String },
     onModelChanged: { type: String },
     org: { type: mongoose.Schema.Types.ObjectId, ref: "Organization", required: true },
+    paidUpgrade: { type: Boolean, default: false },
     personal: { type: Boolean, default: false },
     picture: { type: String, default: DEFAULT_COMPONENT_PICTURE },
     private: { type: Boolean, default: false },
@@ -65,6 +73,12 @@ publicationSchema.pre("remove", async function (next) {
     .exec()
     .catch((reason) => {
       logger.error("Error removing publications for component", { reason, component: publication.component });
+    });
+
+  InstallationModel.remove({ publication: publication._id })
+    .exec()
+    .catch((reason: unknown) => {
+      logger.error("Error removing installations for publication", { reason, publication: publication._id });
     });
 
   OrgModel.updateMany({ publications: publication._id }, { $pull: { publications: publication._id } })
@@ -99,6 +113,12 @@ publicationSchema.pre("remove", async function (next) {
  *            oneOf:
  *              - $ref: '#/components/schemas/Form'
  *              - type: string
+ *        installations:
+ *          type: array
+ *          items:
+ *            oneOf:
+ *              - $ref: '#/components/schemas/Installation'
+ *              - type: string
  *        licenses:
  *          type: array
  *          items:
@@ -117,6 +137,8 @@ publicationSchema.pre("remove", async function (next) {
  *          oneOf:
  *            - $ref: '#/components/schemas/Organization'
  *            - type: string
+ *        paidUpgrade:
+ *          type: boolean
  *        personal:
  *          type: boolean
  *        picture:
