@@ -7,6 +7,7 @@ import OrgModel, { OrgDocument } from "@models/org";
 import CollaborationModel, { CollaborationDocument } from "@models/collaboration";
 import { PermissionScope } from "@constants/permissions";
 import { Form, FormSchema } from "@models/form";
+import PublicationModel, { PublicationDocument } from "@models/publication";
 
 /*
 The story:
@@ -37,6 +38,7 @@ export interface ComponentInput {
 
 export interface ComponentDocument extends BaseDocument, ComponentInput, mongoose.Document {
   collaborations?: Array<CollaborationDocument["_id"]>;
+  publications?: Array<PublicationDocument["_id"]>;
 }
 
 const componentSchema = new mongoose.Schema(
@@ -53,6 +55,7 @@ const componentSchema = new mongoose.Schema(
     personal: { type: Boolean, default: false },
     picture: { type: String, default: DEFAULT_COMPONENT_PICTURE },
     private: { type: Boolean, default: false },
+    publications: [{ type: mongoose.Schema.Types.ObjectId, ref: "Publication" }],
     scopes: [{ type: String, enum: Object.keys(PermissionScope) }],
     supportedEnvLocations: [{ type: String }],
     tags: [{ type: String }],
@@ -72,10 +75,17 @@ componentSchema.pre("remove", async function (next) {
     .catch((reason: unknown) => {
       logger.error("Error removing collaborations for component", { reason, component: component._id });
     });
+
   OrgModel.updateMany({ components: component._id }, { $pull: { components: component._id } })
     .exec()
     .catch((reason) => {
       logger.error("Error removing components for org", { reason, org: component.org });
+    });
+
+  PublicationModel.remove({ component: component._id })
+    .exec()
+    .catch((reason: unknown) => {
+      logger.error("Error removing publications for component", { reason, component: component._id });
     });
 
   return next();
@@ -124,6 +134,12 @@ componentSchema.pre("remove", async function (next) {
  *          type: string
  *        private:
  *          type: boolean
+ *        publications:
+ *          type: array
+ *          items:
+ *            oneOf:
+ *              - $ref: '#/components/schemas/Publication'
+ *              - type: string
  *        scopes:
  *          type: array
  *          items:

@@ -1,28 +1,30 @@
 import mongoose from "mongoose";
-import { DEFAULT_ORG_PICTURE } from "@constants/defaults";
+import { DEFAULT_COMPONENT_PICTURE } from "@constants/defaults";
 import { BaseDocument } from "@models/base";
 import { UserDocument } from "@models/user";
 import logger from "@utils/logger";
 import OrgModel, { OrgDocument } from "@models/org";
 import { PermissionScope } from "@constants/permissions";
-import { ResourceDocument } from "@models/resource";
+import ComponentModel, { ComponentDocument } from "@models/component";
+import { Form, FormSchema } from "@models/form";
+import { License, LicenseSchema } from "@models/license";
 
 export interface PublicationInput {
   name: string;
+  component: ComponentDocument["_id"];
   description?: string;
-  docker?: string;
+  forms?: Array<Form>;
+  licenses?: Array<License>; // can still be change after the publication is created
+  onEnvChanged?: string;
+  onEnvDeployed?: string;
   onInit?: string;
-  onModelCreated?: string;
-  onModelDeleted?: string;
-  onModelUpdated?: string;
-  onRefresh?: string;
+  onModelChanged?: string;
   org: OrgDocument["_id"];
   personal?: boolean;
   private?: boolean;
   picture?: string;
-  resource: ResourceDocument["_id"];
   scopes?: Array<PermissionScope>;
-  serviceDefinition?: string;
+  supportedEnvLocations?: Array<string>;
   tags?: Array<string>;
   user: UserDocument["_id"];
   version: string;
@@ -33,13 +35,23 @@ export interface PublicationDocument extends BaseDocument, PublicationInput, mon
 const publicationSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
+    component: { type: mongoose.Schema.Types.ObjectId, ref: "Component" },
     description: { type: String },
-    personal: { type: Boolean, default: false },
-    private: { type: Boolean, default: false },
-    picture: { type: String, default: DEFAULT_ORG_PICTURE },
-    secrets: { type: {} },
+    forms: [FormSchema],
+    licenses: [LicenseSchema],
+    onEnvChanged: { type: String },
+    onEnvDeployed: { type: String },
+    onInit: { type: String },
+    onModelChanged: { type: String },
     org: { type: mongoose.Schema.Types.ObjectId, ref: "Organization", required: true },
+    personal: { type: Boolean, default: false },
+    picture: { type: String, default: DEFAULT_COMPONENT_PICTURE },
+    private: { type: Boolean, default: false },
+    scopes: [{ type: String, enum: Object.keys(PermissionScope) }],
+    supportedEnvLocations: [{ type: String }],
+    tags: [{ type: String }],
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    version: { type: String, required: true },
   },
   {
     timestamps: true,
@@ -47,12 +59,18 @@ const publicationSchema = new mongoose.Schema(
 );
 
 publicationSchema.pre("remove", async function (next) {
-  const project = this as unknown as PublicationDocument;
+  const publication = this as unknown as PublicationDocument;
 
-  OrgModel.updateMany({ projects: project._id }, { $pull: { projects: project._id } })
+  ComponentModel.updateMany({ publications: publication._id }, { $pull: { publications: publication._id } })
     .exec()
     .catch((reason) => {
-      logger.error("Error removing projects for org", { reason, org: project.org });
+      logger.error("Error removing publications for component", { reason, component: publication.component });
+    });
+
+  OrgModel.updateMany({ publications: publication._id }, { $pull: { publications: publication._id } })
+    .exec()
+    .catch((reason) => {
+      logger.error("Error removing publications for org", { reason, org: publication.org });
     });
 
   return next();
@@ -62,20 +80,38 @@ publicationSchema.pre("remove", async function (next) {
  * @openapi
  * components:
  *  schemas:
- *    Project:
+ *    Publication:
  *      type: object
  *      properties:
  *        _id:
  *          type: string
  *        name:
  *          type: string
- *        collaborations:
+ *        component:
+ *          oneOf:
+ *            - $ref: '#/components/schemas/Component'
+ *            - type: string
+ *        description:
+ *          type: string
+ *        forms:
  *          type: array
  *          items:
  *            oneOf:
- *              - $ref: '#/components/schemas/Collaboration'
+ *              - $ref: '#/components/schemas/Form'
  *              - type: string
- *        description:
+ *        licenses:
+ *          type: array
+ *          items:
+ *            oneOf:
+ *              - $ref: '#/components/schemas/License'
+ *              - type: string
+ *        onEnvChanged:
+ *          type: string
+ *        onEnvDeployed:
+ *          type: string
+ *        onInit:
+ *          type: string
+ *        onModelChanged:
  *          type: string
  *        org:
  *          oneOf:
@@ -87,13 +123,30 @@ publicationSchema.pre("remove", async function (next) {
  *          type: string
  *        private:
  *          type: boolean
- *        secrets:
- *          type: object
- *          additionalProperties: true
+ *        scopes:
+ *          type: array
+ *          items:
+ *            type: string
+ *            enum:
+ *              - read:design
+ *              - read:environment
+ *              - read:org
+ *              - read:project
+ *              - read:user
+ *        supportedEnvLocations:
+ *          type: array
+ *          items:
+ *            type: string
+ *        tags:
+ *          type: array
+ *          items:
+ *            type: string
  *        user:
  *          oneOf:
  *            - $ref: '#/components/schemas/User'
  *            - type: string
+ *        version:
+ *          type: string
  *        createdAt:
  *          type: string
  *          format: date-time
@@ -102,6 +155,6 @@ publicationSchema.pre("remove", async function (next) {
  *          format: date-time
  */
 
-const ResourceModel = mongoose.model<PublicationDocument>("Resource", publicationSchema);
+const PublicationModel = mongoose.model<PublicationDocument>("Publication", publicationSchema);
 
-export default ResourceModel;
+export default PublicationModel;

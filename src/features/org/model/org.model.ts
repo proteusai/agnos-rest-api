@@ -7,6 +7,7 @@ import logger from "@utils/logger";
 import CollaborationModel, { CollaborationDocument } from "@models/collaboration";
 import ProjectModel, { ProjectDocument } from "@models/project";
 import ComponentModel, { ComponentDocument } from "@models/component";
+import PublicationModel, { PublicationDocument } from "@models/publication";
 
 export interface OrgInput {
   name: string;
@@ -28,6 +29,7 @@ export interface OrgDocument extends BaseDocument, OrgInput, mongoose.Document {
   memberships?: Array<MembershipDocument["_id"]>;
   // plugins?: Array<PluginDocument["_id"]>;
   projects?: Array<ProjectDocument["_id"]>;
+  publications?: Array<PublicationDocument["_id"]>;
   // teams?: Array<TeamDocument["_id"]>;
   // templates?: Array<TemplateDocument["_id"]>;
 }
@@ -48,6 +50,7 @@ const orgSchema = new mongoose.Schema(
     picture: { type: String, default: DEFAULT_ORG_PICTURE },
     // plugins: [{ type: mongoose.Schema.Types.ObjectId, ref: "Plugin" }],
     projects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Project" }],
+    publications: [{ type: mongoose.Schema.Types.ObjectId, ref: "Publication" }],
     secrets: { type: {} },
     // services: [{ type: mongoose.Schema.Types.ObjectId, ref: "Service" }],
     // teams: [{ type: mongoose.Schema.Types.ObjectId, ref: "Team" }],
@@ -71,6 +74,12 @@ orgSchema.pre("remove", async function (next) {
     .exec()
     .catch((reason: unknown) => {
       logger.error("Error removing projects for org", { reason, org: org._id });
+    });
+
+  PublicationModel.remove({ org: org._id })
+    .exec()
+    .catch((reason: unknown) => {
+      logger.error("Error removing publications for org", { reason, org: org._id });
     });
 
   CollaborationModel.remove({ org: org._id })
@@ -134,6 +143,12 @@ orgSchema.pre("remove", async function (next) {
  *          items:
  *            oneOf:
  *              - $ref: '#/components/schemas/Project'
+ *              - type: string
+ *        publications:
+ *          type: array
+ *          items:
+ *            oneOf:
+ *              - $ref: '#/components/schemas/Publication'
  *              - type: string
  *        secrets:
  *          type: object
