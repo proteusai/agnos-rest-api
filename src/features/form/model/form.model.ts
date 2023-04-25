@@ -104,6 +104,18 @@ export const FormActionSchema = {
   transform: { type: String },
 };
 
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    Form:
+ *      type: object
+ *      properties:
+ *        disableNavigation:
+ *          type: boolean
+ *        title:
+ *          type: string
+ */
 export const FormSchema = {
   title: { type: String, required: true },
   actions: [FormActionSchema],

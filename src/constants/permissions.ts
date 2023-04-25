@@ -6,6 +6,8 @@ export enum PermissionName {
 export enum PermissionScope {
   "read:design" = "read:design",
   "read:environment" = "read:environment",
+  "read:org" = "read:org",
+  "read:project" = "read:project",
   "read:user" = "read:user",
 }
 

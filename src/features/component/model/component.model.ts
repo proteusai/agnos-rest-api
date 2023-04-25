@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { DEFAULT_ORG_PICTURE } from "@constants/defaults";
+import { DEFAULT_COMPONENT_PICTURE } from "@constants/defaults";
 import { BaseDocument } from "@models/base";
 import { UserDocument } from "@models/user";
 import logger from "@utils/logger";
@@ -45,12 +45,19 @@ const componentSchema = new mongoose.Schema(
     collaborations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collaboration" }],
     description: { type: String },
     forms: [FormSchema],
-    personal: { type: Boolean, default: false },
-    private: { type: Boolean, default: false },
-    picture: { type: String, default: DEFAULT_ORG_PICTURE },
-    secrets: { type: {} },
+    onEnvChanged: { type: String },
+    onEnvDeployed: { type: String },
+    onInit: { type: String },
+    onModelChanged: { type: String },
     org: { type: mongoose.Schema.Types.ObjectId, ref: "Organization", required: true },
+    personal: { type: Boolean, default: false },
+    picture: { type: String, default: DEFAULT_COMPONENT_PICTURE },
+    private: { type: Boolean, default: false },
+    scopes: [{ type: String, enum: Object.keys(PermissionScope) }],
+    supportedEnvLocations: [{ type: String }],
+    tags: [{ type: String }],
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    version: { type: String, required: true },
   },
   {
     timestamps: true,
@@ -58,17 +65,17 @@ const componentSchema = new mongoose.Schema(
 );
 
 componentSchema.pre("remove", async function (next) {
-  const project = this as unknown as ComponentDocument;
+  const component = this as unknown as ComponentDocument;
 
-  CollaborationModel.remove({ project: project._id })
+  CollaborationModel.remove({ component: component._id })
     .exec()
     .catch((reason: unknown) => {
-      logger.error("Error removing collaborations for project", { reason, project: project._id });
+      logger.error("Error removing collaborations for component", { reason, component: component._id });
     });
-  OrgModel.updateMany({ projects: project._id }, { $pull: { projects: project._id } })
+  OrgModel.updateMany({ components: component._id }, { $pull: { components: component._id } })
     .exec()
     .catch((reason) => {
-      logger.error("Error removing projects for org", { reason, org: project.org });
+      logger.error("Error removing components for org", { reason, org: component.org });
     });
 
   return next();
@@ -78,7 +85,7 @@ componentSchema.pre("remove", async function (next) {
  * @openapi
  * components:
  *  schemas:
- *    Project:
+ *    Component:
  *      type: object
  *      properties:
  *        _id:
@@ -93,6 +100,20 @@ componentSchema.pre("remove", async function (next) {
  *              - type: string
  *        description:
  *          type: string
+ *        forms:
+ *          type: array
+ *          items:
+ *            oneOf:
+ *              - $ref: '#/components/schemas/Form'
+ *              - type: string
+ *        onEnvChanged:
+ *          type: string
+ *        onEnvDeployed:
+ *          type: string
+ *        onInit:
+ *          type: string
+ *        onModelChanged:
+ *          type: string
  *        org:
  *          oneOf:
  *            - $ref: '#/components/schemas/Organization'
@@ -103,13 +124,30 @@ componentSchema.pre("remove", async function (next) {
  *          type: string
  *        private:
  *          type: boolean
- *        secrets:
- *          type: object
- *          additionalProperties: true
+ *        scopes:
+ *          type: array
+ *          items:
+ *            type: string
+ *            enum:
+ *              - read:design
+ *              - read:environment
+ *              - read:org
+ *              - read:project
+ *              - read:user
+ *        supportedEnvLocations:
+ *          type: array
+ *          items:
+ *            type: string
+ *        tags:
+ *          type: array
+ *          items:
+ *            type: string
  *        user:
  *          oneOf:
  *            - $ref: '#/components/schemas/User'
  *            - type: string
+ *        version:
+ *          type: string
  *        createdAt:
  *          type: string
  *          format: date-time

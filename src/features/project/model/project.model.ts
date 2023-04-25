@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { DEFAULT_ORG_PICTURE } from "@constants/defaults";
+import { DEFAULT_PROJECT_PICTURE } from "@constants/defaults";
 import { BaseDocument } from "@models/base";
 import { UserDocument } from "@models/user";
 import logger from "@utils/logger";
@@ -28,7 +28,7 @@ const projectSchema = new mongoose.Schema(
     description: { type: String },
     personal: { type: Boolean, default: false },
     private: { type: Boolean, default: false },
-    picture: { type: String, default: DEFAULT_ORG_PICTURE },
+    picture: { type: String, default: DEFAULT_PROJECT_PICTURE },
     secrets: { type: {} },
     org: { type: mongoose.Schema.Types.ObjectId, ref: "Organization", required: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
