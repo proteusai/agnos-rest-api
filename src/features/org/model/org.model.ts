@@ -4,6 +4,7 @@ import { BaseDocument } from "@models/base";
 import MembershipModel, { MembershipDocument } from "@models/membership";
 import { UserDocument } from "@models/user";
 import logger from "@utils/logger";
+import SettingsModel, { SettingsDocument } from "@models/settings";
 import CollaborationModel, { CollaborationDocument } from "@models/collaboration";
 import ProjectModel, { ProjectDocument } from "@models/project";
 import ComponentModel, { ComponentDocument } from "@models/component";
@@ -32,6 +33,7 @@ export interface OrgDocument extends BaseDocument, OrgInput, mongoose.Document {
   projects?: Array<ProjectDocument["_id"]>;
   publications?: Array<PublicationDocument["_id"]>;
   // teams?: Array<TeamDocument["_id"]>;
+  settings?: SettingsDocument["_id"];
   // templates?: Array<TemplateDocument["_id"]>;
 }
 
@@ -55,6 +57,7 @@ const orgSchema = new mongoose.Schema(
     publications: [{ type: mongoose.Schema.Types.ObjectId, ref: "Publication" }],
     secrets: { type: {} },
     // services: [{ type: mongoose.Schema.Types.ObjectId, ref: "Service" }],
+    settings: { type: mongoose.Schema.Types.ObjectId, ref: "Settings" },
     // teams: [{ type: mongoose.Schema.Types.ObjectId, ref: "Team" }],
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   },
@@ -100,6 +103,12 @@ orgSchema.pre("remove", async function (next) {
     .exec()
     .catch((reason: unknown) => {
       logger.error("Error removing memberships for org", { reason, org: org._id });
+    });
+
+  SettingsModel.remove({ org: org._id })
+    .exec()
+    .catch((reason: unknown) => {
+      logger.error("Error removing settings for org", { reason, org: org._id });
     });
 
   return next();
@@ -167,6 +176,10 @@ orgSchema.pre("remove", async function (next) {
  *        secrets:
  *          type: object
  *          additionalProperties: true
+ *        settings:
+ *          oneOf:
+ *            - $ref: '#/components/schemas/Settings'
+ *            - type: string
  *        user:
  *          oneOf:
  *            - $ref: '#/components/schemas/User'

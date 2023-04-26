@@ -3,10 +3,10 @@ import requireUserPermission from "./requireUserPermission";
 import { PermissionName } from "@constants/permissions";
 import { ACCESS_FORBIDDEN } from "@constants/errors";
 import { findCollaboration } from "@services/collaboration";
-import { findMemberships } from "@/service/membership.service";
+import { findMemberships } from "@services/membership";
 import mongoose from "mongoose";
 
-jest.mock("@/service/membership.service");
+jest.mock("@services/membership");
 jest.mock("@services/collaboration");
 const mockedFindMemberships = findMemberships as jest.MockedFunction<typeof findMemberships>;
 const mockedFindCollaboration = findCollaboration as jest.MockedFunction<typeof findCollaboration>;

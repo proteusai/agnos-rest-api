@@ -3,7 +3,7 @@ import logger from "@utils/logger";
 import errorObject from "@utils/error";
 import { MapRoleToValue, ResourceIdLocation, RoleName } from "@constants/permissions";
 import { Obj } from "@types";
-import { findMembership } from "@/service/membership.service";
+import { findMembership } from "@services/membership";
 import { ACCESS_FORBIDDEN } from "@constants/errors";
 
 const requireUserRole =

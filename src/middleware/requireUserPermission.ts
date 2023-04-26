@@ -5,7 +5,7 @@ import { ResourceIdLocation, ResourceTypes, PermissionName, MapPermissionToValue
 import { Obj } from "@types";
 import { ACCESS_FORBIDDEN } from "@constants/errors";
 import { findCollaboration } from "@services/collaboration";
-import { findMemberships } from "@/service/membership.service";
+import { findMemberships } from "@services/membership";
 
 const requireUserPermission =
   (permission: PermissionName, resource: ResourceTypes, idLocation: ResourceIdLocation) =>

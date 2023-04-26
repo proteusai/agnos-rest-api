@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import requireUserRole from "./requireUserRole";
-import { findMembership } from "@/service/membership.service";
+import { findMembership } from "@services/membership";
 import { RoleName } from "@/constants/permissions";
 import mongoose from "mongoose";
 import { ACCESS_FORBIDDEN } from "@constants/errors";
 
-jest.mock("@/service/membership.service");
+jest.mock("@services/membership");
 const mockedFindMembership = findMembership as jest.MockedFunction<typeof findMembership>;
 
 const mockRequest = {

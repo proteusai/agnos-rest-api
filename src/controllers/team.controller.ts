@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { RoleName } from "@constants/permissions";
 import { IGNORE_LEAST_CARDINALITY } from "@constants/settings";
 import { CreateTeamInput, GetTeamInput, GetTeamsInput } from "../schema/team.schema";
-import { createMembership } from "../service/membership.service";
+import { createMembership } from "@services/membership";
 import { createTeamDocument, findTeam, findTeams } from "../service/team.service";
 import { findUserDocument } from "@services/user";
 import { Obj } from "@types";

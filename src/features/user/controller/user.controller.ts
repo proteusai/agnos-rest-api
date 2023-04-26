@@ -4,7 +4,7 @@ import { DEFAULT_ORG_PICTURE } from "@constants/defaults";
 import { RoleName } from "@constants/permissions";
 import { IGNORE_LEAST_CARDINALITY } from "@constants/settings";
 import { CreateUserRequest } from "@schemas/user";
-import { createMembership } from "../../../service/membership.service";
+import { createMembership } from "@services/membership";
 import { createSettings } from "@services/settings";
 import { createUserDocument, findUser } from "@services/user";
 import { Obj, Response } from "@types";
@@ -35,15 +35,17 @@ export async function createUserHandler(
       role: RoleName.owner,
     });
 
-    const settings = await createSettings({ user: userDoc._id });
+    const orgSettings = await createSettings({ org: org._id });
+    const userSettings = await createSettings({ user: userDoc._id });
 
     if (IGNORE_LEAST_CARDINALITY) {
       org.memberships?.push(membership);
-      await org.save();
       userDoc.memberships?.push(membership);
     }
-    userDoc.settings = settings._id;
+    userDoc.settings = userSettings._id;
     await userDoc.save();
+    org.settings = orgSettings._id;
+    await org.save();
 
     const user = await findUser({ _id: userDoc._id });
 

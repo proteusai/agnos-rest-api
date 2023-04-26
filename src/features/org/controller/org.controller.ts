@@ -2,7 +2,7 @@ import { Request } from "express";
 import { RoleName } from "@constants/permissions";
 import { IGNORE_LEAST_CARDINALITY } from "@constants/settings";
 import { CreateOrgRequest, GetOrgRequest } from "@schemas/org";
-import { createMembership } from "../../../service/membership.service";
+import { createMembership } from "@services/membership";
 import { createOrgDocument, findOrg, findOrgs } from "@services/org";
 import { findUserDocument } from "@services/user";
 import { Obj, Response } from "@types";
@@ -10,6 +10,7 @@ import { OrgDocument } from "@models/org";
 import { FilterQuery, LeanDocument, ObjectId } from "mongoose";
 import { ServiceOptions } from "@services";
 import { ORG_NOT_FOUND } from "@constants/errors";
+import { createSettings } from "@services/settings";
 import logger from "@utils/logger";
 import errorObject from "@utils/error";
 
@@ -26,13 +27,15 @@ export async function createOrgHandler(
     org: orgDoc._id,
     role: RoleName.owner,
   });
+  const orgSettings = await createSettings({ org: orgDoc._id });
 
   if (IGNORE_LEAST_CARDINALITY) {
     userDoc?.memberships?.push(membership);
     await userDoc?.save();
     orgDoc.memberships?.push(membership);
-    await orgDoc.save();
   }
+  orgDoc.settings = orgSettings._id;
+  await orgDoc.save();
 
   const org = await findOrg({ _id: orgDoc._id });
 

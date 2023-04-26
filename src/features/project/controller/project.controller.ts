@@ -100,3 +100,7 @@ export async function getProjectsHandler(
     meta: { pagination: { size, page, prev: Math.max(0, page - 1), next: page + 1 } },
   });
 }
+
+// when searching for resources (orgs, projects, resources, etc) private resources should not be returned
+// when searching for associations (memberships, collaborations, teams, etc) only personal associations (user=userId) should be returned
+// to find all associations in a resource use the resource's memberships or collaborations endpoints (u need the right role or permission to access those endpoints)

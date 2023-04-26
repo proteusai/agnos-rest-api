@@ -6,6 +6,7 @@ import OrgModel, { OrgDocument } from "@models/org";
 import PublicationModel, { PublicationDocument } from "@models/publication";
 
 export interface InstallationInput {
+  disabled?: boolean; // useful for deactivating an installation without uninstalling/deleting it
   licenseToken: string; // token representing the license for this installation
   org: OrgDocument["_id"]; // the buying org
   publication: PublicationDocument["_id"];
@@ -16,6 +17,7 @@ export interface InstallationDocument extends BaseDocument, InstallationInput, m
 
 const installationSchema = new mongoose.Schema(
   {
+    disabled: { type: Boolean, default: false },
     licenseToken: { type: String, required: true },
     org: { type: mongoose.Schema.Types.ObjectId, ref: "Organization", required: true },
     publication: { type: mongoose.Schema.Types.ObjectId, ref: "Publication", required: true },
@@ -53,6 +55,8 @@ installationSchema.pre("remove", async function (next) {
  *      properties:
  *        _id:
  *          type: string
+ *        disabled:
+ *          type: boolean
  *        licenseToken:
  *          type: string
  *        org:

@@ -1,10 +1,10 @@
-import { NAME_MISSING, ORG_ID_MISSING } from "@constants/errors";
+import { NAME_MISSING, PROJECT_ID_MISSING } from "@constants/errors";
 import { object, string, boolean, TypeOf } from "zod";
 
 const params = {
   params: object({
     id: string({
-      required_error: ORG_ID_MISSING,
+      required_error: PROJECT_ID_MISSING,
     }),
   }),
 };

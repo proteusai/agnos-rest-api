@@ -7,12 +7,12 @@ import mongoose from "mongoose";
 import { Obj } from "@types";
 import { mockMongooseDocument } from "@mocks/mongoose";
 import { ORG_NOT_FOUND } from "@constants/errors";
-import { createMembership } from "../../../service/membership.service";
+import { createMembership } from "@services/membership";
 import { RoleName } from "@constants/permissions";
 
 jest.mock("@services/user");
 jest.mock("@services/org");
-jest.mock("../../../service/membership.service");
+jest.mock("@services/membership");
 
 const mockedFindUser = findUserDocument as jest.MockedFunction<typeof findUserDocument>;
 const mockedFindOrg = findOrg as jest.MockedFunction<typeof findOrg>;

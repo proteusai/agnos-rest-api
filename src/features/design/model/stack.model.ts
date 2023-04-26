@@ -7,14 +7,8 @@ import OrgModel, { OrgDocument } from "@models/org";
 import { PermissionScope } from "@constants/permissions";
 import { ComponentDocument } from "@models/component";
 
-export interface EnvInput {
+export interface StackInput {
   name: string;
   description?: string;
-  fs?: object; // { [key: string]: { [name: string]: { type: "file|folder", name, children } } }; // filesystem
-  // location: string; local|aws|gcp|azure
-  // os: string; linux|windows|mac
-  // version: string; 1.0.0
-  stack: string;
-  type: "compose" | "aws"; //
-  values?: object; // { [key: string]: { inputs, outputs } };
+  positions?: object; // Ui positions of the instances
 }
