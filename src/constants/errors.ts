@@ -8,6 +8,7 @@ export const EMAIL_MISSING = "Missing email";
 export const ID_TOKEN_INVALID = "Invalid ID token";
 export const ID_TOKEN_MISSING = "Missing ID token";
 export const MEMBERSHIP_ID_MISSING = "Missing membership ID";
+export const MODEL_ID_MISSING = "Missing model ID";
 export const NAME_MISSING = "Missing name";
 export const ORG_ID_MISSING = "Missing organization ID";
 export const ORG_NOT_FOUND = "Organization not found";

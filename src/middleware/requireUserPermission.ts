@@ -32,10 +32,18 @@ const requireUserPermission =
       }
 
       // get the user's team memberships
-      const memberships = await findMemberships({
-        user: res.locals.user?._id,
-        team: { $ne: null },
-      });
+      const memberships = await findMemberships(
+        {
+          user: res.locals.user?._id,
+          team: { $ne: null },
+        },
+        {
+          limit: Number.MAX_SAFE_INTEGER,
+          skip: 0,
+          sort: {},
+          populate: [],
+        }
+      );
 
       for (const membership of memberships) {
         // get the user's team collaboration

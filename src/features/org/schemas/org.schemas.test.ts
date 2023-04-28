@@ -41,7 +41,7 @@ describe("Org schema", () => {
     it("should validate well-formed objects", async () => {
       const request: GetOrgRequest = {
         params: {
-          id: "12234459847373782",
+          org: "12234459847373782",
         },
       };
       expect(() => {

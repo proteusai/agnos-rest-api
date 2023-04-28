@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import config from "config";
 import logger from "@utils/logger";
-import seedPermissions from "../seeds/permissions.seeds";
 
 export async function connect() {
   const dbUri = config.get<string>("dbUri");
@@ -10,13 +9,6 @@ export async function connect() {
     mongoose.set("strictQuery", false);
     await mongoose.connect(dbUri);
     logger.info("DB connected");
-
-    // seeding
-    try {
-      await seedPermissions();
-    } catch (error) {
-      /* ignore */
-    }
   } catch (error) {
     logger.error("Could not connect to db");
     logger.error(error);

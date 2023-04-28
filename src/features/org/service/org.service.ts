@@ -2,29 +2,32 @@ import { omit } from "lodash";
 import { FilterQuery } from "mongoose";
 import { ServiceOptions } from "@services";
 import OrgModel, { OrgDocument, OrgInput } from "@models/org";
+import { DEFAULT_QUERY_LIMIT, DEFAULT_QUERY_SKIP } from "@constants/defaults";
 
 export async function createOrg(input: OrgInput) {
-  const team = await createOrgDocument(input);
+  const org = await createOrgDocument(input);
 
-  return omit(team.toJSON(), "secrets");
+  return omit(org.toJSON(), "secrets");
 }
 export async function createOrgDocument(input: OrgInput) {
   return OrgModel.create(input);
 }
 
-export async function findOrg(query: FilterQuery<OrgDocument>) {
-  return OrgModel.findOne(query).lean();
+export async function findOrg(query: FilterQuery<OrgDocument>, options?: ServiceOptions) {
+  return OrgModel.findOne(query)
+    .populate(options?.populate || [])
+    .lean();
 }
 
-export async function findOrgDocument(query: FilterQuery<OrgDocument>) {
-  return OrgModel.findOne(query);
+export async function findOrgDocument(query: FilterQuery<OrgDocument>, options?: ServiceOptions) {
+  return OrgModel.findOne(query).populate(options?.populate || []);
 }
 
-export async function findOrgs(query: FilterQuery<OrgDocument>, options: ServiceOptions) {
+export async function findOrgs(query: FilterQuery<OrgDocument>, options?: ServiceOptions) {
   return OrgModel.find(query)
-    .skip(options.skip)
-    .limit(options.limit)
-    .sort(options.sort)
-    .populate(options.populate)
+    .skip(options?.skip || DEFAULT_QUERY_SKIP)
+    .limit(options?.limit || DEFAULT_QUERY_LIMIT)
+    .sort(options?.sort || {})
+    .populate(options?.populate || [])
     .lean();
 }

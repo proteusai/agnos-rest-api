@@ -3,7 +3,7 @@ import { object, string, boolean, TypeOf } from "zod";
 
 const params = {
   params: object({
-    id: string({
+    org: string({
       required_error: ORG_ID_MISSING,
     }),
   }),

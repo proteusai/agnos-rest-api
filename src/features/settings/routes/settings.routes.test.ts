@@ -1,7 +1,6 @@
 import request from "supertest";
 import app from "@app";
 import { connect, disconnect } from "@utils/connect";
-import PermissionModel from "../../../models/permission.model";
 import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import { findUserDocument } from "@services/user";
@@ -43,7 +42,6 @@ describe("Settings routes", () => {
   });
 
   afterAll(async () => {
-    await PermissionModel.collection.drop();
     await disconnect();
   });
 

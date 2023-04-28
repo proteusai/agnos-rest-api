@@ -14,6 +14,10 @@ import { ORG_NOT_FOUND, PROJECT_NOT_FOUND } from "@/constants/errors";
 import { createCollaboration } from "@services/collaboration";
 import { PermissionName } from "@/constants/permissions";
 import { ServiceOptions } from "@services";
+import { createCanvas } from "@/features/canvas/service/canvas.service";
+import { CreateModelRequest } from "@schemas/model";
+import { ModelDocument } from "@models/model";
+import { websocket } from "@/index";
 
 export async function createProjectHandler(
   req: Request<Obj, Obj, CreateProjectRequest["body"]>,
@@ -49,15 +53,69 @@ export async function createProjectHandler(
       userDoc?.collaborations?.push(collaboration);
       await userDoc?.save();
       projectDoc.collaborations?.push(collaboration);
-      await projectDoc.save();
       org.collaborations?.push(collaboration);
       org.projects?.push(projectDoc);
       await org.save();
     }
 
+    const canvas = await createCanvas({ project: projectDoc._id, nodes: [] });
+    projectDoc.canvas = canvas._id;
+    await projectDoc.save();
+
     const project = await findProject({ _id: projectDoc._id });
 
     return res.send({ data: project });
+  } catch (error: unknown) {
+    logger.error(error);
+    return res.status(404).send({ error: errorObject(error) });
+  }
+}
+
+export async function createProjectModelHandler(
+  req: Request<CreateModelRequest["params"], Obj, CreateModelRequest["body"]>,
+  res: Response<LeanDocument<ModelDocument & { _id: ObjectId }>>
+) {
+  try {
+    const userId = res.locals.user?._id;
+    const userDoc = await findUserDocument({ _id: userId });
+
+    console.log(">>>>>1");
+
+    const project = await findProject({ _id: req.params.project });
+    if (!project) {
+      throw new Error(PROJECT_NOT_FOUND);
+    }
+
+    console.log(">>>>>2");
+    console.log(`canvas:${project.canvas}`);
+
+    // TODO: move this to canvas service by calling updateCanvas // we are adding a new node to the canvas
+    websocket.emit(`canvas:${project.canvas}`, "hahahahaha");
+
+    console.log(">>>>>3");
+
+    // const collaboration = await createCollaboration({
+    //   org: org._id,
+    //   permission: PermissionName.admin,
+    //   project: projectDoc._id,
+    //   user: userId,
+    // });
+
+    // if (IGNORE_LEAST_CARDINALITY) {
+    //   userDoc?.collaborations?.push(collaboration);
+    //   await userDoc?.save();
+    //   projectDoc.collaborations?.push(collaboration);
+    //   org.collaborations?.push(collaboration);
+    //   org.projects?.push(projectDoc);
+    //   await org.save();
+    // }
+
+    // const canvas = await createCanvas({ project: projectDoc._id, nodes: [] });
+    // projectDoc.canvas = canvas._id;
+    // await projectDoc.save();
+
+    // return res.send({ data: project });
+    return res.send({});
   } catch (error: unknown) {
     logger.error(error);
     return res.status(404).send({ error: errorObject(error) });
@@ -69,7 +127,8 @@ export async function getProjectHandler(
   res: Response<LeanDocument<ProjectDocument & { _id: ObjectId }>>
 ) {
   try {
-    const project = await findProject({ _id: req.params.id });
+    const parsedQuery = (res.locals as Obj).query;
+    const project = await findProject({ _id: req.params.project }, parsedQuery as ServiceOptions);
 
     if (!project) {
       throw new Error(PROJECT_NOT_FOUND);
@@ -102,5 +161,6 @@ export async function getProjectsHandler(
 }
 
 // when searching for resources (orgs, projects, resources, etc) private resources should not be returned
+// when searching for non-root resources (models, designs, etc) go through their parent resource (e.g. project)
 // when searching for associations (memberships, collaborations, teams, etc) only personal associations (user=userId) should be returned
 // to find all associations in a resource use the resource's memberships or collaborations endpoints (u need the right role or permission to access those endpoints)

@@ -8,7 +8,7 @@ const router = Router();
 
 /**
  * @openapi
- * '/collaboration':
+ * '/collaborations':
  *  get:
  *    summary: Get user's collaborations
  *    description: Get user's collaborations

@@ -14,4 +14,10 @@ export const DEFAULT_QUERY_MIN_LIMIT = 1;
 export const DEFAULT_QUERY_SKIP = 0;
 export const DEFAULT_QUERY_MAX_SKIP = Number.MAX_SAFE_INTEGER;
 export const DEFAULT_QUERY_MIN_SKIP = 0;
+export const DEFAULT_SERVICE_OPTIONS = {
+  limit: DEFAULT_QUERY_MAX_LIMIT,
+  skip: DEFAULT_QUERY_SKIP,
+  sort: {},
+  populate: [],
+};
 export const DEFAULT_USER_PICTURE = "https://agnos-cdn.s3.amazonaws.com/user.png";

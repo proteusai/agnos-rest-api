@@ -3,7 +3,7 @@ import { object, string, boolean, TypeOf } from "zod";
 
 const params = {
   params: object({
-    id: string({
+    project: string({
       required_error: PROJECT_ID_MISSING,
     }),
   }),

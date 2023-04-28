@@ -31,4 +31,4 @@ export const MapRoleToValue: Record<RoleName, number> = {
 
 export type ResourceTypes = "org" | "team" | "project";
 
-export type ResourceIdLocation = "body.org" | "params.id" | "query.org";
+export type ResourceIdLocation = "body.org" | "params.org" | "params.project" | "query.org";

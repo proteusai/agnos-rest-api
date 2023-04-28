@@ -1,55 +1,25 @@
 import mongoose from "mongoose";
-import { DEFAULT_ORG_PICTURE } from "@constants/defaults";
 import { BaseDocument } from "@models/base";
 import { UserDocument } from "@models/user";
 import logger from "@utils/logger";
-import OrgModel, { OrgDocument } from "@models/org";
-import CollaborationModel, { CollaborationDocument } from "@models/collaboration";
-
-/*
-The story:
-- to register changes to models we need to create a ModelChangeEventSet (capped collection)
-    - name: the name of the changeset; auto-generated
-    - description: the description of the changeset; auto-generated
-    - project: the project that the model belongs to
-    - user: the user that created the changeset
-    - before: snapshot of the models before the changeset
-    - after: snapshot of the models after the changeset
-    - events: the events that make up the changeset
-        - type: create_model|update_model|delete_model|create_field|update_field|delete_field
-        - model?: the model that was changed
-        - field?: the field that was changed (if applicable)
-        - value?: the value of the field (if applicable)
-        - opposite?: the opposite event (if applicable)
-- when a ModelChangeEventSet is created, it will trigger the onModelChanged events in the components
-- Introduce ModelCanvas to store physical positions of models as well as orientation
- */
+import ProjectModel, { ProjectDocument } from "@models/project";
 
 export interface ModelInput {
   name: string;
   description?: string;
-  personal?: boolean;
-  private?: boolean;
-  picture?: string;
-  secrets?: object;
-  org: OrgDocument["_id"];
+  modelSchema: object;
+  project: ProjectDocument["_id"];
   user: UserDocument["_id"];
 }
 
-export interface ProjectDocument extends BaseDocument, ModelInput, mongoose.Document {
-  collaborations?: Array<CollaborationDocument["_id"]>;
-}
+export interface ModelDocument extends BaseDocument, ModelInput, mongoose.Document {}
 
-const projectSchema = new mongoose.Schema(
+const modelSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    collaborations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collaboration" }],
     description: { type: String },
-    personal: { type: Boolean, default: false },
-    private: { type: Boolean, default: false },
-    picture: { type: String, default: DEFAULT_ORG_PICTURE },
-    secrets: { type: {} },
-    org: { type: mongoose.Schema.Types.ObjectId, ref: "Organization", required: true },
+    modelSchema: { type: {}, required: true },
+    project: { type: mongoose.Schema.Types.ObjectId, ref: "Project", required: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   },
   {
@@ -57,18 +27,13 @@ const projectSchema = new mongoose.Schema(
   }
 );
 
-projectSchema.pre("remove", async function (next) {
-  const project = this as unknown as ProjectDocument;
+modelSchema.pre("remove", async function (next) {
+  const model = this as unknown as ModelDocument;
 
-  CollaborationModel.remove({ project: project._id })
-    .exec()
-    .catch((reason: unknown) => {
-      logger.error("Error removing collaborations for project", { reason, project: project._id });
-    });
-  OrgModel.updateMany({ projects: project._id }, { $pull: { projects: project._id } })
+  ProjectModel.updateMany({ models: model._id }, { $pull: { models: model._id } })
     .exec()
     .catch((reason) => {
-      logger.error("Error removing projects for org", { reason, org: project.org });
+      logger.error("Error removing models for project", { reason, project: model.project });
     });
 
   return next();
@@ -78,34 +43,22 @@ projectSchema.pre("remove", async function (next) {
  * @openapi
  * components:
  *  schemas:
- *    Project:
+ *    Model:
  *      type: object
  *      properties:
  *        _id:
  *          type: string
  *        name:
  *          type: string
- *        collaborations:
- *          type: array
- *          items:
- *            oneOf:
- *              - $ref: '#/components/schemas/Collaboration'
- *              - type: string
  *        description:
  *          type: string
- *        org:
- *          oneOf:
- *            - $ref: '#/components/schemas/Organization'
- *            - type: string
- *        personal:
- *          type: boolean
- *        picture:
- *          type: string
- *        private:
- *          type: boolean
- *        secrets:
+ *        schema:
  *          type: object
  *          additionalProperties: true
+ *        project:
+ *          oneOf:
+ *            - $ref: '#/components/schemas/Project'
+ *            - type: string
  *        user:
  *          oneOf:
  *            - $ref: '#/components/schemas/User'
@@ -118,6 +71,6 @@ projectSchema.pre("remove", async function (next) {
  *          format: date-time
  */
 
-const ProjectModel = mongoose.model<ProjectDocument>("Project", projectSchema);
+const ModelModel = mongoose.model<ModelDocument>("Model", modelSchema);
 
-export default ProjectModel;
+export default ModelModel;

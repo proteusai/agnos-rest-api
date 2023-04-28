@@ -25,6 +25,7 @@ export interface ComponentInput {
   onEnvDeployed?: string; // code to run when env is deployed
   onInit?: string; // code to run when component is initialized
   onModelChanged?: string; // code to run when model is created/updated/deleted
+  // TODO: events for changes to project data
   org: OrgDocument["_id"];
   personal?: boolean;
   private?: boolean;

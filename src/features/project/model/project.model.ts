@@ -5,6 +5,8 @@ import { UserDocument } from "@models/user";
 import logger from "@utils/logger";
 import OrgModel, { OrgDocument } from "@models/org";
 import CollaborationModel, { CollaborationDocument } from "@models/collaboration";
+import CanvasModel, { CanvasDocument } from "@models/canvas";
+import ModelModel, { ModelDocument } from "@models/model";
 
 export interface ProjectInput {
   name: string;
@@ -18,14 +20,18 @@ export interface ProjectInput {
 }
 
 export interface ProjectDocument extends BaseDocument, ProjectInput, mongoose.Document {
+  canvas?: CanvasDocument["_id"];
   collaborations?: Array<CollaborationDocument["_id"]>;
+  models?: Array<ModelDocument["_id"]>;
 }
 
 const projectSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
+    canvas: { type: mongoose.Schema.Types.ObjectId, ref: "Canvas" },
     collaborations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collaboration" }],
     description: { type: String },
+    models: [{ type: mongoose.Schema.Types.ObjectId, ref: "Model" }],
     personal: { type: Boolean, default: false },
     private: { type: Boolean, default: false },
     picture: { type: String, default: DEFAULT_PROJECT_PICTURE },
@@ -41,10 +47,20 @@ const projectSchema = new mongoose.Schema(
 projectSchema.pre("remove", async function (next) {
   const project = this as unknown as ProjectDocument;
 
+  CanvasModel.remove({ project: project._id })
+    .exec()
+    .catch((reason: unknown) => {
+      logger.error("Error removing canvases for project", { reason, project: project._id });
+    });
   CollaborationModel.remove({ project: project._id })
     .exec()
     .catch((reason: unknown) => {
       logger.error("Error removing collaborations for project", { reason, project: project._id });
+    });
+  ModelModel.remove({ project: project._id })
+    .exec()
+    .catch((reason: unknown) => {
+      logger.error("Error removing models for project", { reason, project: project._id });
     });
   OrgModel.updateMany({ projects: project._id }, { $pull: { projects: project._id } })
     .exec()
@@ -66,6 +82,10 @@ projectSchema.pre("remove", async function (next) {
  *          type: string
  *        name:
  *          type: string
+ *        canvas:
+ *          oneOf:
+ *            - $ref: '#/components/schemas/Canvas'
+ *            - type: string
  *        collaborations:
  *          type: array
  *          items:
@@ -74,6 +94,12 @@ projectSchema.pre("remove", async function (next) {
  *              - type: string
  *        description:
  *          type: string
+ *        models:
+ *          type: array
+ *          items:
+ *            oneOf:
+ *              - $ref: '#/components/schemas/Model'
+ *              - type: string
  *        org:
  *          oneOf:
  *            - $ref: '#/components/schemas/Organization'

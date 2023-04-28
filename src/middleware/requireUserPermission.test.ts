@@ -13,7 +13,7 @@ const mockedFindCollaboration = findCollaboration as jest.MockedFunction<typeof 
 
 const projectId = new mongoose.Types.ObjectId();
 const mockRequest = {
-  params: { id: projectId },
+  params: { project: projectId },
 } as unknown as Request;
 
 const mockResponse = {
@@ -41,7 +41,7 @@ describe("requireUserPermission middleware", () => {
       updatedAt: new Date(),
     });
 
-    await requireUserPermission(PermissionName.admin, "project", "params.id")(
+    await requireUserPermission(PermissionName.admin, "project", "params.project")(
       mockRequest,
       mockResponse,
       mockNextFunction
@@ -85,7 +85,7 @@ describe("requireUserPermission middleware", () => {
       updatedAt: new Date(),
     });
 
-    await requireUserPermission(PermissionName.admin, "project", "params.id")(
+    await requireUserPermission(PermissionName.admin, "project", "params.project")(
       mockRequest,
       mockResponse,
       mockNextFunction
@@ -123,7 +123,7 @@ describe("requireUserPermission middleware", () => {
 
     mockedFindMemberships.mockResolvedValueOnce([]);
 
-    await requireUserPermission(PermissionName.admin, "project", "params.id")(
+    await requireUserPermission(PermissionName.admin, "project", "params.project")(
       mockRequest,
       mockResponse,
       mockNextFunction
@@ -166,7 +166,7 @@ describe("requireUserPermission middleware", () => {
       updatedAt: new Date(),
     });
 
-    await requireUserPermission(PermissionName.admin, "project", "params.id")(
+    await requireUserPermission(PermissionName.admin, "project", "params.project")(
       mockRequest,
       mockResponse,
       mockNextFunction
@@ -186,7 +186,7 @@ describe("requireUserPermission middleware", () => {
     mockedFindCollaboration.mockResolvedValueOnce(null);
     mockedFindMemberships.mockResolvedValueOnce([]);
 
-    await requireUserPermission(PermissionName.admin, "project", "params.id")(
+    await requireUserPermission(PermissionName.admin, "project", "params.project")(
       mockRequest,
       mockResponse,
       mockNextFunction

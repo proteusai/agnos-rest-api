@@ -47,7 +47,7 @@ export async function getOrgHandler(
   res: Response<LeanDocument<OrgDocument & { _id: ObjectId }>>
 ) {
   try {
-    const org = await findOrg({ _id: req.params.id });
+    const org = await findOrg({ _id: req.params.org });
 
     if (!org) {
       throw new Error(ORG_NOT_FOUND);
@@ -85,7 +85,3 @@ export async function getMyOrgHandler(req: Request, res: Response<LeanDocument<O
   const org = await findOrg({ personal: true, user: userId });
   return res.send({ data: org });
 }
-
-// when searching for resources (orgs, projects, resources, etc) private resources should not be returned
-// when searching for associations (memberships, collaborations, teams, etc) only personal associations (user=userId) should be returned
-// to find all associations in a resource use the resource's memberships or collaborations endpoints (u need the right role or permission to access those endpoints)

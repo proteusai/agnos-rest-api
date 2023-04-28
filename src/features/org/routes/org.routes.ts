@@ -14,8 +14,8 @@ const router = Router();
  * @openapi
  * '/orgs':
  *  get:
- *    summary: Get organizations
- *    description: Get organizations
+ *    summary: Get public organizations
+ *    description: Get public organizations
  *    tags:
  *      - Organization
  *    responses:
@@ -57,12 +57,12 @@ router.get("/orgs", [checkAuth0AccessToken, requireUser, queryParser], getOrgsHa
  *        description: Organization not found
  */
 router.get(
-  "/orgs/:id",
+  "/orgs/:org",
   [
     validateResource(getOrgRequestSchema),
     checkAuth0AccessToken,
     requireUser,
-    requireUserRole(RoleName.member, "params.id"),
+    requireUserRole(RoleName.member, "params.org"),
   ],
   getOrgHandler
 );

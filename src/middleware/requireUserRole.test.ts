@@ -9,7 +9,7 @@ jest.mock("@services/membership");
 const mockedFindMembership = findMembership as jest.MockedFunction<typeof findMembership>;
 
 const mockRequest = {
-  params: { id: "123" },
+  params: { org: "123" },
 } as unknown as Request;
 
 const mockResponse = {
@@ -35,7 +35,7 @@ describe("requireUserRole", () => {
       updatedAt: new Date(),
     });
 
-    await requireUserRole(RoleName.owner, "params.id")(mockRequest, mockResponse, mockNextFunction);
+    await requireUserRole(RoleName.owner, "params.org")(mockRequest, mockResponse, mockNextFunction);
 
     expect(mockedFindMembership).toHaveBeenCalledWith({
       user: mockResponse.locals.user?._id,
@@ -56,7 +56,7 @@ describe("requireUserRole", () => {
       updatedAt: new Date(),
     });
 
-    await requireUserRole(RoleName.owner, "params.id")(mockRequest, mockResponse, mockNextFunction);
+    await requireUserRole(RoleName.owner, "params.org")(mockRequest, mockResponse, mockNextFunction);
 
     expect(mockResponse.status).toHaveBeenCalledWith(403);
     expect(mockResponse.send).toHaveBeenCalledWith({
@@ -70,7 +70,7 @@ describe("requireUserRole", () => {
   it("should throw an error when the user is not a member of the org", async () => {
     mockedFindMembership.mockResolvedValueOnce(null);
 
-    await requireUserRole(RoleName.owner, "params.id")(mockRequest, mockResponse, mockNextFunction);
+    await requireUserRole(RoleName.owner, "params.org")(mockRequest, mockResponse, mockNextFunction);
 
     expect(mockResponse.status).toHaveBeenCalledWith(403);
     expect(mockResponse.send).toHaveBeenCalledWith({
@@ -84,7 +84,7 @@ describe("requireUserRole", () => {
   it("should catch and handle errors thrown by findMembership", async () => {
     mockedFindMembership.mockRejectedValueOnce(new Error("Test error"));
 
-    await requireUserRole(RoleName.owner, "params.id")(mockRequest, mockResponse, mockNextFunction);
+    await requireUserRole(RoleName.owner, "params.org")(mockRequest, mockResponse, mockNextFunction);
 
     expect(mockResponse.status).toHaveBeenCalledWith(403);
     expect(mockResponse.send).toHaveBeenCalledWith({
