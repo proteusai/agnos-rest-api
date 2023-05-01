@@ -1,9 +1,9 @@
 import { Request } from "express";
 import { IGNORE_LEAST_CARDINALITY } from "@constants/settings";
 import { CreateProjectRequest, GetProjectRequest } from "@schemas/project";
-import { createProjectDocument, findProject, findProjects } from "@services/project";
+import { createProjectDocument, findProject, findProjectDocument, findProjects } from "@services/project";
 import { findUserDocument } from "@services/user";
-import { Obj, Response } from "@types";
+import { Obj, Response, Node } from "@types";
 import { FilterQuery, LeanDocument, ObjectId } from "mongoose";
 import { ProjectDocument } from "@models/project";
 import errorObject from "@utils/error";
@@ -14,10 +14,12 @@ import { ORG_NOT_FOUND, PROJECT_NOT_FOUND } from "@/constants/errors";
 import { createCollaboration } from "@services/collaboration";
 import { PermissionName } from "@/constants/permissions";
 import { ServiceOptions } from "@services";
-import { createCanvas } from "@/features/canvas/service/canvas.service";
+import { addNodeToCanvas, createCanvas } from "@services/canvas";
 import { CreateModelRequest } from "@schemas/model";
 import { ModelDocument } from "@models/model";
-import { websocket } from "@/index";
+import { createModel } from "@/features/model/service/model.service";
+import { omit } from "lodash";
+import { convertModelToNode } from "@utils/flow";
 
 export async function createProjectHandler(
   req: Request<Obj, Obj, CreateProjectRequest["body"]>,
@@ -73,49 +75,30 @@ export async function createProjectHandler(
 
 export async function createProjectModelHandler(
   req: Request<CreateModelRequest["params"], Obj, CreateModelRequest["body"]>,
-  res: Response<LeanDocument<ModelDocument & { _id: ObjectId }>>
+  res: Response<LeanDocument<Omit<ModelDocument, "modelSchema"> & { _id: ObjectId }> & { schema: Obj }>
 ) {
   try {
     const userId = res.locals.user?._id;
-    const userDoc = await findUserDocument({ _id: userId });
 
-    console.log(">>>>>1");
-
-    const project = await findProject({ _id: req.params.project });
-    if (!project) {
+    const projectDoc = await findProjectDocument({ _id: req.params.project });
+    if (!projectDoc) {
       throw new Error(PROJECT_NOT_FOUND);
     }
 
-    console.log(">>>>>2");
-    console.log(`canvas:${project.canvas}`);
+    const input = omit(req.body, "events", "schema");
 
-    // TODO: move this to canvas service by calling updateCanvas // we are adding a new node to the canvas
-    websocket.emit(`canvas:${project.canvas}`, "hahahahaha");
+    const model = await createModel({ ...input, modelSchema: req.body.schema, project: projectDoc._id, user: userId });
 
-    console.log(">>>>>3");
+    if (IGNORE_LEAST_CARDINALITY) {
+      projectDoc.models?.push(model);
+      await projectDoc.save();
+    }
 
-    // const collaboration = await createCollaboration({
-    //   org: org._id,
-    //   permission: PermissionName.admin,
-    //   project: projectDoc._id,
-    //   user: userId,
-    // });
+    const node: Node = convertModelToNode(model);
+    await addNodeToCanvas({ _id: projectDoc.canvas }, node);
+    // TODO: dispatch model event with new model // move to service
 
-    // if (IGNORE_LEAST_CARDINALITY) {
-    //   userDoc?.collaborations?.push(collaboration);
-    //   await userDoc?.save();
-    //   projectDoc.collaborations?.push(collaboration);
-    //   org.collaborations?.push(collaboration);
-    //   org.projects?.push(projectDoc);
-    //   await org.save();
-    // }
-
-    // const canvas = await createCanvas({ project: projectDoc._id, nodes: [] });
-    // projectDoc.canvas = canvas._id;
-    // await projectDoc.save();
-
-    // return res.send({ data: project });
-    return res.send({});
+    return res.send({ data: { ...omit(model, "modelSchema"), schema: req.body.schema as Obj } });
   } catch (error: unknown) {
     logger.error(error);
     return res.status(404).send({ error: errorObject(error) });

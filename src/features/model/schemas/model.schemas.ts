@@ -79,7 +79,7 @@ export const createModelRequestSchema = object({
     })
       .array()
       .optional(),
-    schema: object({}).optional(),
+    schema: object({}),
   }),
   ...params,
 });
