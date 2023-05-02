@@ -125,6 +125,7 @@
     "@routes/settings": "src/features/settings/routes/settings.routes",
     "@routes/user": "src/features/user/routes/user.routes",
     "@schemas/base": "src/features/base/schemas/base.schemas",
+    "@schemas/canvas": "src/features/canvas/schemas/canvas.schemas",
     "@schemas/collaboration": "src/features/collaboration/schemas/collaboration.schemas",
     "@schemas/membership": "src/features/membership/schemas/membership.schemas",
     "@schemas/model": "src/features/model/schemas/model.schemas",

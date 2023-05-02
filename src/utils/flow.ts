@@ -13,7 +13,7 @@ export function convertModelToNode(
 ) {
   return {
     id: model._id,
-    position: { x: 50, y: 50 },
+    position: { x: 0, y: 0 },
     data: model.modelSchema,
     type: "model",
   } as Node;

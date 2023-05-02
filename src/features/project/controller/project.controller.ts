@@ -14,12 +14,14 @@ import { ORG_NOT_FOUND, PROJECT_NOT_FOUND } from "@/constants/errors";
 import { createCollaboration } from "@services/collaboration";
 import { PermissionName } from "@/constants/permissions";
 import { ServiceOptions } from "@services";
-import { addNodeToCanvas, createCanvas } from "@services/canvas";
+import { addNodeToCanvas, createCanvas, findCanvas, updateCanvasNode } from "@services/canvas";
 import { CreateModelRequest } from "@schemas/model";
 import { ModelDocument } from "@models/model";
 import { createModel } from "@/features/model/service/model.service";
 import { omit } from "lodash";
 import { convertModelToNode } from "@utils/flow";
+import { UpdateCanvasRequest } from "@schemas/canvas";
+import { CanvasDocument } from "@models/canvas";
 
 export async function createProjectHandler(
   req: Request<Obj, Obj, CreateProjectRequest["body"]>,
@@ -141,6 +143,28 @@ export async function getProjectsHandler(
     data: projects,
     meta: { pagination: { size, page, prev: Math.max(0, page - 1), next: page + 1 } },
   });
+}
+
+export async function updateProjectCanvasHandler(
+  req: Request<UpdateCanvasRequest["params"], Obj, UpdateCanvasRequest["body"]>,
+  res: Response<LeanDocument<CanvasDocument & { _id: ObjectId }>>
+) {
+  try {
+    const project = await findProject({ _id: req.params.project });
+    if (!project) {
+      throw new Error(PROJECT_NOT_FOUND);
+    }
+
+    const nodes: Array<Partial<Node>> = req.body.nodes;
+    await updateCanvasNode({ _id: project.canvas }, nodes);
+
+    const canvas = await findCanvas({ _id: project.canvas });
+
+    return res.send({ data: canvas });
+  } catch (error: unknown) {
+    logger.error(error);
+    return res.status(404).send({ error: errorObject(error) });
+  }
 }
 
 // when searching for resources (orgs, projects, resources, etc) private resources should not be returned

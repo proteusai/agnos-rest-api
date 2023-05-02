@@ -7,6 +7,7 @@ import {
   createProjectModelHandler,
   getProjectHandler,
   getProjectsHandler,
+  updateProjectCanvasHandler,
 } from "@controllers/project";
 import checkAuth0AccessToken from "@middleware/checkAuth0AccessToken";
 import queryParser from "@middleware/queryParser";
@@ -14,6 +15,7 @@ import requireUserRole from "@middleware/requireUserRole";
 import { PermissionName, RoleName } from "@constants/permissions";
 import requireUserPermission from "@middleware/requireUserPermission";
 import { createModelRequestSchema } from "@schemas/model";
+import { updateCanvasRequestSchema } from "@schemas/canvas";
 
 const router = Router();
 
@@ -80,6 +82,52 @@ router.get(
 );
 
 // TODO: GET /projects/:project/collaborations
+
+/**
+ * @openapi
+ * '/projects/{project}/canvas':
+ *  post:
+ *    summary: Update a project's canvas
+ *    description: Update a project's canvas
+ *    tags:
+ *      - Project
+ *    parameters:
+ *      - name: project
+ *        in: path
+ *        description: Project ID
+ *        required: true
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *              $ref: '#/components/schemas/UpdateCanvasRequestBody'
+ *    responses:
+ *      200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/UpdateCanvasResponse'
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized access
+ *      403:
+ *        description: Forbidden
+ *      404:
+ *        description: Not found
+ */
+router.patch(
+  "/projects/:project/canvas",
+  [
+    validateResource(updateCanvasRequestSchema),
+    checkAuth0AccessToken,
+    requireUser,
+    requireUserPermission(PermissionName.write, "project", "params.project"),
+  ],
+  updateProjectCanvasHandler
+);
 
 /**
  * @openapi

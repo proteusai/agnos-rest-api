@@ -34,6 +34,27 @@ export async function updateCanvas(query: FilterQuery<CanvasDocument>, update: U
   return CanvasModel.updateOne(query, update);
 }
 
+export async function updateCanvasNode(query: FilterQuery<CanvasDocument>, input: Array<Partial<Node>>) {
+  const canvas = await findCanvasDocument(query);
+  const nodes = ((canvas?.nodes as Node[]) || []).map((n) => {
+    const node = input.find((i) => i.id?.toString() === n.id?.toString());
+    if (node) {
+      return { ...n, ...node };
+    }
+    return n;
+  });
+
+  console.log(input);
+  console.log(nodes);
+
+  websocket.emit(`canvas:${canvas?._id}`, {
+    type: "canvas_updated",
+    nodes,
+  });
+
+  return CanvasModel.updateOne(query, { nodes });
+}
+
 export async function addNodeToCanvas(query: FilterQuery<CanvasDocument>, node: Node) {
   const canvas = await findCanvasDocument(query);
   const nodes = (canvas?.nodes || []).concat(node);
