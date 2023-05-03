@@ -26,6 +26,6 @@ const installationSchema = new mongoose.Schema(
   }
 );
 
-const InstallationModel = mongoose.model<InstallationDocument>("Installation", installationSchema);
+const InstallationModel = mongoose.model<InstallationDocument>("Installation2", installationSchema);
 
 export default InstallationModel;

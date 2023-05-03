@@ -2,12 +2,14 @@ import mongoose from "mongoose";
 import { BaseDocument } from "@models/base";
 import { UserDocument } from "@models/user";
 import { ColorMode } from "@constants/settings";
+import { OrgDocument } from "@models/org";
 
 export interface SettingsInput {
   autoSave?: boolean;
   colorMode?: ColorMode;
+  org?: OrgDocument["_id"];
   useGrayscaleIcons?: boolean;
-  user: UserDocument["_id"];
+  user?: UserDocument["_id"];
 }
 
 export interface SettingsDocument extends BaseDocument, SettingsInput, mongoose.Document {}
@@ -15,9 +17,10 @@ export interface SettingsDocument extends BaseDocument, SettingsInput, mongoose.
 const settingsSchema = new mongoose.Schema(
   {
     autoSave: { type: Boolean, default: false },
-    colorMode: { type: String, enum: Object.keys(ColorMode), default: ColorMode.LIGHT },
+    colorMode: { type: String, enum: Object.keys(ColorMode), default: ColorMode.light },
+    org: { type: mongoose.Schema.Types.ObjectId, ref: "Organization" },
     useGrayscaleIcons: { type: Boolean, default: false },
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, unique: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   {
     timestamps: true,
@@ -38,8 +41,12 @@ const settingsSchema = new mongoose.Schema(
  *        colorMode:
  *          type: string
  *          enum:
- *           - DARK
- *           - LIGHT
+ *           - dark
+ *           - light
+ *        org:
+ *          oneOf:
+ *            - $ref: '#/components/schemas/Organization'
+ *            - type: string
  *        useGrayscaleIcons:
  *          type: boolean
  *        user:

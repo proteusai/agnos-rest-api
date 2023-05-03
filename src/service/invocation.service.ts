@@ -14,7 +14,7 @@ export async function createInvocation(input: InvocationInput, options?: { acces
 export async function createInvocationDocument(input: InvocationInput, options?: { accessToken?: string }) {
   const invocation = await InvocationModel.create({
     ...input,
-    ...(input.env === Env.TEST && { expiresAt: new Date() }),
+    ...(input.env === Env.test && { expiresAt: new Date() }),
   });
 
   websocket.emit(`invocation:${invocation.function}`, invocation);

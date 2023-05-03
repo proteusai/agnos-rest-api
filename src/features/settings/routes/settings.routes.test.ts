@@ -1,7 +1,6 @@
 import request from "supertest";
 import app from "@app";
 import { connect, disconnect } from "@utils/connect";
-import PermissionModel from "../../../models/permission.model";
 import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import { findUserDocument } from "@services/user";
@@ -43,7 +42,6 @@ describe("Settings routes", () => {
   });
 
   afterAll(async () => {
-    await PermissionModel.collection.drop();
     await disconnect();
   });
 
@@ -56,7 +54,7 @@ describe("Settings routes", () => {
       expect(response.body.data).toHaveProperty("_id");
       expect(response.body.data).toHaveProperty("autoSave", false);
       expect(response.body.data).toHaveProperty("useGrayscaleIcons", false);
-      expect(response.body.data).toHaveProperty("colorMode", "LIGHT");
+      expect(response.body.data).toHaveProperty("colorMode", "light");
     });
   });
 
@@ -67,7 +65,7 @@ describe("Settings routes", () => {
       const body = {
         autoSave: true,
         useGrayscaleIcons: true,
-        colorMode: "DARK",
+        colorMode: "dark",
       };
 
       const response = await request(app).patch("/settings").send(body);
@@ -75,7 +73,7 @@ describe("Settings routes", () => {
       expect(response.body.data).toHaveProperty("_id");
       expect(response.body.data).toHaveProperty("autoSave", true);
       expect(response.body.data).toHaveProperty("useGrayscaleIcons", true);
-      expect(response.body.data).toHaveProperty("colorMode", "DARK");
+      expect(response.body.data).toHaveProperty("colorMode", "dark");
     });
   });
 });

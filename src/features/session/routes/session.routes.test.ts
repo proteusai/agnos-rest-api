@@ -2,7 +2,6 @@ import request from "supertest";
 import app from "@app";
 import { connect, disconnect } from "@utils/connect";
 import { ACCESS_TOKEN_INVALID } from "@constants/errors";
-import PermissionModel from "../../../models/permission.model";
 import { Request, Response, NextFunction } from "express";
 import { createUserHandler } from "@controllers/user";
 
@@ -23,7 +22,6 @@ describe("Session routes", () => {
   });
 
   afterAll(async () => {
-    await PermissionModel.collection.drop();
     await disconnect();
   });
 

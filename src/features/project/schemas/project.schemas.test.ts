@@ -35,7 +35,7 @@ describe("Project schema", () => {
     it("should validate well-formed objects", async () => {
       const request: GetProjectRequest = {
         params: {
-          id: "12234459847373782",
+          project: "12234459847373782",
         },
       };
       expect(() => {

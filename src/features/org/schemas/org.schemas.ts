@@ -3,15 +3,9 @@ import { object, string, boolean, TypeOf } from "zod";
 
 const params = {
   params: object({
-    id: string({
+    org: string({
       required_error: ORG_ID_MISSING,
     }),
-  }),
-};
-
-const query = {
-  query: object({
-    populate: string().optional(),
   }),
 };
 
@@ -70,16 +64,6 @@ export const createOrgRequestSchema = object({
  *      properties:
  *        data:
  *          $ref: '#/components/schemas/Organization'
- */
-export const getOrgRequestSchema = object({
-  ...params,
-  ...query,
-});
-
-/**
- * @openapi
- * components:
- *  schemas:
  *    GetOrganizationsResponse:
  *      type: object
  *      properties:
@@ -88,10 +72,9 @@ export const getOrgRequestSchema = object({
  *          items:
  *            $ref: '#/components/schemas/Organization'
  */
-export const getOrgsRequestSchema = object({
-  ...query,
+export const getOrgRequestSchema = object({
+  ...params,
 });
 
 export type CreateOrgRequest = TypeOf<typeof createOrgRequestSchema>;
 export type GetOrgRequest = TypeOf<typeof getOrgRequestSchema>;
-export type GetOrgsRequest = TypeOf<typeof getOrgsRequestSchema>;

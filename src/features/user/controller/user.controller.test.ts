@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { createUserHandler, getMeHandler } from "./user.controller";
 import * as userService from "@services/user";
 import * as orgService from "@services/org";
-import * as membershipService from "../../../service/membership.service";
+import * as membershipService from "@services/membership";
 import * as settingsService from "@services/settings";
 import { RoleName } from "@constants/permissions";
 import { DEFAULT_ORG_NAME, DEFAULT_ORG_PICTURE } from "@constants/defaults";
@@ -11,7 +11,7 @@ import { mockMongooseDocument } from "@mocks/mongoose";
 
 jest.mock("@services/user");
 jest.mock("@services/org");
-jest.mock("../../../service/membership.service");
+jest.mock("@services/membership");
 jest.mock("@services/settings");
 
 describe("User Controller", () => {
@@ -60,7 +60,7 @@ describe("User Controller", () => {
           _id: new mongoose.Types.ObjectId(),
           user: new mongoose.Types.ObjectId(),
           org: new mongoose.Types.ObjectId(),
-          role: RoleName.OWNER,
+          role: RoleName.owner,
           createdAt: new Date(),
           updatedAt: new Date(),
         });

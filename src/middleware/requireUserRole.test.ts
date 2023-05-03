@@ -1,15 +1,15 @@
 import { Request, Response } from "express";
 import requireUserRole from "./requireUserRole";
-import { findMembership } from "@/service/membership.service";
+import { findMembership } from "@services/membership";
 import { RoleName } from "@/constants/permissions";
 import mongoose from "mongoose";
 import { ACCESS_FORBIDDEN } from "@constants/errors";
 
-jest.mock("@/service/membership.service");
+jest.mock("@services/membership");
 const mockedFindMembership = findMembership as jest.MockedFunction<typeof findMembership>;
 
 const mockRequest = {
-  params: { id: "123" },
+  params: { org: "123" },
 } as unknown as Request;
 
 const mockResponse = {
@@ -30,12 +30,12 @@ describe("requireUserRole", () => {
       _id: new mongoose.Types.ObjectId(),
       user: new mongoose.Types.ObjectId(),
       org: new mongoose.Types.ObjectId(),
-      role: RoleName.OWNER,
+      role: RoleName.owner,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
-    await requireUserRole(RoleName.OWNER, "params.id")(mockRequest, mockResponse, mockNextFunction);
+    await requireUserRole(RoleName.owner, "params.org")(mockRequest, mockResponse, mockNextFunction);
 
     expect(mockedFindMembership).toHaveBeenCalledWith({
       user: mockResponse.locals.user?._id,
@@ -51,12 +51,12 @@ describe("requireUserRole", () => {
       _id: new mongoose.Types.ObjectId(),
       user: new mongoose.Types.ObjectId(),
       org: new mongoose.Types.ObjectId(),
-      role: RoleName.MEMBER,
+      role: RoleName.member,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
-    await requireUserRole(RoleName.OWNER, "params.id")(mockRequest, mockResponse, mockNextFunction);
+    await requireUserRole(RoleName.owner, "params.org")(mockRequest, mockResponse, mockNextFunction);
 
     expect(mockResponse.status).toHaveBeenCalledWith(403);
     expect(mockResponse.send).toHaveBeenCalledWith({
@@ -70,7 +70,7 @@ describe("requireUserRole", () => {
   it("should throw an error when the user is not a member of the org", async () => {
     mockedFindMembership.mockResolvedValueOnce(null);
 
-    await requireUserRole(RoleName.OWNER, "params.id")(mockRequest, mockResponse, mockNextFunction);
+    await requireUserRole(RoleName.owner, "params.org")(mockRequest, mockResponse, mockNextFunction);
 
     expect(mockResponse.status).toHaveBeenCalledWith(403);
     expect(mockResponse.send).toHaveBeenCalledWith({
@@ -84,7 +84,7 @@ describe("requireUserRole", () => {
   it("should catch and handle errors thrown by findMembership", async () => {
     mockedFindMembership.mockRejectedValueOnce(new Error("Test error"));
 
-    await requireUserRole(RoleName.OWNER, "params.id")(mockRequest, mockResponse, mockNextFunction);
+    await requireUserRole(RoleName.owner, "params.org")(mockRequest, mockResponse, mockNextFunction);
 
     expect(mockResponse.status).toHaveBeenCalledWith(403);
     expect(mockResponse.send).toHaveBeenCalledWith({

@@ -5,7 +5,7 @@ import { ResourceIdLocation, ResourceTypes, PermissionName, MapPermissionToValue
 import { Obj } from "@types";
 import { ACCESS_FORBIDDEN } from "@constants/errors";
 import { findCollaboration } from "@services/collaboration";
-import { findMemberships } from "@/service/membership.service";
+import { findMemberships } from "@services/membership";
 
 const requireUserPermission =
   (permission: PermissionName, resource: ResourceTypes, idLocation: ResourceIdLocation) =>
@@ -32,10 +32,18 @@ const requireUserPermission =
       }
 
       // get the user's team memberships
-      const memberships = await findMemberships({
-        user: res.locals.user?._id,
-        team: { $ne: null },
-      });
+      const memberships = await findMemberships(
+        {
+          user: res.locals.user?._id,
+          team: { $ne: null },
+        },
+        {
+          limit: Number.MAX_SAFE_INTEGER,
+          skip: 0,
+          sort: {},
+          populate: [],
+        }
+      );
 
       for (const membership of memberships) {
         // get the user's team collaboration

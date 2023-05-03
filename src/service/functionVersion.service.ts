@@ -67,27 +67,27 @@ export async function runFunctionVersion(query: FilterQuery<FunctionVersionDocum
   }
 
   const log = (data: any, type: LogType) => {
-    let dataType = DataType.OBJECT;
+    let dataType = DataType.object;
     switch (typeof data) {
       case "boolean":
-        dataType = DataType.BOOLEAN;
+        dataType = DataType.boolean;
         break;
       case "bigint":
       case "number":
-        dataType = DataType.NUMBER;
+        dataType = DataType.number;
         break;
       case "string":
-        dataType = DataType.STRING;
+        dataType = DataType.string;
         break;
       case "undefined":
-        dataType = DataType.UNDEFINED;
+        dataType = DataType.undefined;
         break;
     }
     createLog(
       {
         data,
         dataType,
-        env: options.test ? Env.TEST : Env.PRODUCTION,
+        env: options.test ? Env.test : Env.production,
         meta: {
           function: functionVersion.function._id,
           functionName: functionVersion.function.name,
@@ -134,7 +134,7 @@ export async function runFunctionVersion(query: FilterQuery<FunctionVersionDocum
       ...(functionVersion.secrets || {}),
     },
     ...(functionVersion.scopes &&
-      functionVersion.scopes.includes(PermissionScope["READ:USER"]) && {
+      functionVersion.scopes.includes(PermissionScope["read:user"]) && {
         user: {
           email: user?.email,
           name: user?.name,
@@ -155,11 +155,11 @@ export async function runFunctionVersion(query: FilterQuery<FunctionVersionDocum
       },
     },
     console: {
-      error: (data: any) => log(data, LogType.ERROR),
-      info: (data: any) => log(data, LogType.INFO),
-      log: (data: any) => log(data, LogType.INFO),
-      success: (data: any) => log(data, LogType.SUCCESS),
-      warn: (data: any) => log(data, LogType.WARNING),
+      error: (data: any) => log(data, LogType.error),
+      info: (data: any) => log(data, LogType.info),
+      log: (data: any) => log(data, LogType.info),
+      success: (data: any) => log(data, LogType.success),
+      warn: (data: any) => log(data, LogType.warning),
     },
   };
   const vm = new VM({
@@ -169,7 +169,7 @@ export async function runFunctionVersion(query: FilterQuery<FunctionVersionDocum
 
   const invocation = {
     // TODO: caller,
-    env: options.test ? Env.TEST : Env.PRODUCTION,
+    env: options.test ? Env.test : Env.production,
     function: functionVersion.function._id,
     input: agnos,
     meta: {
@@ -187,7 +187,7 @@ export async function runFunctionVersion(query: FilterQuery<FunctionVersionDocum
       {
         ...invocation,
         output: result,
-        type: InvocationType.SUCCESS,
+        type: InvocationType.success,
       },
       { accessToken: options.args.user.accessToken }
     ).catch(() => {
@@ -200,7 +200,7 @@ export async function runFunctionVersion(query: FilterQuery<FunctionVersionDocum
       {
         ...invocation,
         error,
-        type: InvocationType.ERROR,
+        type: InvocationType.error,
       },
       { accessToken: options.args.user.accessToken }
     ).catch(() => {

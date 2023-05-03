@@ -1,4 +1,4 @@
 export enum InvocationType {
-  "ERROR" = "ERROR",
-  "SUCCESS" = "SUCCESS",
+  "error" = "error",
+  "success" = "success",
 }

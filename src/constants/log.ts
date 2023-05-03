@@ -1,14 +1,14 @@
 export enum LogType {
-  "ERROR" = "ERROR",
-  "INFO" = "INFO",
-  "SUCCESS" = "SUCCESS",
-  "WARNING" = "WARNING",
+  "error" = "error",
+  "info" = "info",
+  "success" = "success",
+  "warning" = "warning",
 }
 
 export enum DataType {
-  "BOOLEAN" = "BOOLEAN",
-  "NUMBER" = "NUMBER",
-  "OBJECT" = "OBJECT",
-  "STRING" = "STRING",
-  "UNDEFINED" = "UNDEFINED",
+  "boolean" = "boolean",
+  "number" = "number",
+  "object" = "object",
+  "string" = "string",
+  "undefined" = "undefined",
 }

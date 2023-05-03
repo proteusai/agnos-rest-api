@@ -6,24 +6,27 @@ import UserModel, { UserDocument } from "@models/user";
 import OrgModel, { OrgDocument } from "@models/org";
 import logger from "@/utils/logger";
 import ProjectModel, { ProjectDocument } from "@models/project";
+import ComponentModel, { ComponentDocument } from "@models/component";
 
 export interface CollaborationInput {
-  user?: UserDocument["_id"];
+  component?: ComponentDocument["_id"];
   org: OrgDocument["_id"];
+  permission?: PermissionName;
   project?: ProjectDocument["_id"];
   team?: TeamDocument["_id"];
-  permission?: PermissionName;
+  user?: UserDocument["_id"];
 }
 
 export interface CollaborationDocument extends BaseDocument, CollaborationInput, mongoose.Document {}
 
 const collaborationSchema = new mongoose.Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    component: { type: mongoose.Schema.Types.ObjectId, ref: "Component" },
     org: { type: mongoose.Schema.Types.ObjectId, ref: "Organization", required: true },
+    permission: { type: String, enum: Object.keys(PermissionName), default: PermissionName.write },
     project: { type: mongoose.Schema.Types.ObjectId, ref: "Project" },
     team: { type: mongoose.Schema.Types.ObjectId, ref: "Team" },
-    permission: { type: String, enum: Object.keys(PermissionName), default: PermissionName.WRITE },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   {
     timestamps: true,
@@ -38,10 +41,15 @@ collaborationSchema.pre("remove", function (next) {
     .catch((reason) => {
       logger.error("Error removing collaborations for org", { reason, org: collaboration.org });
     });
+  ComponentModel.updateMany({ collaborations: collaboration._id }, { $pull: { collaborations: collaboration._id } })
+    .exec()
+    .catch((reason) => {
+      logger.error("Error removing collaborations for component", { reason, component: collaboration.component });
+    });
   ProjectModel.updateMany({ collaborations: collaboration._id }, { $pull: { collaborations: collaboration._id } })
     .exec()
     .catch((reason) => {
-      logger.error("Error removing collaborations for project", { reason, org: collaboration.org });
+      logger.error("Error removing collaborations for project", { reason, project: collaboration.project });
     });
   TeamModel.updateMany({ collaborations: collaboration._id }, { $pull: { collaborations: collaboration._id } })
     .exec()
@@ -66,6 +74,10 @@ collaborationSchema.pre("remove", function (next) {
  *      properties:
  *        _id:
  *          type: string
+ *        component:
+ *          oneOf:
+ *            - $ref: '#/components/schemas/Component'
+ *            - type: string
  *        org:
  *          oneOf:
  *            - $ref: '#/components/schemas/Organization'
@@ -73,9 +85,9 @@ collaborationSchema.pre("remove", function (next) {
  *        permission:
  *          type: string
  *          enum:
- *           - ADMIN
- *           - READ
- *           - WRITE
+ *           - admin
+ *           - read
+ *           - write
  *        project:
  *          oneOf:
  *            - $ref: '#/components/schemas/Project'

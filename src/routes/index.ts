@@ -1,4 +1,6 @@
 import { Express, Request, Response } from "express";
+import collaborationRoutes from "@routes/collaboration";
+import membershipRoutes from "@routes/membership";
 import orgRoutes from "@routes/org";
 import projectRoutes from "@routes/project";
 import sessionRoutes from "@routes/session";
@@ -10,7 +12,6 @@ import functionVersionRoutes from "./functionVersion.routes";
 import invocationRoutes from "./invocation.routes";
 import logRoutes from "./log.routes";
 import meRoutes from "./me.routes";
-import membershipRoutes from "./membership.routes";
 import pluginRoutes from "./plugin.routes";
 import pluginVersionRoutes from "./pluginVersion.routes";
 import teamRoutes from "./team.routes";
@@ -30,6 +31,8 @@ export default function routes(app: Express) {
   app.get("/healthcheck", (req: Request, res: Response) => res.sendStatus(200));
 
   app.use(userRoutes);
+  app.use(collaborationRoutes);
+  app.use(membershipRoutes);
   app.use(orgRoutes);
   app.use(projectRoutes);
   app.use(sessionRoutes);
@@ -40,7 +43,6 @@ export default function routes(app: Express) {
   app.use(functionVersionRoutes);
   app.use(invocationRoutes);
   app.use(logRoutes);
-  app.use(membershipRoutes);
   app.use(pluginRoutes);
   app.use(pluginVersionRoutes);
   app.use(teamRoutes);
