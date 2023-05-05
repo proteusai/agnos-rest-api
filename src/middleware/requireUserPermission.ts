@@ -18,6 +18,7 @@ const requireUserPermission =
       // get the user's resource collaboration
       const collaboration = await findCollaboration({
         user: res.locals.user?._id,
+        ...(resource === "component" && { component: id }),
         ...(resource === "project" && { project: id }),
         team: { $eq: null },
         permission: { $ne: null },
@@ -49,6 +50,7 @@ const requireUserPermission =
         // get the user's team collaboration
         const collaboration = await findCollaboration({
           user: { $eq: null },
+          ...(resource === "component" && { component: id }),
           ...(resource === "project" && { project: id }),
           team: membership.team,
           permission: { $ne: null },
