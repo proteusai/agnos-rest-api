@@ -1,6 +1,6 @@
 export interface Form {
   formData?: object;
-  jsonSchema: object;
+  jsonSchema?: object;
   uiSchema?: object;
 }
 
@@ -25,6 +25,6 @@ export interface Form {
  */
 export const FormSchema = {
   formData: { type: {} },
-  jsonSchema: { type: {}, required: true },
+  jsonSchema: { type: {} },
   uiSchema: { type: {} },
 };

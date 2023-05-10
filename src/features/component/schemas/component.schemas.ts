@@ -86,7 +86,7 @@ export const createComponentRequestSchema = object({
     description: string().optional(),
     form: object({
       formData: object({}).optional(),
-      jsonSchema: object({}),
+      jsonSchema: object({}).optional(),
       uiSchema: object({}).optional(),
     }).optional(),
     onEnvChanged: string().optional(),
