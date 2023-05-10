@@ -1,5 +1,6 @@
 import { Express, Request, Response } from "express";
 import collaborationRoutes from "@routes/collaboration";
+import componentRoutes from "@routes/component";
 import membershipRoutes from "@routes/membership";
 import orgRoutes from "@routes/org";
 import projectRoutes from "@routes/project";
@@ -32,6 +33,7 @@ export default function routes(app: Express) {
 
   app.use(userRoutes);
   app.use(collaborationRoutes);
+  app.use(componentRoutes);
   app.use(membershipRoutes);
   app.use(orgRoutes);
   app.use(projectRoutes);

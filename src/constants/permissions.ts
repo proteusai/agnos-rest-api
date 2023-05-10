@@ -29,6 +29,6 @@ export const MapRoleToValue: Record<RoleName, number> = {
   owner: 100,
 };
 
-export type ResourceTypes = "org" | "team" | "project";
+export type ResourceTypes = "org" | "team" | "component" | "project";
 
-export type ResourceIdLocation = "body.org" | "params.org" | "params.project" | "query.org";
+export type ResourceIdLocation = "body.org" | "params.component" | "params.org" | "params.project" | "query.org";

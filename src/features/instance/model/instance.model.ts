@@ -21,5 +21,5 @@ export interface InstanceInput {
   description?: string;
   models?: object; // array of models to listen to
   stack: string;
-  // modelSubscriptions, fs, installation, publication, org, project, design
+  // modelSubscriptions, fs, installation, publication/component (for testing), org, project, design
 }

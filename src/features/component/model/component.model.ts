@@ -20,7 +20,7 @@ The story:
 export interface ComponentInput {
   name: string;
   description?: string;
-  forms?: Array<Form>; // "inputs" will be derived from this and env.values
+  form?: Form; // "inputs" will be derived from this and env.values
   onEnvChanged?: string; // code to run when env is created/updated/deleted
   onEnvDeployed?: string; // code to run when env is deployed
   onInit?: string; // code to run when component is initialized
@@ -47,7 +47,7 @@ const componentSchema = new mongoose.Schema(
     name: { type: String, required: true },
     collaborations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collaboration" }],
     description: { type: String },
-    forms: [FormSchema],
+    form: FormSchema,
     onEnvChanged: { type: String },
     onEnvDeployed: { type: String },
     onInit: { type: String },
@@ -111,12 +111,8 @@ componentSchema.pre("remove", async function (next) {
  *              - type: string
  *        description:
  *          type: string
- *        forms:
- *          type: array
- *          items:
- *            oneOf:
- *              - $ref: '#/components/schemas/Form'
- *              - type: string
+ *        form:
+ *          $ref: '#/components/schemas/Form'
  *        onEnvChanged:
  *          type: string
  *        onEnvDeployed:

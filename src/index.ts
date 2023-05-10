@@ -1,5 +1,6 @@
 import "module-alias/register";
 import http from "http";
+import https from "https";
 import { Server } from "socket.io";
 import config from "config";
 import app from "@app";
@@ -12,7 +13,13 @@ import swaggerDocs from "@utils/swagger";
 const env = config.get<string>("nodeEnv");
 const port = config.get<number>("port");
 
-const server = http.createServer(app);
+let server: http.Server;
+if (env === "production") {
+  server = https.createServer(app);
+} else {
+  server = http.createServer(app);
+}
+
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -47,4 +54,32 @@ if (env !== "test") {
 
     swaggerDocs(app, port);
   });
+
+  const terminate = (server: http.Server, options = { coreDump: false, timeout: 500 }) => {
+    // Exit function
+    const exit = (code: number) => {
+      options.coreDump ? process.abort() : process.exit(code);
+    };
+
+    return (code: number, _reason: string) => (err: Error | unknown, _promise: Promise<unknown> | unknown) => {
+      if (err && err instanceof Error) {
+        // Log error information, use a proper logging library here :)
+        console.log(err.message, err.stack);
+      }
+
+      // Attempt a graceful shutdown
+      server.close(() => exit(code));
+      setTimeout(() => exit(code), options.timeout).unref();
+    };
+  };
+
+  const exitHandler = terminate(server, {
+    coreDump: false,
+    timeout: 500,
+  });
+
+  process.on("uncaughtException", exitHandler(1, "Unexpected Error"));
+  process.on("unhandledRejection", exitHandler(1, "Unhandled Promise"));
+  process.on("SIGTERM", exitHandler(0, "SIGTERM"));
+  process.on("SIGINT", exitHandler(0, "SIGINT"));
 }

@@ -2,7 +2,7 @@ import { omit } from "lodash";
 import { FilterQuery } from "mongoose";
 import { ServiceOptions } from "@services";
 import ProjectModel, { ProjectDocument, ProjectInput } from "@models/project";
-import { DEFAULT_QUERY_LIMIT, DEFAULT_QUERY_SKIP } from "@/constants/defaults";
+import { DEFAULT_QUERY_LIMIT, DEFAULT_QUERY_SKIP } from "@constants/defaults";
 
 export async function createProject(input: ProjectInput) {
   const project = await createProjectDocument(input);
