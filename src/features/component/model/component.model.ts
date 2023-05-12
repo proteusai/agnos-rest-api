@@ -8,6 +8,7 @@ import CollaborationModel, { CollaborationDocument } from "@models/collaboration
 import { PermissionScope } from "@constants/permissions";
 import { Form, FormSchema } from "@models/form";
 import PublicationModel, { PublicationDocument } from "@models/publication";
+import InstanceModel, { InstanceDocument } from "@models/instance";
 
 /*
 The story:
@@ -39,6 +40,7 @@ export interface ComponentInput {
 
 export interface ComponentDocument extends BaseDocument, ComponentInput, mongoose.Document {
   collaborations?: Array<CollaborationDocument["_id"]>;
+  instances?: Array<InstanceDocument["_id"]>;
   publications?: Array<PublicationDocument["_id"]>;
 }
 
@@ -48,6 +50,7 @@ const componentSchema = new mongoose.Schema(
     collaborations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collaboration" }],
     description: { type: String },
     form: FormSchema,
+    instances: [{ type: mongoose.Schema.Types.ObjectId, ref: "Instance" }],
     onEnvChanged: { type: String },
     onEnvDeployed: { type: String },
     onInit: { type: String },
@@ -75,6 +78,12 @@ componentSchema.pre("remove", async function (next) {
     .exec()
     .catch((reason: unknown) => {
       logger.error("Error removing collaborations for component", { reason, component: component._id });
+    });
+
+  InstanceModel.remove({ component: component._id })
+    .exec()
+    .catch((reason: unknown) => {
+      logger.error("Error removing instances for component", { reason, component: component._id });
     });
 
   OrgModel.updateMany({ components: component._id }, { $pull: { components: component._id } })
@@ -113,6 +122,12 @@ componentSchema.pre("remove", async function (next) {
  *          type: string
  *        form:
  *          $ref: '#/components/schemas/Form'
+ *        instances:
+ *          type: array
+ *          items:
+ *            oneOf:
+ *              - $ref: '#/components/schemas/Instance'
+ *              - type: string
  *        onEnvChanged:
  *          type: string
  *        onEnvDeployed:
