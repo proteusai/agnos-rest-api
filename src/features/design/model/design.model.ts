@@ -5,13 +5,15 @@ import ProjectModel, { ProjectDocument } from "@models/project";
 import CanvasModel, { CanvasDocument } from "@models/canvas";
 import EnvModel, { EnvDocument } from "@models/env";
 import InstanceModel, { InstanceDocument } from "@models/instance";
+import { UserDocument } from "@models/user";
 import logger from "@utils/logger";
 
 export interface DesignInput {
   name: string;
   description?: string;
   picture?: string;
-  project?: ProjectDocument["_id"];
+  project: ProjectDocument["_id"];
+  user: UserDocument["_id"];
 }
 
 export interface DesignDocument extends BaseDocument, DesignInput, mongoose.Document {
@@ -28,7 +30,8 @@ const designSchema = new mongoose.Schema(
     envs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Environment" }],
     instances: [{ type: mongoose.Schema.Types.ObjectId, ref: "Instance" }],
     picture: { type: String, default: DEFAULT_DESIGN_PICTURE },
-    project: { type: mongoose.Schema.Types.ObjectId, ref: "Project" },
+    project: { type: mongoose.Schema.Types.ObjectId, ref: "Project", required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   },
   {
     timestamps: true,
@@ -96,6 +99,10 @@ designSchema.pre("remove", function (next) {
  *        project:
  *          oneOf:
  *            - $ref: '#/components/schemas/Project'
+ *            - type: string
+ *        user:
+ *          oneOf:
+ *            - $ref: '#/components/schemas/User'
  *            - type: string
  *        createdAt:
  *          type: string

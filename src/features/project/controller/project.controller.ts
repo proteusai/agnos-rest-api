@@ -22,6 +22,9 @@ import { omit } from "lodash";
 import { convertModelToNode } from "@utils/flow";
 import { UpdateCanvasRequest } from "@schemas/canvas";
 import { CanvasDocument } from "@models/canvas";
+import { CreateDesignRequest } from "@schemas/design";
+import { DesignDocument } from "@models/design";
+import { createDesignDocument, findDesign } from "@services/design";
 
 export async function createProjectHandler(
   req: Request<Obj, Obj, CreateProjectRequest["body"]>,
@@ -69,6 +72,38 @@ export async function createProjectHandler(
     const project = await findProject({ _id: projectDoc._id });
 
     return res.send({ data: project });
+  } catch (error: unknown) {
+    logger.error(error);
+    return res.status(404).send({ error: errorObject(error) });
+  }
+}
+
+export async function createProjectDesignHandler(
+  req: Request<CreateDesignRequest["params"], Obj, CreateDesignRequest["body"]>,
+  res: Response<LeanDocument<DesignDocument & { _id: ObjectId }>>
+) {
+  try {
+    const userId = res.locals.user?._id;
+
+    const projectDoc = await findProjectDocument({ _id: req.params.project });
+    if (!projectDoc) {
+      throw new Error(PROJECT_NOT_FOUND);
+    }
+
+    const designDoc = await createDesignDocument({ ...req.body, project: projectDoc._id, user: userId });
+
+    if (IGNORE_LEAST_CARDINALITY) {
+      projectDoc.designs?.push(designDoc);
+      await projectDoc.save();
+    }
+
+    const canvas = await createCanvas({ design: designDoc._id, nodes: [] });
+    designDoc.canvas = canvas._id;
+    await designDoc.save();
+
+    const design = await findDesign({ _id: designDoc._id });
+
+    return res.send({ data: design });
   } catch (error: unknown) {
     logger.error(error);
     return res.status(404).send({ error: errorObject(error) });

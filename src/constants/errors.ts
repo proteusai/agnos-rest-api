@@ -5,6 +5,7 @@ export const ACCESS_UNAUTHORIZED = "Unauthorized";
 export const COLLABORATION_ID_MISSING = "Missing collaboration ID";
 export const COMPONENT_ID_MISSING = "Missing component ID";
 export const COMPONENT_NOT_FOUND = "Component not found";
+export const DESIGN_ID_MISSING = "Missing design ID";
 export const EMAIL_INVALID = "Invalid email";
 export const EMAIL_MISSING = "Missing email";
 export const ID_TOKEN_INVALID = "Invalid ID token";
