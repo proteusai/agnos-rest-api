@@ -10,7 +10,7 @@ import errorObject from "@utils/error";
 import logger from "@utils/logger";
 import { OrgDocument } from "@models/org";
 import { findOrgDocument } from "@services/org";
-import { ORG_NOT_FOUND, PROJECT_NOT_FOUND } from "@constants/errors";
+import { DESIGN_NOT_FOUND, ORG_NOT_FOUND, PROJECT_NOT_FOUND } from "@constants/errors";
 import { createCollaboration } from "@services/collaboration";
 import { PermissionName } from "@constants/permissions";
 import { ServiceOptions } from "@services";
@@ -22,6 +22,9 @@ import { omit } from "lodash";
 import { convertModelToNode } from "@utils/flow";
 import { UpdateCanvasRequest } from "@schemas/canvas";
 import { CanvasDocument } from "@models/canvas";
+import { CreateDesignRequest, GetDesignRequest, GetDesignsRequest } from "@schemas/design";
+import { DesignDocument } from "@models/design";
+import { createDesignDocument, findDesign, findDesigns } from "@services/design";
 
 export async function createProjectHandler(
   req: Request<Obj, Obj, CreateProjectRequest["body"]>,
@@ -69,6 +72,38 @@ export async function createProjectHandler(
     const project = await findProject({ _id: projectDoc._id });
 
     return res.send({ data: project });
+  } catch (error: unknown) {
+    logger.error(error);
+    return res.status(404).send({ error: errorObject(error) });
+  }
+}
+
+export async function createProjectDesignHandler(
+  req: Request<CreateDesignRequest["params"], Obj, CreateDesignRequest["body"]>,
+  res: Response<LeanDocument<DesignDocument & { _id: ObjectId }>>
+) {
+  try {
+    const userId = res.locals.user?._id;
+
+    const projectDoc = await findProjectDocument({ _id: req.params.project });
+    if (!projectDoc) {
+      throw new Error(PROJECT_NOT_FOUND);
+    }
+
+    const designDoc = await createDesignDocument({ ...req.body, project: projectDoc._id, user: userId });
+
+    if (IGNORE_LEAST_CARDINALITY) {
+      projectDoc.designs?.push(designDoc);
+      await projectDoc.save();
+    }
+
+    const canvas = await createCanvas({ design: designDoc._id, nodes: [] });
+    designDoc.canvas = canvas._id;
+    await designDoc.save();
+
+    const design = await findDesign({ _id: designDoc._id });
+
+    return res.send({ data: design });
   } catch (error: unknown) {
     logger.error(error);
     return res.status(404).send({ error: errorObject(error) });
@@ -141,6 +176,47 @@ export async function getProjectsHandler(
   const page = ((parsedQuery as Obj).skip as number) / size + 1; // skip = (page - 1) * size // => page = skip / size + 1
   return res.send({
     data: projects,
+    meta: { pagination: { size, page, prev: Math.max(0, page - 1), next: page + 1 } },
+  });
+}
+
+export async function getProjectDesignHandler(
+  req: Request<GetDesignRequest["params"]>,
+  res: Response<LeanDocument<DesignDocument & { _id: ObjectId }>>
+) {
+  try {
+    const parsedQuery = (res.locals as Obj).query;
+    const design = await findDesign(
+      { _id: req.params.design, project: req.params.project },
+      parsedQuery as ServiceOptions
+    );
+
+    if (!design) {
+      throw new Error(DESIGN_NOT_FOUND);
+    }
+
+    return res.send({ data: design });
+  } catch (error: unknown) {
+    logger.error(error);
+    return res.status(404).send({ error: errorObject(error) });
+  }
+}
+
+export async function getProjectDesignsHandler(
+  req: Request<GetDesignsRequest["params"]>,
+  res: Response<LeanDocument<Array<DesignDocument & { _id: ObjectId }>>>
+) {
+  const parsedQuery = (res.locals as Obj).query;
+
+  const designs = await findDesigns(
+    { ...((parsedQuery as Obj).filter as Obj), project: req.params.project } as FilterQuery<ProjectDocument>,
+    parsedQuery as ServiceOptions
+  );
+
+  const size = (parsedQuery as Obj).limit as number;
+  const page = ((parsedQuery as Obj).skip as number) / size + 1; // skip = (page - 1) * size // => page = skip / size + 1
+  return res.send({
+    data: designs,
     meta: { pagination: { size, page, prev: Math.max(0, page - 1), next: page + 1 } },
   });
 }

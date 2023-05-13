@@ -4,6 +4,7 @@ import { UserDocument } from "@models/user";
 import logger from "@utils/logger";
 import OrgModel, { OrgDocument } from "@models/org";
 import PublicationModel, { PublicationDocument } from "@models/publication";
+import InstanceModel, { InstanceDocument } from "@models/instance";
 
 export interface InstallationInput {
   disabled?: boolean; // useful for deactivating an installation without uninstalling/deleting it
@@ -13,11 +14,14 @@ export interface InstallationInput {
   user: UserDocument["_id"];
 }
 
-export interface InstallationDocument extends BaseDocument, InstallationInput, mongoose.Document {}
+export interface InstallationDocument extends BaseDocument, InstallationInput, mongoose.Document {
+  instances?: Array<InstanceDocument["_id"]>;
+}
 
 const installationSchema = new mongoose.Schema(
   {
     disabled: { type: Boolean, default: false },
+    instances: [{ type: mongoose.Schema.Types.ObjectId, ref: "Instance" }],
     licenseToken: { type: String, required: true },
     org: { type: mongoose.Schema.Types.ObjectId, ref: "Organization", required: true },
     publication: { type: mongoose.Schema.Types.ObjectId, ref: "Publication", required: true },
@@ -30,6 +34,12 @@ const installationSchema = new mongoose.Schema(
 
 installationSchema.pre("remove", async function (next) {
   const installation = this as unknown as InstallationDocument;
+
+  InstanceModel.remove({ installation: installation._id })
+    .exec()
+    .catch((reason: unknown) => {
+      logger.error("Error removing instances for installation", { reason, installation: installation._id });
+    });
 
   OrgModel.updateMany({ installations: installation._id }, { $pull: { installations: installation._id } })
     .exec()
@@ -57,6 +67,12 @@ installationSchema.pre("remove", async function (next) {
  *          type: string
  *        disabled:
  *          type: boolean
+ *        instances:
+ *          type: array
+ *          items:
+ *            oneOf:
+ *              - $ref: '#/components/schemas/Instance'
+ *              - type: string
  *        licenseToken:
  *          type: string
  *        org:

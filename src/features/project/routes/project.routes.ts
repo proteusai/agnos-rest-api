@@ -3,8 +3,11 @@ import requireUser from "@middleware/requireUser";
 import validateResource from "@middleware/validateResource";
 import { createProjectRequestSchema, getProjectRequestSchema } from "@schemas/project";
 import {
+  createProjectDesignHandler,
   createProjectHandler,
   createProjectModelHandler,
+  getProjectDesignHandler,
+  getProjectDesignsHandler,
   getProjectHandler,
   getProjectsHandler,
   updateProjectCanvasHandler,
@@ -16,6 +19,7 @@ import { PermissionName, RoleName } from "@constants/permissions";
 import requireUserPermission from "@middleware/requireUserPermission";
 import { createModelRequestSchema } from "@schemas/model";
 import { updateCanvasRequestSchema } from "@schemas/canvas";
+import { createDesignRequestSchema, getDesignRequestSchema, getDesignsRequestSchema } from "@schemas/design";
 
 const router = Router();
 
@@ -82,6 +86,88 @@ router.get(
 );
 
 // TODO: GET /projects/:project/collaborations
+
+/**
+ * @openapi
+ * '/projects/{project}/designs':
+ *  get:
+ *    summary: Get project designs
+ *    description: Get project designs
+ *    tags:
+ *      - Project
+ *    parameters:
+ *      - name: project
+ *        in: path
+ *        description: Project ID
+ *        required: true
+ *    responses:
+ *      200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/GetDesignsResponse'
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized access
+ *      403:
+ *        description: Forbidden
+ */
+router.get(
+  "/projects/:project/designs",
+  [
+    validateResource(getDesignsRequestSchema),
+    checkAuth0AccessToken,
+    requireUser,
+    requireUserPermission(PermissionName.read, "project", "params.project"),
+    queryParser,
+  ],
+  getProjectDesignsHandler
+);
+
+/**
+ * @openapi
+ * '/projects/{project}/designs/{design}':
+ *  get:
+ *    summary: Get a project design
+ *    description: Get a project design
+ *    tags:
+ *      - Project
+ *    parameters:
+ *      - name: project
+ *        in: path
+ *        description: Project ID
+ *        required: true
+ *      - name: design
+ *        in: path
+ *        description: Design ID
+ *        required: true
+ *    responses:
+ *      200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/GetDesignResponse'
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized access
+ *      403:
+ *        description: Forbidden
+ */
+router.get(
+  "/projects/:project/designs/:design",
+  [
+    validateResource(getDesignRequestSchema),
+    checkAuth0AccessToken,
+    requireUser,
+    requireUserPermission(PermissionName.read, "project", "params.project"),
+    queryParser,
+  ],
+  getProjectDesignHandler
+);
 
 /**
  * @openapi
@@ -168,6 +254,52 @@ router.post(
     requireUserRole(RoleName.owner, "body.org"),
   ],
   createProjectHandler
+);
+
+/**
+ * @openapi
+ * '/projects/{project}/designs':
+ *  post:
+ *    summary: Create a project design
+ *    description: Create a project design
+ *    tags:
+ *      - Project
+ *    parameters:
+ *      - name: project
+ *        in: path
+ *        description: Project ID
+ *        required: true
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *              $ref: '#/components/schemas/CreateDesignRequestBody'
+ *    responses:
+ *      200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/CreateDesignResponse'
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized access
+ *      403:
+ *        description: Forbidden
+ *      404:
+ *        description: Not found
+ */
+router.post(
+  "/projects/:project/designs",
+  [
+    validateResource(createDesignRequestSchema),
+    checkAuth0AccessToken,
+    requireUser,
+    requireUserPermission(PermissionName.write, "project", "params.project"),
+  ],
+  createProjectDesignHandler
 );
 
 /**

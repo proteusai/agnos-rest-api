@@ -7,14 +7,11 @@ import projectRoutes from "@routes/project";
 import sessionRoutes from "@routes/session";
 import settingsRoutes from "@routes/settings";
 import userRoutes from "@routes/user";
-import designRoutes from "./design.routes";
 import functionRoutes from "./function.routes";
 import functionVersionRoutes from "./functionVersion.routes";
 import invocationRoutes from "./invocation.routes";
 import logRoutes from "./log.routes";
 import meRoutes from "./me.routes";
-import pluginRoutes from "./plugin.routes";
-import pluginVersionRoutes from "./pluginVersion.routes";
 import teamRoutes from "./team.routes";
 
 export default function routes(app: Express) {
@@ -40,12 +37,9 @@ export default function routes(app: Express) {
   app.use(sessionRoutes);
   app.use(settingsRoutes);
   app.use(meRoutes);
-  app.use(designRoutes);
   app.use(functionRoutes);
   app.use(functionVersionRoutes);
   app.use(invocationRoutes);
   app.use(logRoutes);
-  app.use(pluginRoutes);
-  app.use(pluginVersionRoutes);
   app.use(teamRoutes);
 }

@@ -7,6 +7,7 @@ import OrgModel, { OrgDocument } from "@models/org";
 import CollaborationModel, { CollaborationDocument } from "@models/collaboration";
 import CanvasModel, { CanvasDocument } from "@models/canvas";
 import ModelModel, { ModelDocument } from "@models/model";
+import DesignModel, { DesignDocument } from "@models/design";
 
 export interface ProjectInput {
   name: string;
@@ -22,6 +23,7 @@ export interface ProjectInput {
 export interface ProjectDocument extends BaseDocument, ProjectInput, mongoose.Document {
   canvas?: CanvasDocument["_id"];
   collaborations?: Array<CollaborationDocument["_id"]>;
+  designs?: Array<DesignDocument["_id"]>;
   models?: Array<ModelDocument["_id"]>;
 }
 
@@ -31,6 +33,7 @@ const projectSchema = new mongoose.Schema(
     canvas: { type: mongoose.Schema.Types.ObjectId, ref: "Canvas" },
     collaborations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collaboration" }],
     description: { type: String },
+    designs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Design" }],
     models: [{ type: mongoose.Schema.Types.ObjectId, ref: "Model" }],
     personal: { type: Boolean, default: false },
     private: { type: Boolean, default: false },
@@ -56,6 +59,11 @@ projectSchema.pre("remove", async function (next) {
     .exec()
     .catch((reason: unknown) => {
       logger.error("Error removing collaborations for project", { reason, project: project._id });
+    });
+  DesignModel.remove({ project: project._id })
+    .exec()
+    .catch((reason: unknown) => {
+      logger.error("Error removing designs for project", { reason, project: project._id });
     });
   ModelModel.remove({ project: project._id })
     .exec()
@@ -94,6 +102,12 @@ projectSchema.pre("remove", async function (next) {
  *              - type: string
  *        description:
  *          type: string
+ *        designs:
+ *          type: array
+ *          items:
+ *            oneOf:
+ *              - $ref: '#/components/schemas/Design'
+ *              - type: string
  *        models:
  *          type: array
  *          items:

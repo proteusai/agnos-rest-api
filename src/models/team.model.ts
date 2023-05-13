@@ -1,11 +1,8 @@
 import mongoose from "mongoose";
 import { DEFAULT_TEAM_PICTURE } from "@constants/defaults";
 import { BaseDocument } from "@models/base";
-import DesignModel, { DesignDocument } from "./design.model";
 import FunctionModel, { FunctionDocument } from "./function.model";
 import MembershipModel, { MembershipDocument } from "@models/membership";
-import PluginModel, { PluginDocument } from "./plugin.model";
-import TeamDesignShareModel, { TeamDesignShareDocument } from "./teamDesignShare.model";
 import { UserDocument } from "@models/user";
 import CollaborationModel, { CollaborationDocument } from "@models/collaboration";
 
@@ -22,11 +19,8 @@ export interface TeamInput {
 
 export interface TeamDocument extends BaseDocument, TeamInput, mongoose.Document {
   collaborations?: Array<CollaborationDocument["_id"]>;
-  designs?: Array<DesignDocument["_id"]>;
   functions?: Array<FunctionDocument["_id"]>;
   memberships?: Array<MembershipDocument["_id"]>;
-  plugins?: Array<PluginDocument["_id"]>;
-  teamDesignShares?: Array<TeamDesignShareDocument["_id"]>;
 }
 
 const teamSchema = new mongoose.Schema(
@@ -60,27 +54,12 @@ teamSchema.pre("remove", async function (next) {
     .catch(() => {
       // TODO: what do we do?
     });
-  DesignModel.remove({ team: team._id })
-    .exec()
-    .catch(() => {
-      // TODO: what do we do?
-    });
   FunctionModel.remove({ team: team._id })
     .exec()
     .catch(() => {
       // TODO: what do we do?
     });
   MembershipModel.remove({ team: team._id })
-    .exec()
-    .catch(() => {
-      // TODO: what do we do?
-    });
-  PluginModel.remove({ team: team._id })
-    .exec()
-    .catch(() => {
-      // TODO: what do we do?
-    });
-  TeamDesignShareModel.remove({ team: team._id })
     .exec()
     .catch(() => {
       // TODO: what do we do?
