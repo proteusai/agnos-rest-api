@@ -34,7 +34,7 @@ export interface PublicationInput {
 
 export interface PublicationDocument extends BaseDocument, PublicationInput, mongoose.Document {
   installations?: Array<InstallationDocument["_id"]>;
-  installationsCount?: bigint; // for each installation: { $inc: { installationsCount: 1 }}
+  installationsCount?: bigint; // TODO: for each installation: { $inc: { installationsCount: 1 }}
 }
 
 const publicationSchema = new mongoose.Schema(

@@ -4,6 +4,7 @@ import validateResource from "@middleware/validateResource";
 import { createProjectRequestSchema, getProjectRequestSchema } from "@schemas/project";
 import {
   createProjectDesignHandler,
+  createProjectDesignInstanceHandler,
   createProjectHandler,
   createProjectModelHandler,
   getProjectDesignHandler,
@@ -21,6 +22,7 @@ import requireUserPermission from "@middleware/requireUserPermission";
 import { createModelRequestSchema } from "@schemas/model";
 import { updateDesignCanvasRequestSchema, updateProjectCanvasRequestSchema } from "@schemas/canvas";
 import { createDesignRequestSchema, getDesignRequestSchema, getDesignsRequestSchema } from "@schemas/design";
+import { createInstanceRequestSchema } from "@schemas/instance";
 
 const router = Router();
 
@@ -351,6 +353,58 @@ router.post(
     requireUserPermission(PermissionName.write, "project", "params.project"),
   ],
   createProjectDesignHandler
+);
+
+/**
+ * @openapi
+ * '/projects/{project}/designs/{design}/instances':
+ *  post:
+ *    summary: Create an instance in a project design
+ *    description: Create an instance in a project design
+ *    tags:
+ *      - Project
+ *    parameters:
+ *      - name: project
+ *        in: path
+ *        description: Project ID
+ *        required: true
+ *      - name: design
+ *        in: path
+ *        description: Design ID
+ *        required: true
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *              $ref: '#/components/schemas/CreateInstanceRequestBody'
+ *    responses:
+ *      200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/CreateInstanceResponse'
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized access
+ *      403:
+ *        description: Forbidden
+ *      404:
+ *        description: Not found
+ *      409:
+ *        description: Conflict
+ */
+router.post(
+  "/projects/:project/designs/:design/instances",
+  [
+    validateResource(createInstanceRequestSchema),
+    checkAuth0AccessToken,
+    requireUser,
+    requireUserPermission(PermissionName.write, "project", "params.project"),
+  ],
+  createProjectDesignInstanceHandler
 );
 
 /**

@@ -24,6 +24,7 @@ export interface ComponentInput {
   form?: Form; // "inputs" will be derived from this and env.values
   onEnvChanged?: string; // code to run when env is created/updated/deleted
   onEnvDeployed?: string; // code to run when env is deployed
+  onFormSubmitted?: string; // code to run when form is submitted
   onInit?: string; // code to run when component is initialized
   onModelChanged?: string; // code to run when model is created/updated/deleted
   // TODO: events for changes to project data
@@ -53,6 +54,7 @@ const componentSchema = new mongoose.Schema(
     instances: [{ type: mongoose.Schema.Types.ObjectId, ref: "Instance" }],
     onEnvChanged: { type: String },
     onEnvDeployed: { type: String },
+    onFormSubmitted: { type: String },
     onInit: { type: String },
     onModelChanged: { type: String },
     org: { type: mongoose.Schema.Types.ObjectId, ref: "Organization", required: true },
@@ -131,6 +133,8 @@ componentSchema.pre("remove", async function (next) {
  *        onEnvChanged:
  *          type: string
  *        onEnvDeployed:
+ *          type: string
+ *        onFormSubmitted:
  *          type: string
  *        onInit:
  *          type: string
