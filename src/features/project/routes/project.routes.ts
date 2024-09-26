@@ -4,6 +4,7 @@ import validateResource from "@middleware/validateResource";
 import { createProjectRequestSchema, getProjectRequestSchema } from "@schemas/project";
 import {
   createProjectDesignHandler,
+  createProjectDesignInstanceHandler,
   createProjectHandler,
   createProjectModelHandler,
   getProjectDesignHandler,
@@ -11,6 +12,7 @@ import {
   getProjectHandler,
   getProjectsHandler,
   updateProjectCanvasHandler,
+  updateProjectDesignCanvasHandler,
 } from "@controllers/project";
 import checkAuth0AccessToken from "@middleware/checkAuth0AccessToken";
 import queryParser from "@middleware/queryParser";
@@ -18,8 +20,9 @@ import requireUserRole from "@middleware/requireUserRole";
 import { PermissionName, RoleName } from "@constants/permissions";
 import requireUserPermission from "@middleware/requireUserPermission";
 import { createModelRequestSchema } from "@schemas/model";
-import { updateCanvasRequestSchema } from "@schemas/canvas";
+import { updateDesignCanvasRequestSchema, updateProjectCanvasRequestSchema } from "@schemas/canvas";
 import { createDesignRequestSchema, getDesignRequestSchema, getDesignsRequestSchema } from "@schemas/design";
+import { createInstanceRequestSchema } from "@schemas/instance";
 
 const router = Router();
 
@@ -207,12 +210,62 @@ router.get(
 router.patch(
   "/projects/:project/canvas",
   [
-    validateResource(updateCanvasRequestSchema),
+    validateResource(updateProjectCanvasRequestSchema),
     checkAuth0AccessToken,
     requireUser,
     requireUserPermission(PermissionName.write, "project", "params.project"),
   ],
   updateProjectCanvasHandler
+);
+
+/**
+ * @openapi
+ * '/projects/{project}/designs/{design}/canvas':
+ *  post:
+ *    summary: Update a project design's canvas
+ *    description: Update a project design's canvas
+ *    tags:
+ *      - Project
+ *    parameters:
+ *      - name: project
+ *        in: path
+ *        description: Project ID
+ *        required: true
+ *      - name: design
+ *        in: path
+ *        description: Design ID
+ *        required: true
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *              $ref: '#/components/schemas/UpdateCanvasRequestBody'
+ *    responses:
+ *      200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/UpdateCanvasResponse'
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized access
+ *      403:
+ *        description: Forbidden
+ *      404:
+ *        description: Not found
+ */
+router.patch(
+  "/projects/:project/designs/:design/canvas",
+  [
+    validateResource(updateDesignCanvasRequestSchema),
+    checkAuth0AccessToken,
+    requireUser,
+    requireUserPermission(PermissionName.write, "project", "params.project"),
+  ],
+  updateProjectDesignCanvasHandler
 );
 
 /**
@@ -300,6 +353,58 @@ router.post(
     requireUserPermission(PermissionName.write, "project", "params.project"),
   ],
   createProjectDesignHandler
+);
+
+/**
+ * @openapi
+ * '/projects/{project}/designs/{design}/instances':
+ *  post:
+ *    summary: Create an instance in a project design
+ *    description: Create an instance in a project design
+ *    tags:
+ *      - Project
+ *    parameters:
+ *      - name: project
+ *        in: path
+ *        description: Project ID
+ *        required: true
+ *      - name: design
+ *        in: path
+ *        description: Design ID
+ *        required: true
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *              $ref: '#/components/schemas/CreateInstanceRequestBody'
+ *    responses:
+ *      200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/CreateInstanceResponse'
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized access
+ *      403:
+ *        description: Forbidden
+ *      404:
+ *        description: Not found
+ *      409:
+ *        description: Conflict
+ */
+router.post(
+  "/projects/:project/designs/:design/instances",
+  [
+    validateResource(createInstanceRequestSchema),
+    checkAuth0AccessToken,
+    requireUser,
+    requireUserPermission(PermissionName.write, "project", "params.project"),
+  ],
+  createProjectDesignInstanceHandler
 );
 
 /**
