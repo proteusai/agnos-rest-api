@@ -10,7 +10,7 @@ import errorObject from "@utils/error";
 import logger from "@utils/logger";
 import { OrgDocument } from "@models/org";
 import { findOrgDocument } from "@services/org";
-import { DESIGN_NOT_FOUND, ORG_NOT_FOUND, PROJECT_NOT_FOUND } from "@constants/errors";
+import { DESIGN_NOT_FOUND, INSTANCE_NAME_FOUND, ORG_NOT_FOUND, PROJECT_NOT_FOUND } from "@constants/errors";
 import { createCollaboration } from "@services/collaboration";
 import { PermissionName } from "@constants/permissions";
 import { ServiceOptions } from "@services";
@@ -19,12 +19,17 @@ import { CreateModelRequest } from "@schemas/model";
 import { ModelDocument } from "@models/model";
 import { createModel } from "@/features/model/service/model.service";
 import { omit } from "lodash";
-import { convertModelToNode } from "@utils/flow";
-import { UpdateCanvasRequest } from "@schemas/canvas";
+import { convertInstanceToNode, convertModelToNode } from "@utils/flow";
+import { UpdateDesignCanvasRequest, UpdateProjectCanvasRequest } from "@schemas/canvas";
 import { CanvasDocument } from "@models/canvas";
 import { CreateDesignRequest, GetDesignRequest, GetDesignsRequest } from "@schemas/design";
 import { DesignDocument } from "@models/design";
-import { createDesignDocument, findDesign, findDesigns } from "@services/design";
+import { createDesignDocument, findDesign, findDesignDocument, findDesigns } from "@services/design";
+import { InstanceDocument } from "@models/instance";
+import { CreateInstanceRequest } from "@schemas/instance";
+import { createInstance, findInstance } from "@services/instance";
+import { findComponentDocument } from "@services/component";
+import { findInstallationDocument } from "@services/installation";
 
 export async function createProjectHandler(
   req: Request<Obj, Obj, CreateProjectRequest["body"]>,
@@ -106,6 +111,58 @@ export async function createProjectDesignHandler(
     return res.send({ data: design });
   } catch (error: unknown) {
     logger.error(error);
+    return res.status(404).send({ error: errorObject(error) });
+  }
+}
+
+export async function createProjectDesignInstanceHandler(
+  req: Request<CreateInstanceRequest["params"], Obj, CreateInstanceRequest["body"]>,
+  res: Response<LeanDocument<InstanceDocument & { _id: ObjectId }>>
+) {
+  try {
+    const designDoc = await findDesignDocument({ _id: req.params.design, project: req.params.project });
+    if (!designDoc) {
+      throw new Error(DESIGN_NOT_FOUND);
+    }
+
+    // ensure no instance of same name exists in design
+    const sameNameInstance = await findInstance({ name: req.body.name, design: designDoc._id });
+    if (sameNameInstance) {
+      throw new Error(INSTANCE_NAME_FOUND);
+    }
+
+    const instance = await createInstance({ ...req.body, design: designDoc._id });
+
+    if (IGNORE_LEAST_CARDINALITY) {
+      designDoc.instances?.push(instance);
+      await designDoc.save();
+      if (instance.component) {
+        const component = await findComponentDocument({ _id: instance.component });
+        if (component) {
+          component.instances?.push(instance);
+          await component.save();
+        }
+      }
+      if (instance.installation) {
+        const installation = await findInstallationDocument({ _id: instance.installation });
+        if (installation) {
+          installation.instances?.push(instance);
+          await installation.save();
+        }
+      }
+    }
+
+    const node: Node = convertInstanceToNode(instance);
+    await addNodeToCanvas({ _id: designDoc.canvas }, node);
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return res.send({ data: instance });
+  } catch (error: unknown) {
+    logger.error(error);
+    if (error instanceof Error && (error as Error).message === INSTANCE_NAME_FOUND) {
+      return res.status(409).send({ error: errorObject(error) });
+    }
     return res.status(404).send({ error: errorObject(error) });
   }
 }
@@ -222,7 +279,7 @@ export async function getProjectDesignsHandler(
 }
 
 export async function updateProjectCanvasHandler(
-  req: Request<UpdateCanvasRequest["params"], Obj, UpdateCanvasRequest["body"]>,
+  req: Request<UpdateProjectCanvasRequest["params"], Obj, UpdateProjectCanvasRequest["body"]>,
   res: Response<LeanDocument<CanvasDocument & { _id: ObjectId }>>
 ) {
   try {
@@ -235,6 +292,28 @@ export async function updateProjectCanvasHandler(
     await updateCanvasNode({ _id: project.canvas }, nodes);
 
     const canvas = await findCanvas({ _id: project.canvas });
+
+    return res.send({ data: canvas });
+  } catch (error: unknown) {
+    logger.error(error);
+    return res.status(404).send({ error: errorObject(error) });
+  }
+}
+
+export async function updateProjectDesignCanvasHandler(
+  req: Request<UpdateDesignCanvasRequest["params"], Obj, UpdateDesignCanvasRequest["body"]>,
+  res: Response<LeanDocument<CanvasDocument & { _id: ObjectId }>>
+) {
+  try {
+    const design = await findDesign({ _id: req.params.design, project: req.params.project });
+    if (!design) {
+      throw new Error(DESIGN_NOT_FOUND);
+    }
+
+    const nodes: Array<Partial<Node>> = req.body.nodes;
+    await updateCanvasNode({ _id: design.canvas }, nodes);
+
+    const canvas = await findCanvas({ _id: design.canvas });
 
     return res.send({ data: canvas });
   } catch (error: unknown) {
